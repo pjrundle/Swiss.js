@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dSwiss - Testing</title>
+  <!-- <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"> -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Exo:wght@200;400;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Exo', sans-serif;
+      color: white;
+      padding: 4rem;
+    }
+    h1 { margin: 0; }
+
+    .heading {
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .lead { opacity: 0.7 }
+    .btn {
+      cursor: pointer;
+      user-select: none;
+      font-weight: 900;
+      display: inline-flex;
+      border-radius: 6px;
+      background-color: teal;
+      padding: 1em 2em;
+    }
+    .measure { max-width: 36em }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .example-section { padding: 20px 0 }
+    .x-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem;
+      user-select: none;
+      border-radius: 20px;
+      border: 1px dashed rgba(255,255,255,0.3);
+
+      /* background-image: linear-gradient(-180deg, #2d2d31 0%, #000000 100%);
+      box-shadow: 0 1rem 1.25rem 0 rgb(17 23 37 / 50%), 0 -0.25rem 1.5rem rgb(14 14 14) inset, 0 0.75rem 0.5rem rgba(255,255,255, 0.4) inset, 0 0.25rem 0.5rem 0 rgb(39 39 39) inset; */
+    }
+
+    .dn { display: none }
+    .df { display: flex }
+    .dib { display: inline-block }
+    .relative { position: relative }
+    .tc { text-align: center }
+    .min-w100vw { min-width: 100vw }
+    .min-h100vh { min-height: 100vh }
+    .cursor-pointer { cursor: pointer }
+    .mbSm { margin-bottom: 3rem }
+    .mrSm { margin-right: 3rem }
+
+    .gradient-bg-blue-black {
+      background: linear-gradient(140deg, #17171d, #2a2e32);;
+    }
+    .bg-color-teal { background-color: teal }
+    .bg-color-red { background-color: #ff4d4d }
+    .border-color-red { border-color: #ff4d4d }
+    .text-color-red { color: #ff4d4d }
+  </style>
+</head>
+<body class="min-w100vw min-h100vh gradient-bg-blue-black">
+  <div class="container">
+
+    <div class="tc mbSm">
+      <h1 class="heading" style="font-size: 10vw;">Swiss<span class="text-color-red">.js</span><span class="dn">🇨🇭🔪</span></h1>
+      <p class="lead measure dib" style="font-size: 17px;">Swiss.js is javascript utility for declarativly adding, removing and toggling classes via data-attributes. It's great for fast protoyping in non-react codebases, and works well with atomic css.</p>
+    </div>
+
+    <section class="example-section df">
+      <div class="x-box mrSm cursor-pointer bg-color-red"
+          data-swiss
+          data-swiss-this-class="bg-color-red">
+        Click Me
+      </div>
+      <div class="x-box">
+        <div class="x-box mrSm cursor-pointer"
+            data-swiss
+            data-swiss-target-class="bg-color-red"
+            data-swiss-target="target-1">Click Me</div>
+        <div id="target-1" class="x-box">To Change Me</div>
+      </div>
+    </section>
+
+    <section class="example-section df">
+      <div class="x-box mrSm cursor-pointer"
+          data-swiss
+          data-swiss-this-class="border-color-red"
+          data-swiss-run="alert('Swiss #triggered me!')">
+        Click Me
+      </div>
+
+      <div class="x-box mrSm cursor-pointer"
+          data-swiss
+          data-swiss-event-type="mouseenter"
+          data-swiss-this-class="text-color-red">
+        MouseEnter Me
+      </div>
+
+      <div class="x-box mrSm cursor-pointer"
+          id="event-listener-box"
+          data-swiss
+          data-swiss-trigger-event="myCustomEvent"
+          data-swiss-this-class="text-color-red">
+        Click me
+      </div>
+    </section>
+
+  </div>
+
+  <script type="text/javascript" src="dswiss.js"></script>
+
+  <script>
+    const box = document.getElementById('event-listener-box');
+    box.addEventListener('myCustomEvent', () => alert('myCustomEvent tiggered by Swiss.js'));
+  </script>
+</body>
+</html>
+
