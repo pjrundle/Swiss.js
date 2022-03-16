@@ -254,5 +254,3 @@ function init_all() {
   items.forEach(swiss);
 }
 init_all();
-
-console.log("running");
