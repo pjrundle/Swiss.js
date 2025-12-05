@@ -23,7 +23,7 @@ const bp_max = {
   xxl: set_bp_max(bp_min.xxl),
 };
 
-module.exports = {
+export default {
   bp_min,
   bp_max,
 };
