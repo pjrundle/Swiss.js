@@ -75,7 +75,7 @@
         <section class="flex gap:4x">
           <!-- Toggle class on itself -->
           <div>
-            <p class="f:12px ml:1x mb:2x">Toggle class on itself</p>
+            <p class="f:12px ml:1x mb:2x">Toggle class on self</p>
             <div class="box cursor:pointer bg:accent!"
               data-swiss="toggle[this](bg:accent! color:accent border-color:rgba(255,255,255,0.8)!)">
               <div>Click</div>
@@ -121,6 +121,33 @@
             <div class="box cursor:pointer w:full" id="event-listener-box"
               data-swiss="toggle[this](color:accent) event:myCustomEvent">
               <div>Click</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mt:8x">
+          <p class="f:12px mb:2x">And more!</p>
+          <div class="rel">
+            <button class=" cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
+              data-swiss="toggle[#my-menu](opacity:0)">Menu</button>
+
+            <div id="my-menu"
+              class="abs top:40px opacity:0 f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|0.1s|ease-in-out">
+              <p>Some kind of menu...</p>
+            </div>
+
+            <button class=" cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
+              data-swiss="toggle[#modal](opacity:0 pointer-events:none)">Open Modal</button>
+
+            <div id="modal"
+              class="opacity:0 pointer-events:none fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
+              <div class="box bg:surface-a! rel">
+                <div class="flex flex-direction:column gap:1em">
+                  <button class="abs top:4x right:4x cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
+                    data-swiss="toggle[#modal](opacity:0 pointer-events:none)">Close Modal</button>
+                  <p class="f:12px">Some kind of modal...</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
