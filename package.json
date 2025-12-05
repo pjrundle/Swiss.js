@@ -8,23 +8,25 @@
     "type": "git",
     "url": "https://github.com/swissjs/swissjs.git"
   },
-
   "source": "src/swiss.ts",
   "main": "dist/swiss.cjs",
   "module": "dist/swiss.mjs",
   "unpkg": "dist/swiss.umd.js",
   "types": "dist/swiss.d.ts",
   "tsconfig": "tsconfig.json",
-
   "scripts": {
     "build": "microbundle --format modern,cjs,umd",
     "dev": "microbundle watch",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "eslint src --fix",
+    "format": "prettier --write src"
   },
-
   "devDependencies": {
     "jsdom": "^27.2.0",
     "microbundle": "^0.15.1",
-    "vitest": "^4.0.15"
+    "vitest": "^4.0.15",
+    "@pjrundle/config-eslint-prettier": "1.0.5",
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0"
   }
 }

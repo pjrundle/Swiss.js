@@ -1,5 +1,3 @@
-// Swiss.ts v2.8 (TypeScript)
-// ---------------------------------------------
 (function () {
   //
   // Types
@@ -117,7 +115,10 @@
             };
           }
 
-          console.warn("Swiss: unsupported action type in bracket syntax:", type);
+          console.warn(
+            "Swiss: unsupported action type in bracket syntax:",
+            type,
+          );
           return null;
         }
 
@@ -137,7 +138,10 @@
             };
           }
 
-          console.warn("Swiss: unsupported action type in legacy syntax:", type);
+          console.warn(
+            "Swiss: unsupported action type in legacy syntax:",
+            type,
+          );
           return null;
         }
 
@@ -150,7 +154,10 @@
   //
   // Build initial class state for reset-on-resize
   //
-  function getInitialState(el: Element, actions: ParsedAction[]): InitialClassState[] {
+  function getInitialState(
+    el: Element,
+    actions: ParsedAction[],
+  ): InitialClassState[] {
     const state: InitialClassState[] = [];
 
     actions.forEach((action) => {
@@ -222,7 +229,6 @@
 
       case "run": {
         try {
-          // eslint-disable-next-line no-new-func
           new Function(action.js)();
         } catch (e) {
           console.error("Swiss run: error:", e);
@@ -259,8 +265,8 @@
             .split(/\s+/)
             .filter(Boolean)
         : hasActions
-        ? ["click"]
-        : [];
+          ? ["click"]
+          : [];
 
     let initialState: InitialClassState[] | null = null;
     let active = false;
@@ -345,7 +351,11 @@
       }
 
       const mq = window.matchMedia(when);
-      mq.matches ? enable() : disable();
+      if (mq.matches) {
+        enable();
+      } else {
+        disable();
+      }
     }
 
     // Begin
@@ -357,13 +367,11 @@
     }
   }
 
-  //
-  // Initialise all Swiss-bound elements
-  //
+  // Init all Swiss-bound elements
   function initAll(): void {
     document
       .querySelectorAll(
-        "[data-swiss], [data-swiss-stop-propagation], [data-swiss-on='clickOutside']"
+        "[data-swiss], [data-swiss-stop-propagation], [data-swiss-on='clickOutside']",
       )
       .forEach(initElement);
   }
