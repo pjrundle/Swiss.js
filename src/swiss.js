@@ -1,16 +1,17 @@
-// Swiss.js v2
+// Swiss.js v2.3b
 // ---------------------------------------------
 (function () {
-
-  // Parse actions inside data-swiss="..."
-  function parseActions(str) {
-    if (!str) return [];
-
-    // Split by spaces/semicolons, but respect quoted strings
+  //
+  // Helper: split on given delimiters, but ignore those
+  // inside quotes or parentheses.
+  //
+  function splitOutside(str, delimiters) {
     const parts = [];
     let current = "";
     let inQuotes = false;
     let quoteChar = null;
+    let parenDepth = 0;
+    const delimSet = new Set(delimiters);
 
     for (let i = 0; i < str.length; i++) {
       const char = str[i];
@@ -20,23 +21,50 @@
         inQuotes = true;
         quoteChar = char;
         current += char;
-      } else if (isQuote && inQuotes && char === quoteChar) {
+        continue;
+      }
+
+      if (isQuote && inQuotes && char === quoteChar) {
         inQuotes = false;
         quoteChar = null;
         current += char;
-      } else if (!inQuotes && (char === " " || char === ";")) {
-        if (current.trim()) {
-          parts.push(current.trim());
-          current = "";
-        }
-      } else {
-        current += char;
+        continue;
       }
+
+      if (!inQuotes) {
+        if (char === "(") {
+          parenDepth++;
+        } else if (char === ")" && parenDepth > 0) {
+          parenDepth--;
+        }
+
+        if (parenDepth === 0 && delimSet.has(char)) {
+          if (current.trim()) {
+            parts.push(current.trim());
+          }
+          current = "";
+          continue;
+        }
+      }
+
+      current += char;
     }
 
     if (current.trim()) {
       parts.push(current.trim());
     }
+
+    return parts;
+  }
+
+  //
+  // Parse actions inside data-swiss="..."
+  //
+  function parseActions(str) {
+    if (!str) return [];
+
+    // Split actions on space/semicolon, but not inside quotes/paren
+    const parts = splitOutside(str, [" ", ";"]);
 
     return parts
       .map((part) => {
@@ -52,20 +80,35 @@
           return { type: "event", name: eventMatch[1] };
         }
 
-        // toggle:this(a, b)
-        const match = part.match(/^(\w+):(.+?)\((.+?)\)$/);
-        if (match) {
-          const [, type, selector, rawClassList] = match;
+        // New syntax: toggle[selector](classA classB ...)
+        const bracketMatch = part.match(/^(\w+)\[(.+?)\]\((.+?)\)$/);
+        if (bracketMatch) {
+          const [, type, selectorRaw, rawClassList] = bracketMatch;
 
-          // Support multiple classes: (a, b, c)
-          const classNames = rawClassList
-            .split(",")
+          // Space-delimited classes, but don't break inside rgba(...)
+          const classNames = splitOutside(rawClassList, [" "])
             .map((c) => c.trim())
             .filter(Boolean);
 
           return {
             type,
-            selector,
+            selector: selectorRaw.trim(),
+            classNames,
+          };
+        }
+
+        // Backwards compat: toggle:this(...)
+        const oldMatch = part.match(/^(\w+):(.+?)\((.+?)\)$/);
+        if (oldMatch) {
+          const [, type, selectorRaw, rawClassList] = oldMatch;
+
+          const classNames = splitOutside(rawClassList, [" "])
+            .map((c) => c.trim())
+            .filter(Boolean);
+
+          return {
+            type,
+            selector: selectorRaw.trim(),
             classNames,
           };
         }
@@ -76,7 +119,9 @@
       .filter(Boolean);
   }
 
-  // Get initial states
+  //
+  // Build initial state for restore functionality
+  //
   function getInitialState(el, actions) {
     const state = [];
 
@@ -99,7 +144,9 @@
     return state;
   }
 
-  // Restore classes
+  //
+  // Restore classes back to initial
+  //
   function restoreState(initial) {
     initial.forEach((item) => {
       if (item.hasClass) {
@@ -110,9 +157,12 @@
     });
   }
 
-  // Resolve selector
+  //
+  // Resolve selector (supports [this])
+  //
   function resolveTargets(el, selector) {
     if (selector === "this") return [el];
+
     try {
       return Array.from(document.querySelectorAll(selector));
     } catch (e) {
@@ -121,7 +171,9 @@
     }
   }
 
-  // Execute an action
+  //
+  // Execute a single action
+  //
   function runAction(el, action) {
     switch (action.type) {
       case "toggle":
@@ -155,7 +207,9 @@
     }
   }
 
-  // Init one element
+  //
+  // Init a single element
+  //
   function initElement(el) {
     const actionString = el.getAttribute("data-swiss") || "";
     const actions = parseActions(actionString);
@@ -216,7 +270,9 @@
     }
   }
 
-  // Init all elements
+  //
+  // Init all data-swiss elements
+  //
   function initAll() {
     const elements = document.querySelectorAll("[data-swiss]");
     elements.forEach(initElement);
