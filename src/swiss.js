@@ -1,7 +1,7 @@
 // Swiss.js v2
 // ---------------------------------------------
-
 (function () {
+
   // Parse actions inside data-swiss="..."
   function parseActions(str) {
     if (!str) return [];
@@ -24,7 +24,7 @@
         inQuotes = false;
         quoteChar = null;
         current += char;
-      } else if (!inQuotes && (char === ' ' || char === ';')) {
+      } else if (!inQuotes && (char === " " || char === ";")) {
         if (current.trim()) {
           parts.push(current.trim());
           current = "";
@@ -38,47 +38,59 @@
       parts.push(current.trim());
     }
 
-    return parts.map(part => {
-      // Check for run: and event: first (before checking for parentheses pattern)
-      const runMatch = part.match(/^run:(.+)$/);
-      if (runMatch) {
-        return { type: "run", js: runMatch[1] };
-      }
+    return parts
+      .map((part) => {
+        // run:JS
+        const runMatch = part.match(/^run:(.+)$/);
+        if (runMatch) {
+          return { type: "run", js: runMatch[1] };
+        }
 
-      const eventMatch = part.match(/^event:(.+)$/);
-      if (eventMatch) {
-        return { type: "event", name: eventMatch[1] };
-      }
+        // event:name
+        const eventMatch = part.match(/^event:(.+)$/);
+        if (eventMatch) {
+          return { type: "event", name: eventMatch[1] };
+        }
 
-      // e.g. "toggle:this(active)" - only match if it's NOT run: or event:
-      const match = part.match(/^(\w+):(.+?)\((.+?)\)$/);
-      if (match) {
-        const [, type, selector, className] = match;
-        return {
-          type,
-          selector,
-          className
-        };
-      }
+        // toggle:this(a, b)
+        const match = part.match(/^(\w+):(.+?)\((.+?)\)$/);
+        if (match) {
+          const [, type, selector, rawClassList] = match;
 
-      console.warn("Swiss: invalid action format:", part);
-      return null;
-    }).filter(Boolean);
+          // Support multiple classes: (a, b, c)
+          const classNames = rawClassList
+            .split(",")
+            .map((c) => c.trim())
+            .filter(Boolean);
+
+          return {
+            type,
+            selector,
+            classNames,
+          };
+        }
+
+        console.warn("Swiss: invalid action format:", part);
+        return null;
+      })
+      .filter(Boolean);
   }
 
-  // Get initial class state for restoring
+  // Get initial states
   function getInitialState(el, actions) {
     const state = [];
 
-    actions.forEach(action => {
+    actions.forEach((action) => {
       if (["toggle", "add", "remove"].includes(action.type)) {
         const targets = resolveTargets(el, action.selector);
 
-        targets.forEach(t => {
-          state.push({
-            el: t,
-            className: action.className,
-            hasClass: t.classList.contains(action.className)
+        targets.forEach((t) => {
+          action.classNames.forEach((cls) => {
+            state.push({
+              el: t,
+              className: cls,
+              hasClass: t.classList.contains(cls),
+            });
           });
         });
       }
@@ -87,9 +99,9 @@
     return state;
   }
 
-  // Restore classes based on initial state
+  // Restore classes
   function restoreState(initial) {
-    initial.forEach(item => {
+    initial.forEach((item) => {
       if (item.hasClass) {
         item.el.classList.add(item.className);
       } else {
@@ -101,7 +113,6 @@
   // Resolve selector
   function resolveTargets(el, selector) {
     if (selector === "this") return [el];
-
     try {
       return Array.from(document.querySelectorAll(selector));
     } catch (e) {
@@ -117,13 +128,18 @@
       case "add":
       case "remove": {
         const targets = resolveTargets(el, action.selector);
-        targets.forEach(t => t.classList[action.type](action.className));
+
+        targets.forEach((t) => {
+          action.classNames.forEach((cls) => {
+            t.classList[action.type](cls);
+          });
+        });
+
         break;
       }
 
       case "run": {
         try {
-          // sandboxed eval using Function
           const fn = new Function(action.js);
           fn();
         } catch (e) {
@@ -139,11 +155,10 @@
     }
   }
 
-  // Main initializer for one element
+  // Init one element
   function initElement(el) {
     const actionString = el.getAttribute("data-swiss") || "";
     const actions = parseActions(actionString);
-
     if (actions.length === 0) return;
 
     const events = (el.getAttribute("data-swiss-on") || "click")
@@ -162,7 +177,7 @@
 
       initialState = getInitialState(el, actions);
 
-      events.forEach(ev => {
+      events.forEach((ev) => {
         el.addEventListener(ev, handler);
       });
     }
@@ -171,7 +186,7 @@
       if (!active) return;
       active = false;
 
-      events.forEach(ev => {
+      events.forEach((ev) => {
         el.removeEventListener(ev, handler);
       });
 
@@ -180,11 +195,10 @@
       }
     }
 
-    function handler(e) {
-      actions.forEach(action => runAction(el, action));
+    function handler() {
+      actions.forEach((action) => runAction(el, action));
     }
 
-    // Apply breakpoint / media query logic
     function evaluate() {
       if (!when) {
         enable();
@@ -202,13 +216,12 @@
     }
   }
 
-  // Init all elements with data-swiss
+  // Init all elements
   function initAll() {
     const elements = document.querySelectorAll("[data-swiss]");
     elements.forEach(initElement);
   }
 
-  // Auto-init on DOM load
   if (document.readyState !== "loading") {
     initAll();
   } else {
