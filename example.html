@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Exo:wght@200;400;900&display=swap"
     rel="stylesheet">
+
   <style>
     * {
       box-sizing: border-box;
@@ -18,8 +19,6 @@
     body {
       margin: 0;
       font-family: 'Exo', sans-serif;
-      /* font-family: 'Bebas Neue', cursive; */
-      /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; */
       color: white;
       padding: 6rem 3rem;
     }
@@ -132,9 +131,9 @@
       margin-right: 3rem
     }
 
-    .o-0 {
+    /* .o-0 {
       opacity: 0
-    }
+    } */
 
     .bg-color-blueblack {
       background-color: #0e141f
@@ -161,57 +160,67 @@
 <body class="min-w100vw min-h100vh bg-color-blueblack">
   <div class="container">
 
+    <!-- HEADER EXAMPLE -->
     <div class="tc mbSm">
       <h1 class="heading" style="font-size: 10vw; text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
-        <span class="cursor-pointer user-select-none" data-swiss data-swiss-target="js"
-          data-swiss-target-class="text-color-red">Swiss</span><span id="js" class="text-color-red">.js</span>
+        <span class="cursor-pointer user-select-none"
+          data-swiss="toggle:this(text-color-red) toggle:#js(text-color-red)">Swiss</span>
+        <span id="js" class="text-color-red">.js</span>
       </h1>
+
       <div><span class="dib pill-border-thinger mbXs"></span></div>
-      <p class="lead measure dib" style="font-size: 19px;">A simple javascript utility for declarativly adding, removing
-        and toggling classes + more via data-attributes. Use it for fast protoyping and eliminating scattered,
-        repetitive code in non-react/vue etc projects.</p>
+
+      <p class="lead measure dib" style="font-size: 19px;">
+        A simple javascript utility for declaratively adding, removing
+        and toggling classes + more via data-attributes. Use it for fast prototyping and eliminating scattered,
+        repetitive code in non-react/vue etc projects.
+      </p>
     </div>
 
+    <!-- CLASS TOGGLE EXAMPLES -->
     <section class="example-section df">
-      <div class="x-box mrSm cursor-pointer bg-color-red" data-swiss data-swiss-this-class="bg-color-red">
-        <div class="o-0">
-          Click Me
-        </div>
+      <!-- Toggle class on itself -->
+      <div class="x-box mrSm cursor-pointer bg-color-red" data-swiss="toggle:this(bg-color-red)">
+        <div class="o-0">Click Me</div>
       </div>
+
+      <!-- Toggle class on another element -->
       <div class="x-box">
-        <div class="x-box x-box--no-shadow mrSm cursor-pointer" data-swiss data-swiss-target-class="bg-color-red"
-          data-swiss-target="target-1">
-          <div class="o-0">
-            Click Me
-          </div>
+        <div class="x-box x-box--no-shadow mrSm cursor-pointer" data-swiss="toggle:#target-1(bg-color-red)">
+          <div class="o-0">Click Me</div>
         </div>
+
         <div id="target-1" class="x-box x-box--no-shadow bg-color-red">
-          <div class="o-0">
-            To Change Me
-          </div>
+          <div class="o-0">To Change Me</div>
         </div>
       </div>
     </section>
 
+    <!-- ACTION / RUN / EVENT EXAMPLES -->
     <section class="example-section df">
-      <div class="x-box mrSm cursor-pointer" data-swiss data-swiss-this-class="border-color-red"
-        data-swiss-run="alert('Swiss #triggered me!')">
-        <div class="o-0">
-          Click Me
-        </div>
+
+      <!-- run: example -->
+      <div class="x-box mrSm cursor-pointer"
+        data-swiss="toggle:this(border-color-red) run:alert('Swiss #triggered me!')">
+        <div class="o-0">Click Me</div>
       </div>
 
-      <div class="x-box mrSm cursor-pointer" data-swiss data-swiss-event-type="mouseenter"
-        data-swiss-this-class="text-color-red">
+      <!-- mouseenter example -->
+      <div class="x-box mrSm cursor-pointer" data-swiss="toggle:this(text-color-red)" data-swiss-on="mouseenter">
         MouseEnter Me
       </div>
 
-      <div class="x-box mrSm cursor-pointer" id="event-listener-box" data-swiss data-swiss-trigger-event="myCustomEvent"
-        data-swiss-this-class="text-color-red">
-        <div class="o-0">
-          Click me
-        </div>
+      <!-- dispatch event example -->
+      <div class="x-box mrSm cursor-pointer" id="event-listener-box"
+        data-swiss="toggle:this(text-color-red) event:myCustomEvent">
+        <div class="o-0">Click me</div>
       </div>
+
+      <!-- dispatch event example -->
+      <div class="x-box mrSm cursor-pointer" data-swiss="toggle:this(text-color-red) run:alert('Hello from Swiss.js!')">
+        <div class="o-0">Click me</div>
+      </div>
+
     </section>
 
   </div>
@@ -220,7 +229,7 @@
 
   <script>
     const box = document.getElementById('event-listener-box');
-    box.addEventListener('myCustomEvent', () => alert('myCustomEvent tiggered by Swiss.js'));
+    box.addEventListener('myCustomEvent', () => alert('myCustomEvent triggered by Swiss.js'));
   </script>
 </body>
 
