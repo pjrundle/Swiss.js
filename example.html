@@ -54,20 +54,20 @@
       <header
         class="t:center mb:4x flex flex-direction:column flex-direction:row@md justify-content:between align-items:center gap:6x gap:10x@md">
 
-        <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,5vw,80px)"
-          style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
-          <span class="cursor:pointer user-select:none"
-            data-swiss="toggle:this(color:accent!) toggle:#js(color:accent!)">Swiss</span>
-          <span id="js" class="color:accent!">.js</span>
-        </h1>
-
-        <div class="flex:1 t:center t:right@md">
-          <p class="inline-block opacity:0.85 max-w:32em f:14px f:16px@lg t:center t:right@md">
+        <div class="flex:1 t:center t:left@md">
+          <p class="inline-block opacity:0.85 max-w:32em f:14px f:16px@lg line-height:1.4 t:center t:left@md">
             A simple javascript utility for declaratively adding, removing
             and toggling classes + more via data-attributes. Use it for fast prototyping and eliminating scattered,
             repetitive code in non-react/vue etc projects.
           </p>
         </div>
+
+        <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,70px)"
+          style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
+          <span class="cursor:pointer user-select:none"
+            data-swiss="toggle:this(color:accent!) toggle:#js(color:accent!)">Swiss</span>
+          <span id="js" class="color:accent!">.js</span>
+        </h1>
       </header>
 
       <div class="mt:16x r:40px p:10x bg:rgba(255,255,255,0.05)">
@@ -99,20 +99,20 @@
 
         <!-- ACTION / RUN / EVENT EXAMPLES -->
         <section class="flex gap:4x mt:8x">
-          <!-- run: example -->
-          <div class="flex:1">
-            <p class="f:12px ml:1x mb:2x">Trigger an alert</p>
-            <div class="box cursor:pointer w:full"
-              data-swiss="toggle[this](border-color:accent!) run:alert('Hello from Swiss.js!')">
-              <div>Click</div>
-            </div>
-          </div>
           <!-- mouseenter example -->
           <div class="flex:1">
             <p class="f:12px ml:1x mb:2x">Hover to toggle class</p>
             <div class="box cursor:pointer w:full" data-swiss="toggle[this](color:accent!)"
               data-swiss-on="mouseenter mouseleave">
               Hover
+            </div>
+          </div>
+          <!-- run: example -->
+          <div class="flex:1">
+            <p class="f:12px ml:1x mb:2x">Trigger an alert</p>
+            <div class="box cursor:pointer w:full"
+              data-swiss="toggle[this](border-color:accent!) run:alert('Hello from Swiss.js!')">
+              <div>Click</div>
             </div>
           </div>
           <!-- dispatch event example -->
@@ -127,41 +127,22 @@
 
         <section class="mt:8x">
           <p class="f:12px mb:2x">And more!</p>
-          <div class="rel">
-            <button class=" cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
-              data-swiss="toggle[#my-menu](opacity:0 menu-is-active)">Menu</button>
-
-            <div id="my-menu"
-              class="abs top:40px opacity:0 f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|0.1s|ease-in-out"
-              data-swiss="toggle[#my-menu](opacity:0 menu-is-active)" data-swiss-on="clickOutside"
-              data-swiss-if="#my-menu.menu-is-active">
-              <p>Some kind of menu...</p>
+          <div class="flex gap:2x">
+            <div class="rel">
+              <button class=" cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
+                data-swiss="toggle[#my-menu](opacity:0 menu-is-active)">Menu</button>
+              <div id="my-menu"
+                class="abs w:200px top:40px opacity:0 f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|0.1s|ease-in-out"
+                data-swiss="toggle[#my-menu](opacity:0 menu-is-active)" data-swiss-on="clickOutside"
+                data-swiss-if="#my-menu.menu-is-active">
+                <p>Some kind of menu...</p>
+              </div>
             </div>
-
             <!-- OPEN BUTTON -->
             <button class="cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
               data-swiss="remove[#modal](opacity:0 pointer-events:none) add[#modal](modal-is-active)">
               Open Modal
             </button>
-
-            <!-- MODAL OVERLAY -->
-            <div id="modal"
-              class="opacity:0 pointer-events:none fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
-
-              <div class="box bg:surface-a! rel"
-                data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)"
-                data-swiss-on="clickOutside" data-swiss-if="#modal.modal-is-active">
-                <div class="flex flex-direction:column gap:1em">
-                  <button class="abs top:4x right:4x cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
-                    data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)">
-                    Close Modal
-                  </button>
-
-                  <p class="f:12px">Some kind of modal...</p>
-                </div>
-              </div>
-
-            </div>
           </div>
         </section>
       </div>
@@ -169,7 +150,23 @@
     </div>
   </div>
 
-  <script src="src/swiss.js"></script>
+  <div id="modal"
+    class="opacity:0 pointer-events:none fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
+    <div class="box bg:surface-a! rel"
+      data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)"
+      data-swiss-on="clickOutside" data-swiss-if="#modal.modal-is-active">
+      <div class="flex flex-direction:column gap:1em">
+        <button class="abs top:4x right:4x cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
+          data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)">
+          Close Modal
+        </button>
+
+        <p class="f:12px">Some kind of modal...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="dist/swiss.umd.js"></script>
 
   <script>
     const box = document.getElementById('event-listener-box');

@@ -1,0 +1,30 @@
+{
+  "name": "swissjs",
+  "version": "1.0.0",
+  "description": "A tiny Javascript utility for declaratively adding, removing and toggling classes — plus custom events and click-outside handling — using HTML data attributes.",
+  "author": "@pjrundle",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/swissjs/swissjs.git"
+  },
+
+  "source": "src/swiss.ts",
+  "main": "dist/swiss.cjs",
+  "module": "dist/swiss.mjs",
+  "unpkg": "dist/swiss.umd.js",
+  "types": "dist/swiss.d.ts",
+  "tsconfig": "tsconfig.json",
+
+  "scripts": {
+    "build": "microbundle --format modern,cjs,umd",
+    "dev": "microbundle watch",
+    "test": "vitest"
+  },
+
+  "devDependencies": {
+    "jsdom": "^27.2.0",
+    "microbundle": "^0.15.1",
+    "vitest": "^4.0.15"
+  }
+}
