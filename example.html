@@ -70,42 +70,58 @@
         </div>
       </header>
 
-      <div class="mt:16x r:40px p:5x bg:rgba(255,255,255,0.05)">
+      <div class="mt:16x r:40px p:10x bg:rgba(255,255,255,0.05)">
         <!-- CLASS TOGGLE EXAMPLES -->
         <section class="flex gap:4x">
           <!-- Toggle class on itself -->
-          <div class="box cursor:pointer bg:accent!"
-            data-swiss="toggle[this](bg:accent! color:accent border-color:rgba(255,255,255,0.8)!)">
-            <div>Click</div>
-          </div>
-          <!-- Toggle class on another element -->
-          <div class="box flex:1 test-selector-class">
-            <div class="box mr:4x cursor:pointer"
-              data-swiss="toggle[#target-1](bg:accent!) toggle[this](color:accent) toggle[.test-selector-class](b:1px|solid|accent)">
+          <div>
+            <p class="f:12px ml:1x mb:2x">Toggle class on itself</p>
+            <div class="box cursor:pointer bg:accent!"
+              data-swiss="toggle[this](bg:accent! color:accent border-color:rgba(255,255,255,0.8)!)">
               <div>Click</div>
             </div>
-            <div id="target-1" class="box bg:accent!">
-              <div style="opacity: 0;">To Change</div>
+          </div>
+
+          <!-- Toggle class on another element -->
+          <div class="flex:1">
+            <p class="f:12px ml:1x mb:2x">Toggle class on this & another elements</p>
+            <div class="box test-selector-class w:full">
+              <div class="box mr:4x cursor:pointer"
+                data-swiss="toggle[#target-1](bg:accent!) toggle[this](color:accent) toggle[.test-selector-class](b:1px|solid|accent)">
+                <div>Click</div>
+              </div>
+              <div id="target-1" class="box bg:accent!">
+                <div style="opacity: 0;">To Change</div>
+              </div>
             </div>
           </div>
         </section>
 
         <!-- ACTION / RUN / EVENT EXAMPLES -->
-        <section class="flex gap:4x mt:4x">
+        <section class="flex gap:4x mt:8x">
           <!-- run: example -->
-          <div class="box flex:1 cursor:pointer"
-            data-swiss="toggle[this](border-color:accent!) run:alert('Hello from Swiss.js!')">
-            <div>Click</div>
+          <div class="flex:1">
+            <p class="f:12px ml:1x mb:2x">Trigger an alert</p>
+            <div class="box cursor:pointer w:full"
+              data-swiss="toggle[this](border-color:accent!) run:alert('Hello from Swiss.js!')">
+              <div>Click</div>
+            </div>
           </div>
           <!-- mouseenter example -->
-          <div class="box flex:1 cursor:pointer" data-swiss="toggle[this](color:accent!)"
-            data-swiss-on="mouseenter mouseleave">
-            Hover
+          <div class="flex:1">
+            <p class="f:12px ml:1x mb:2x">Hover to toggle class</p>
+            <div class="box cursor:pointer w:full" data-swiss="toggle[this](color:accent!)"
+              data-swiss-on="mouseenter mouseleave">
+              Hover
+            </div>
           </div>
           <!-- dispatch event example -->
-          <div class="box flex:1 cursor:pointer" id="event-listener-box"
-            data-swiss="toggle[this](color:accent) event:myCustomEvent">
-            <div>Click</div>
+          <div class="flex:1">
+            <p class="f:12px ml:1x mb:2x">Click to trigger an event</p>
+            <div class="box cursor:pointer w:full" id="event-listener-box"
+              data-swiss="toggle[this](color:accent) event:myCustomEvent">
+              <div>Click</div>
+            </div>
           </div>
         </section>
       </div>
