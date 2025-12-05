@@ -1,151 +1,154 @@
-;(function () {
+(function () {
   //
   // Types
   //
-  type ActionKind = "toggle" | "add" | "remove" | "run" | "event"
+  type ActionKind = "toggle" | "add" | "remove" | "run" | "event";
 
   interface BaseAction {
-    type: ActionKind
+    type: ActionKind;
   }
 
   interface ClassAction extends BaseAction {
-    type: "toggle" | "add" | "remove"
-    selector: string
-    classNames: string[]
+    type: "toggle" | "add" | "remove";
+    selector: string;
+    classNames: string[];
   }
 
   interface RunAction extends BaseAction {
-    type: "run"
-    js: string
+    type: "run";
+    js: string;
   }
 
   interface EventAction extends BaseAction {
-    type: "event"
-    name: string
+    type: "event";
+    name: string;
   }
 
-  type ParsedAction = ClassAction | RunAction | EventAction
+  type ParsedAction = ClassAction | RunAction | EventAction;
 
   interface InitialClassState {
-    el: Element
-    className: string
-    hasClass: boolean
+    el: Element;
+    className: string;
+    hasClass: boolean;
   }
 
   //
   // Utility: split on delimiters, but ignore those inside quotes or parentheses.
   //
   function splitOutside(str: string, delimiters: string[]): string[] {
-    const parts: string[] = []
-    let current = ""
-    let inQuotes = false
-    let quoteChar: string | null = null
-    let parenDepth = 0
-    const delims = new Set(delimiters)
+    const parts: string[] = [];
+    let current = "";
+    let inQuotes = false;
+    let quoteChar: string | null = null;
+    let parenDepth = 0;
+    const delims = new Set(delimiters);
 
     for (let i = 0; i < str.length; i++) {
-      const char = str[i]
-      const isQuote = char === '"' || char === "'"
+      const char = str[i];
+      const isQuote = char === '"' || char === "'";
 
       if (isQuote && !inQuotes) {
-        inQuotes = true
-        quoteChar = char
-        current += char
-        continue
+        inQuotes = true;
+        quoteChar = char;
+        current += char;
+        continue;
       }
 
       if (isQuote && inQuotes && char === quoteChar) {
-        inQuotes = false
-        quoteChar = null
-        current += char
-        continue
+        inQuotes = false;
+        quoteChar = null;
+        current += char;
+        continue;
       }
 
       if (!inQuotes) {
-        if (char === "(") parenDepth++
-        else if (char === ")" && parenDepth > 0) parenDepth--
+        if (char === "(") parenDepth++;
+        else if (char === ")" && parenDepth > 0) parenDepth--;
 
         if (parenDepth === 0 && delims.has(char)) {
-          if (current.trim()) parts.push(current.trim())
-          current = ""
-          continue
+          if (current.trim()) parts.push(current.trim());
+          current = "";
+          continue;
         }
       }
 
-      current += char
+      current += char;
     }
 
-    if (current.trim()) parts.push(current.trim())
-    return parts
+    if (current.trim()) parts.push(current.trim());
+    return parts;
   }
 
   //
   // Parse actions inside data-swiss="..."
   //
   function parseActions(str: string): ParsedAction[] {
-    if (!str) return []
+    if (!str) return [];
 
-    const parts = splitOutside(str, [" ", ";"])
+    const parts = splitOutside(str, [" ", ";"]);
 
     return parts
       .map<ParsedAction | null>((part) => {
-        const runMatch = part.match(/^run:(.+)$/)
+        const runMatch = part.match(/^run:(.+)$/);
         if (runMatch) {
-          return { type: "run", js: runMatch[1] }
+          return { type: "run", js: runMatch[1] };
         }
 
-        const evMatch = part.match(/^event:(.+)$/)
+        const evMatch = part.match(/^event:(.+)$/);
         if (evMatch) {
-          return { type: "event", name: evMatch[1] }
+          return { type: "event", name: evMatch[1] };
         }
 
-        const bracketMatch = part.match(/^(\w+)\[(.+?)\]\((.+?)\)$/)
+        const bracketMatch = part.match(/^(\w+)\[(.+?)\]\((.+?)\)$/);
         if (bracketMatch) {
-          const [, typeRaw, selectorRaw, rawClassList] = bracketMatch
-          const type = typeRaw as ActionKind
+          const [, typeRaw, selectorRaw, rawClassList] = bracketMatch;
+          const type = typeRaw as ActionKind;
           const classNames = splitOutside(rawClassList, [" "])
             .map((c) => c.trim())
-            .filter(Boolean)
+            .filter(Boolean);
 
           if (type === "toggle" || type === "add" || type === "remove") {
             return {
               type,
               selector: selectorRaw.trim(),
               classNames,
-            }
+            };
           }
 
           console.warn(
             "Swiss: unsupported action type in bracket syntax:",
             type,
-          )
-          return null
+          );
+          return null;
         }
 
-        const oldMatch = part.match(/^(\w+):(.+?)\((.+?)\)$/)
+        const oldMatch = part.match(/^(\w+):(.+?)\((.+?)\)$/);
         if (oldMatch) {
-          const [, typeRaw, selectorRaw, rawClassList] = oldMatch
-          const type = typeRaw as ActionKind
+          const [, typeRaw, selectorRaw, rawClassList] = oldMatch;
+          const type = typeRaw as ActionKind;
           const classNames = splitOutside(rawClassList, [" "])
             .map((c) => c.trim())
-            .filter(Boolean)
+            .filter(Boolean);
 
           if (type === "toggle" || type === "add" || type === "remove") {
             return {
               type,
               selector: selectorRaw.trim(),
               classNames,
-            }
+            };
           }
 
-          console.warn("Swiss: unsupported action type in legacy syntax:", type)
-          return null
+          console.warn(
+            "Swiss: unsupported action type in legacy syntax:",
+            type,
+          );
+          return null;
         }
 
-        console.warn("Swiss: invalid action format:", part)
-        return null
+        console.warn("Swiss: invalid action format:", part);
+        return null;
       })
-      .filter((a): a is ParsedAction => Boolean(a))
+      .filter((a): a is ParsedAction => Boolean(a));
   }
 
   //
@@ -155,7 +158,7 @@
     el: Element,
     actions: ParsedAction[],
   ): InitialClassState[] {
-    const state: InitialClassState[] = []
+    const state: InitialClassState[] = [];
 
     actions.forEach((action) => {
       if (
@@ -163,7 +166,7 @@
         action.type === "add" ||
         action.type === "remove"
       ) {
-        const targets = resolveTargets(el, action.selector)
+        const targets = resolveTargets(el, action.selector);
 
         targets.forEach((t) => {
           action.classNames.forEach((cls) => {
@@ -171,33 +174,33 @@
               el: t,
               className: cls,
               hasClass: t.classList.contains(cls),
-            })
-          })
-        })
+            });
+          });
+        });
       }
-    })
+    });
 
-    return state
+    return state;
   }
 
   function restoreState(initial: InitialClassState[]): void {
     initial.forEach((item) => {
-      if (item.hasClass) item.el.classList.add(item.className)
-      else item.el.classList.remove(item.className)
-    })
+      if (item.hasClass) item.el.classList.add(item.className);
+      else item.el.classList.remove(item.className);
+    });
   }
 
   //
   // Resolve selector (supports "this")
   //
   function resolveTargets(el: Element, selector: string): Element[] {
-    if (selector === "this") return [el]
+    if (selector === "this") return [el];
 
     try {
-      return Array.from(document.querySelectorAll(selector))
+      return Array.from(document.querySelectorAll(selector));
     } catch {
-      console.warn("Swiss: invalid selector:", selector)
-      return []
+      console.warn("Swiss: invalid selector:", selector);
+      return [];
     }
   }
 
@@ -209,34 +212,34 @@
       case "toggle":
       case "add":
       case "remove": {
-        const targets = resolveTargets(el, action.selector)
+        const targets = resolveTargets(el, action.selector);
         targets.forEach((t) => {
           action.classNames.forEach((cls) => {
             if (action.type === "toggle") {
-              t.classList.toggle(cls)
+              t.classList.toggle(cls);
             } else if (action.type === "add") {
-              t.classList.add(cls)
+              t.classList.add(cls);
             } else {
-              t.classList.remove(cls)
+              t.classList.remove(cls);
             }
-          })
-        })
-        break
+          });
+        });
+        break;
       }
 
       case "run": {
         try {
-          new Function(action.js)()
+          new Function(action.js)();
         } catch (e) {
-          console.error("Swiss run: error:", e)
+          console.error("Swiss run: error:", e);
         }
-        break
+        break;
       }
 
       case "event": {
-        const customEvent = new CustomEvent(action.name, { bubbles: true })
-        ;(el as HTMLElement).dispatchEvent(customEvent)
-        break
+        const customEvent = new CustomEvent(action.name, { bubbles: true });
+        (el as HTMLElement).dispatchEvent(customEvent);
+        break;
       }
     }
   }
@@ -245,16 +248,16 @@
   // Initialise a single Swiss element
   //
   function initElement(el: Element): void {
-    const htmlEl = el as HTMLElement
+    const htmlEl = el as HTMLElement;
 
-    const actionString = htmlEl.getAttribute("data-swiss") || ""
-    const actions = parseActions(actionString)
-    const hasActions = actions.length > 0
+    const actionString = htmlEl.getAttribute("data-swiss") || "";
+    const actions = parseActions(actionString);
+    const hasActions = actions.length > 0;
 
-    const whenActiveSelector = htmlEl.getAttribute("data-swiss-if")
-    const stopProp = htmlEl.hasAttribute("data-swiss-stop-propagation")
-    const when = htmlEl.getAttribute("data-swiss-when")
-    const restoreOnResize = htmlEl.hasAttribute("data-swiss-reset-on-resize")
+    const whenActiveSelector = htmlEl.getAttribute("data-swiss-if");
+    const stopProp = htmlEl.hasAttribute("data-swiss-stop-propagation");
+    const when = htmlEl.getAttribute("data-swiss-when");
+    const restoreOnResize = htmlEl.hasAttribute("data-swiss-reset-on-resize");
 
     const events: string[] =
       hasActions && htmlEl.hasAttribute("data-swiss-on")
@@ -263,103 +266,103 @@
             .filter(Boolean)
         : hasActions
           ? ["click"]
-          : []
+          : [];
 
-    let initialState: InitialClassState[] | null = null
-    let active = false
+    let initialState: InitialClassState[] | null = null;
+    let active = false;
 
     function isActive(): boolean {
-      if (!whenActiveSelector) return true
-      const target = document.querySelector(whenActiveSelector)
-      return target ? target.matches(whenActiveSelector) : false
+      if (!whenActiveSelector) return true;
+      const target = document.querySelector(whenActiveSelector);
+      return target ? target.matches(whenActiveSelector) : false;
     }
 
     function handler(_e: Event): void {
-      if (!isActive()) return
-      actions.forEach((a) => runAction(htmlEl, a))
+      if (!isActive()) return;
+      actions.forEach((a) => runAction(htmlEl, a));
     }
 
     function outsideListener(e: MouseEvent | TouchEvent): void {
-      if (!isActive()) return
+      if (!isActive()) return;
 
-      const target = e.target as Element | null
-      if (!target) return
+      const target = e.target as Element | null;
+      if (!target) return;
 
       // Ignore inside clicks
-      if (htmlEl.contains(target)) return
+      if (htmlEl.contains(target)) return;
 
       // Ignore clicks originating from another Swiss-action element
-      const otherSwiss = target.closest("[data-swiss]")
-      if (otherSwiss) return
+      const otherSwiss = target.closest("[data-swiss]");
+      if (otherSwiss) return;
 
-      handler(e)
+      handler(e);
     }
 
     function enable(): void {
-      if (active) return
-      active = true
+      if (active) return;
+      active = true;
 
       if (stopProp) {
         htmlEl.addEventListener("click", (e: MouseEvent) => {
           // Only stop propagation when clicking the element itself,
           // not its children (so child buttons still work)
-          if (e.target === htmlEl) e.stopPropagation()
-        })
+          if (e.target === htmlEl) e.stopPropagation();
+        });
       }
 
       if (hasActions) {
-        initialState = getInitialState(htmlEl, actions)
+        initialState = getInitialState(htmlEl, actions);
 
         events.forEach((ev) => {
           if (ev === "clickOutside") {
-            document.addEventListener("mousedown", outsideListener)
-            document.addEventListener("touchstart", outsideListener)
+            document.addEventListener("mousedown", outsideListener);
+            document.addEventListener("touchstart", outsideListener);
           } else {
-            htmlEl.addEventListener(ev, handler as EventListener)
+            htmlEl.addEventListener(ev, handler as EventListener);
           }
-        })
+        });
       }
     }
 
     function disable(): void {
-      if (!active) return
-      active = false
+      if (!active) return;
+      active = false;
 
       if (hasActions) {
         events.forEach((ev) => {
           if (ev === "clickOutside") {
-            document.removeEventListener("mousedown", outsideListener)
-            document.removeEventListener("touchstart", outsideListener)
+            document.removeEventListener("mousedown", outsideListener);
+            document.removeEventListener("touchstart", outsideListener);
           } else {
-            htmlEl.removeEventListener(ev, handler as EventListener)
+            htmlEl.removeEventListener(ev, handler as EventListener);
           }
-        })
+        });
 
         if (restoreOnResize && initialState) {
-          restoreState(initialState)
+          restoreState(initialState);
         }
       }
     }
 
     function evaluate(): void {
       if (!when) {
-        enable()
-        return
+        enable();
+        return;
       }
 
-      const mq = window.matchMedia(when)
+      const mq = window.matchMedia(when);
       if (mq.matches) {
-        enable()
+        enable();
       } else {
-        disable()
+        disable();
       }
     }
 
     // Begin
     if (hasActions || stopProp) {
-      evaluate()
+      evaluate();
       if (when || restoreOnResize) {
-        window.addEventListener("resize", evaluate)
+        window.addEventListener("resize", evaluate);
       }
     }
   }
@@ -370,12 +373,12 @@
       .querySelectorAll(
         "[data-swiss], [data-swiss-stop-propagation], [data-swiss-on='clickOutside']",
       )
-      .forEach(initElement)
+      .forEach(initElement);
   }
 
   if (document.readyState !== "loading") {
-    initAll()
+    initAll();
   } else {
-    document.addEventListener("DOMContentLoaded", initAll)
+    document.addEventListener("DOMContentLoaded", initAll);
   }
-})()
+})();
