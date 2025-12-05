@@ -7,7 +7,6 @@
   <title>Swiss.js - Testing Playground</title>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Exo:wght@200;400;600&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
 
   <link rel="preload" as="script" href="https://cdn.master.co/css-runtime@rc">
   <link rel="preload" as="style" href="https://cdn.master.co/normal.css">
@@ -28,6 +27,13 @@
           "border-radius": "30px",
           "border": "1px solid rgba(255, 255, 255, 0.2)",
           "box-shadow": "0 1rem 20rem -0.5rem rgba(0, 0, 0, 0.85)",
+        },
+        "btn": {
+          "cursor": "pointer",
+          "border": "1px solid #e31d65",
+          "padding": "0.5em 1em",
+          "border-radius": "5px",
+          "font-size": "11px"
         }
       }
     }
@@ -125,12 +131,11 @@
           </div>
         </section>
 
-        <section class="mt:8x">
+        <section class="my:8x">
           <p class="f:12px mb:2x">And more!</p>
           <div class="flex gap:2x">
             <div class="rel">
-              <button class=" cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
-                data-swiss="toggle[#my-menu](opacity:0 menu-is-active)">Menu</button>
+              <button class="btn" data-swiss="toggle[#my-menu](opacity:0 menu-is-active)">Menu</button>
               <div id="my-menu"
                 class="abs w:200px top:40px opacity:0 f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|0.1s|ease-in-out"
                 data-swiss="toggle[#my-menu](opacity:0 menu-is-active)" data-swiss-on="clickOutside"
@@ -139,10 +144,49 @@
               </div>
             </div>
             <!-- OPEN BUTTON -->
-            <button class="cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
-              data-swiss="remove[#modal](opacity:0 pointer-events:none) add[#modal](modal-is-active)">
+            <button class="btn" data-swiss="remove[#modal](opacity:0 pointer-events:none) add[#modal](modal-is-active)">
               Open Modal
             </button>
+          </div>
+        </section>
+
+
+        <section>
+          <div class="box block!">
+
+            <!-- TARGET ELEMENT -->
+            <div id="target" class="box w:full align-items:center justify-content:center" data-state="closed" data-flag
+              style="transition:all 0.3s ease; margin-bottom:20px;">
+              <div class="t:center">
+                Target Element
+                <br>
+                <p class="f:10px opacity:0.5 mt:2x">(watch attributes change in DevTools)</p>
+              </div>
+            </div>
+
+            <div class="flex gap:2x">
+              <!-- ADD ATTRIBUTE -->
+              <button class="btn" data-swiss="add[#target]({data-open:true})">
+                Add attribute: data-open="true"
+              </button>
+              <!-- REMOVE ATTRIBUTE -->
+              <button class="btn" data-swiss="remove[#target]({data-open})">
+                Remove attribute: data-open
+              </button>
+              <!-- TOGGLE PRESENCE -->
+              <button class="btn" data-swiss="toggle[#target]({data-flag})">
+                Toggle presence: data-flag
+              </button>
+              <!-- TOGGLE VALUE (open|closed) -->
+              <button class="btn" data-swiss="toggle[#target]({data-state:open|closed})">
+                Toggle data-state="open|closed"
+              </button>
+              <!-- MIX CLASS + ATTRIBUTE -->
+              <button class="btn" data-swiss="toggle[#target](bg:accent! {data-mixed:true})">
+                Toggle class + add/remove attribute
+              </button>
+            </div>
+
           </div>
         </section>
       </div>
