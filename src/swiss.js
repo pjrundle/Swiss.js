@@ -215,13 +215,13 @@
     const actions = parseActions(actionString);
     if (actions.length === 0) return;
 
-    const events = (el.getAttribute("data-swiss-on") || "click")
-      .split(/\s+/)
-      .filter(Boolean);
+    const eventString = el.getAttribute("data-swiss-on") || "click";
+    const events = eventString.split(/\s+/).filter(Boolean);
+
+    const wantsClickOutside = events.includes("clickOutside");
 
     const when = el.getAttribute("data-swiss-when");
     const restoreOnResize = el.hasAttribute("data-swiss-reset-on-resize");
-    const outsideThis = el.hasAttribute("data-swiss-outside-this");
 
     let initialState = null;
     let active = false;
@@ -231,7 +231,6 @@
     }
 
     function outsideHandler(e) {
-      // If click is outside this element, run actions
       if (!el.contains(e.target)) {
         actions.forEach((action) => runAction(el, action));
       }
@@ -243,10 +242,10 @@
 
       initialState = getInitialState(el, actions);
 
-      if (outsideThis) {
+      if (wantsClickOutside) {
         document.addEventListener("click", outsideHandler, true);
       } else {
-        events.forEach((ev) => {
+        events.forEach(ev => {
           el.addEventListener(ev, handler);
         });
       }
@@ -256,10 +255,10 @@
       if (!active) return;
       active = false;
 
-      if (outsideThis) {
+      if (wantsClickOutside) {
         document.removeEventListener("click", outsideHandler, true);
       } else {
-        events.forEach((ev) => {
+        events.forEach(ev => {
           el.removeEventListener(ev, handler);
         });
       }
@@ -281,10 +280,11 @@
 
     evaluate();
 
-    if (when || restoreOnResize || outsideThis) {
+    if (when || restoreOnResize || wantsClickOutside) {
       window.addEventListener("resize", evaluate);
     }
   }
+
 
   //
   // Init all data-swiss elements

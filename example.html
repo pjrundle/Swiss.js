@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Swiss.js - Testing</title>
+  <title>Swiss.js - Testing Playground</title>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Exo:wght@200;400;600&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -143,16 +143,11 @@
             </button>
 
             <!-- MODAL OVERLAY -->
-            <div id="modal" class="
-    opacity:0 pointer-events:none
-    fixed inset:0
-    bg:rgba(0,0,0,0.5)
-    transition:opacity|0.1s|ease-in-out
-    flex align-items:center justify-content:center
-  ">
+            <div id="modal"
+              class="opacity:0 pointer-events:none fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
               <!-- MODAL CONTENT -->
               <div class="box bg:surface-a! rel pointer-events:auto"
-                data-swiss="add[#modal](opacity:0 pointer-events:none)" data-swiss-outside-this>
+                data-swiss="add[#modal](opacity:0 pointer-events:none)" data-swiss-on="clickOutside">
                 <div class="flex flex-direction:column gap:1em">
                   <button class="abs top:4x right:4x cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
                     data-swiss="add[#modal](opacity:0 pointer-events:none)">
