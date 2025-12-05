@@ -39,6 +39,10 @@
       font-family: 'Exo', sans-serif;
       color: white;
     }
+
+    .debug {
+      border: 1px solid red;
+    }
   </style>
 </head>
 
@@ -70,12 +74,13 @@
         <!-- CLASS TOGGLE EXAMPLES -->
         <section class="flex gap:4x">
           <!-- Toggle class on itself -->
-          <div class="box cursor:pointer bg:accent!" data-swiss="toggle:this(bg:accent!,color:red)">
+          <div class="box cursor:pointer bg:accent!" data-swiss="toggle:this(bg:accent!,color:accent)">
             <div>Click</div>
           </div>
           <!-- Toggle class on another element -->
-          <div class="box flex:1">
-            <div class="box mr:4x cursor:pointer" data-swiss="toggle:#target-1(bg:accent!)">
+          <div class="box flex:1 test-selector-class">
+            <div class="box mr:4x cursor:pointer"
+              data-swiss="toggle:#target-1(bg:accent!) toggle:this(color:accent) toggle:.test-selector-class(b:1px|solid|accent)">
               <div>Click</div>
             </div>
             <div id="target-1" class="box bg:accent!">
