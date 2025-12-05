@@ -136,15 +136,29 @@
               <p>Some kind of menu...</p>
             </div>
 
-            <button class=" cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
-              data-swiss="toggle[#modal](opacity:0 pointer-events:none)">Open Modal</button>
+            <!-- OPEN BUTTON -->
+            <button class="cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
+              data-swiss="remove[#modal](opacity:0 pointer-events:none)">
+              Open Modal
+            </button>
 
-            <div id="modal"
-              class="opacity:0 pointer-events:none fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
-              <div class="box bg:surface-a! rel">
+            <!-- MODAL OVERLAY -->
+            <div id="modal" class="
+    opacity:0 pointer-events:none
+    fixed inset:0
+    bg:rgba(0,0,0,0.5)
+    transition:opacity|0.1s|ease-in-out
+    flex align-items:center justify-content:center
+  ">
+              <!-- MODAL CONTENT -->
+              <div class="box bg:surface-a! rel pointer-events:auto"
+                data-swiss="add[#modal](opacity:0 pointer-events:none)" data-swiss-outside-this>
                 <div class="flex flex-direction:column gap:1em">
                   <button class="abs top:4x right:4x cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
-                    data-swiss="toggle[#modal](opacity:0 pointer-events:none)">Close Modal</button>
+                    data-swiss="add[#modal](opacity:0 pointer-events:none)">
+                    Close Modal
+                  </button>
+
                   <p class="f:12px">Some kind of modal...</p>
                 </div>
               </div>
