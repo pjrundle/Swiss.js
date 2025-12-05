@@ -6,36 +6,63 @@
   function parseActions(str) {
     if (!str) return [];
 
-    // Allow spaces OR semicolons as separators
-    const parts = str.split(/[\s;]+/).filter(Boolean);
+    // Split by spaces/semicolons, but respect quoted strings
+    const parts = [];
+    let current = "";
+    let inQuotes = false;
+    let quoteChar = null;
+
+    for (let i = 0; i < str.length; i++) {
+      const char = str[i];
+      const isQuote = char === '"' || char === "'";
+
+      if (isQuote && !inQuotes) {
+        inQuotes = true;
+        quoteChar = char;
+        current += char;
+      } else if (isQuote && inQuotes && char === quoteChar) {
+        inQuotes = false;
+        quoteChar = null;
+        current += char;
+      } else if (!inQuotes && (char === ' ' || char === ';')) {
+        if (current.trim()) {
+          parts.push(current.trim());
+          current = "";
+        }
+      } else {
+        current += char;
+      }
+    }
+
+    if (current.trim()) {
+      parts.push(current.trim());
+    }
 
     return parts.map(part => {
-      // e.g. "toggle:this(active)"
-      const match = part.match(/^(\w+):(.+?)\((.+?)\)$/);
-
-      // run:<js> special-case (no parentheses)
-      if (!match) {
-        const runMatch = part.match(/^run:(.+)$/);
-        if (runMatch) {
-          return { type: "run", js: runMatch[1] };
-        }
-
-        // event:<name>
-        const eventMatch = part.match(/^event:(.+)$/);
-        if (eventMatch) {
-          return { type: "event", name: eventMatch[1] };
-        }
-
-        console.warn("Swiss: invalid action format:", part);
-        return null;
+      // Check for run: and event: first (before checking for parentheses pattern)
+      const runMatch = part.match(/^run:(.+)$/);
+      if (runMatch) {
+        return { type: "run", js: runMatch[1] };
       }
 
-      const [, type, selector, className] = match;
-      return {
-        type,
-        selector,
-        className
-      };
+      const eventMatch = part.match(/^event:(.+)$/);
+      if (eventMatch) {
+        return { type: "event", name: eventMatch[1] };
+      }
+
+      // e.g. "toggle:this(active)" - only match if it's NOT run: or event:
+      const match = part.match(/^(\w+):(.+?)\((.+?)\)$/);
+      if (match) {
+        const [, type, selector, className] = match;
+        return {
+          type,
+          selector,
+          className
+        };
+      }
+
+      console.warn("Swiss: invalid action format:", part);
+      return null;
     }).filter(Boolean);
   }
 
@@ -96,6 +123,7 @@
 
       case "run": {
         try {
+          console.log("Swiss: executing run action:", action.js);
           // sandboxed eval using Function
           const fn = new Function(action.js);
           fn();
@@ -116,6 +144,8 @@
   function initElement(el) {
     const actionString = el.getAttribute("data-swiss") || "";
     const actions = parseActions(actionString);
+
+    console.log("Swiss: parsed actions for element:", el, "actions:", actions);
 
     if (actions.length === 0) return;
 

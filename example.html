@@ -201,13 +201,14 @@
 
       <!-- run: example -->
       <div class="x-box mrSm cursor-pointer"
-        data-swiss="toggle:this(border-color-red) run:alert('Swiss #triggered me!')">
+        data-swiss="toggle:this(border-color-red) run:alert('Hello from Swiss.js!')">
         <div class="o-0">Click Me</div>
       </div>
 
       <!-- mouseenter example -->
-      <div class="x-box mrSm cursor-pointer" data-swiss="toggle:this(text-color-red)" data-swiss-on="mouseenter">
-        MouseEnter Me
+      <div class="x-box mrSm cursor-pointer" data-swiss="toggle:this(text-color-red)"
+        data-swiss-on="mouseenter mouseleave">
+        Hover Me
       </div>
 
       <!-- dispatch event example -->
@@ -215,12 +216,6 @@
         data-swiss="toggle:this(text-color-red) event:myCustomEvent">
         <div class="o-0">Click me</div>
       </div>
-
-      <!-- dispatch event example -->
-      <div class="x-box mrSm cursor-pointer" data-swiss="toggle:this(text-color-red) run:alert('Hello from Swiss.js!')">
-        <div class="o-0">Click me</div>
-      </div>
-
     </section>
 
   </div>
