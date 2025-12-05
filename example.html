@@ -129,10 +129,12 @@
           <p class="f:12px mb:2x">And more!</p>
           <div class="rel">
             <button class=" cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
-              data-swiss="toggle[#my-menu](opacity:0)">Menu</button>
+              data-swiss="toggle[#my-menu](opacity:0 menu-is-active)">Menu</button>
 
             <div id="my-menu"
-              class="abs top:40px opacity:0 f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|0.1s|ease-in-out">
+              class="abs top:40px opacity:0 f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|0.1s|ease-in-out"
+              data-swiss="toggle[#my-menu](opacity:0 menu-is-active)" data-swiss-on="clickOutside"
+              data-swiss-if="#my-menu.menu-is-active">
               <p>Some kind of menu...</p>
             </div>
 
