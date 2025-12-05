@@ -123,7 +123,6 @@
 
       case "run": {
         try {
-          console.log("Swiss: executing run action:", action.js);
           // sandboxed eval using Function
           const fn = new Function(action.js);
           fn();
@@ -144,8 +143,6 @@
   function initElement(el) {
     const actionString = el.getAttribute("data-swiss") || "";
     const actions = parseActions(actionString);
-
-    console.log("Swiss: parsed actions for element:", el, "actions:", actions);
 
     if (actions.length === 0) return;
 

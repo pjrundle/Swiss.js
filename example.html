@@ -6,10 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Swiss.js - Testing</title>
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Exo:wght@200;400;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Exo:wght@200;400;700&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Exo:wght@200;400;900&display=swap"
     rel="stylesheet">
+
+  <script src="https://cdn.master.co/css"></script>
 
   <style>
     * {
@@ -28,7 +30,7 @@
     }
 
     .heading {
-      font-weight: 900;
+      font-weight: 700;
       letter-spacing: -0.025em;
       line-height: 1;
     }
@@ -91,8 +93,20 @@
       display: flex
     }
 
+    .dif {
+      display: inline-flex
+    }
+
     .dib {
       display: inline-block
+    }
+
+    .justify-between {
+      justify-content: space-between
+    }
+
+    .flex-1 {
+      flex: 1 1 0%;
     }
 
     .relative {
@@ -158,19 +172,17 @@
 </head>
 
 <body class="min-w100vw min-h100vh bg-color-blueblack">
-  <div class="container">
+  <div class="container bg:red@lg">
 
     <!-- HEADER EXAMPLE -->
-    <div class="tc mbSm">
-      <h1 class="heading" style="font-size: 10vw; text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
+    <div class="tc mbSm df justify-between" style="gap: 8rem;">
+      <h1 class="heading df" style="font-size: 7vw; text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
         <span class="cursor-pointer user-select-none"
           data-swiss="toggle:this(text-color-red) toggle:#js(text-color-red)">Swiss</span>
         <span id="js" class="text-color-red">.js</span>
       </h1>
 
-      <div><span class="dib pill-border-thinger mbXs"></span></div>
-
-      <p class="lead measure dib" style="font-size: 19px;">
+      <p class="leadasure dib" style="font-size: 19px;">
         A simple javascript utility for declaratively adding, removing
         and toggling classes + more via data-attributes. Use it for fast prototyping and eliminating scattered,
         repetitive code in non-react/vue etc projects.
@@ -181,17 +193,17 @@
     <section class="example-section df">
       <!-- Toggle class on itself -->
       <div class="x-box mrSm cursor-pointer bg-color-red" data-swiss="toggle:this(bg-color-red)">
-        <div class="o-0">Click Me</div>
+        <div class="o-0">Click</div>
       </div>
 
       <!-- Toggle class on another element -->
-      <div class="x-box">
+      <div class="x-box flex-1">
         <div class="x-box x-box--no-shadow mrSm cursor-pointer" data-swiss="toggle:#target-1(bg-color-red)">
-          <div class="o-0">Click Me</div>
+          <div class="o-0">Click</div>
         </div>
 
         <div id="target-1" class="x-box x-box--no-shadow bg-color-red">
-          <div class="o-0">To Change Me</div>
+          <div class="o-0" style="opacity: 0;">To Change</div>
         </div>
       </div>
     </section>
@@ -200,21 +212,21 @@
     <section class="example-section df">
 
       <!-- run: example -->
-      <div class="x-box mrSm cursor-pointer"
+      <div class="x-box mrSm cursor-pointer flex-1"
         data-swiss="toggle:this(border-color-red) run:alert('Hello from Swiss.js!')">
-        <div class="o-0">Click Me</div>
+        <div class="o-0">Click</div>
       </div>
 
       <!-- mouseenter example -->
-      <div class="x-box mrSm cursor-pointer" data-swiss="toggle:this(text-color-red)"
+      <div class="x-box mrSm cursor-pointer flex-1" data-swiss="toggle:this(text-color-red)"
         data-swiss-on="mouseenter mouseleave">
-        Hover Me
+        Hover
       </div>
 
       <!-- dispatch event example -->
-      <div class="x-box mrSm cursor-pointer" id="event-listener-box"
+      <div class="x-box cursor-pointer flex-1" id="event-listener-box"
         data-swiss="toggle:this(text-color-red) event:myCustomEvent">
-        <div class="o-0">Click me</div>
+        <div class="o-0">Click</div>
       </div>
     </section>
 
