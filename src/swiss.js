@@ -1,9 +1,9 @@
-// Swiss.js v2.4
+// Swiss.js v2.6
 // ---------------------------------------------
 (function () {
+
   //
-  // Helper: split on given delimiters, but ignore those
-  // inside quotes or parentheses.
+  // Utility: split on delimiters, but ignore those inside quotes or parentheses.
   //
   function splitOutside(str, delimiters) {
     const parts = [];
@@ -11,7 +11,7 @@
     let inQuotes = false;
     let quoteChar = null;
     let parenDepth = 0;
-    const delimSet = new Set(delimiters);
+    const delims = new Set(delimiters);
 
     for (let i = 0; i < str.length; i++) {
       const char = str[i];
@@ -32,16 +32,11 @@
       }
 
       if (!inQuotes) {
-        if (char === "(") {
-          parenDepth++;
-        } else if (char === ")" && parenDepth > 0) {
-          parenDepth--;
-        }
+        if (char === "(") parenDepth++;
+        else if (char === ")" && parenDepth > 0) parenDepth--;
 
-        if (parenDepth === 0 && delimSet.has(char)) {
-          if (current.trim()) {
-            parts.push(current.trim());
-          }
+        if (parenDepth === 0 && delims.has(char)) {
+          if (current.trim()) parts.push(current.trim());
           current = "";
           continue;
         }
@@ -50,12 +45,10 @@
       current += char;
     }
 
-    if (current.trim()) {
-      parts.push(current.trim());
-    }
-
+    if (current.trim()) parts.push(current.trim());
     return parts;
   }
+
 
   //
   // Parse actions inside data-swiss="..."
@@ -63,7 +56,6 @@
   function parseActions(str) {
     if (!str) return [];
 
-    // Split actions on space/semicolon, but not inside quotes/paren
     const parts = splitOutside(str, [" ", ";"]);
 
     return parts
@@ -75,17 +67,15 @@
         }
 
         // event:name
-        const eventMatch = part.match(/^event:(.+)$/);
-        if (eventMatch) {
-          return { type: "event", name: eventMatch[1] };
+        const evMatch = part.match(/^event:(.+)$/);
+        if (evMatch) {
+          return { type: "event", name: evMatch[1] };
         }
 
-        // New syntax: toggle[selector](classA classB ...)
+        // New syntax: toggle[selector](class tokens)
         const bracketMatch = part.match(/^(\w+)\[(.+?)\]\((.+?)\)$/);
         if (bracketMatch) {
           const [, type, selectorRaw, rawClassList] = bracketMatch;
-
-          // Space-delimited classes, but don't break inside rgba(...)
           const classNames = splitOutside(rawClassList, [" "])
             .map((c) => c.trim())
             .filter(Boolean);
@@ -97,11 +87,10 @@
           };
         }
 
-        // Backwards compat: toggle:this(...)
+        // Backward-compatible syntax: toggle:this(...)
         const oldMatch = part.match(/^(\w+):(.+?)\((.+?)\)$/);
         if (oldMatch) {
           const [, type, selectorRaw, rawClassList] = oldMatch;
-
           const classNames = splitOutside(rawClassList, [" "])
             .map((c) => c.trim())
             .filter(Boolean);
@@ -119,8 +108,9 @@
       .filter(Boolean);
   }
 
+
   //
-  // Build initial state for restore functionality
+  // Build initial class state (for reset-on-resize)
   //
   function getInitialState(el, actions) {
     const state = [];
@@ -144,8 +134,9 @@
     return state;
   }
 
+
   //
-  // Restore classes back to initial
+  // Restore to initial state
   //
   function restoreState(initial) {
     initial.forEach((item) => {
@@ -157,8 +148,9 @@
     });
   }
 
+
   //
-  // Resolve selector (supports [this])
+  // Resolve selector (supports "this")
   //
   function resolveTargets(el, selector) {
     if (selector === "this") return [el];
@@ -170,6 +162,7 @@
       return [];
     }
   }
+
 
   //
   // Execute a single action
@@ -192,10 +185,9 @@
 
       case "run": {
         try {
-          const fn = new Function(action.js);
-          fn();
+          new Function(action.js)();
         } catch (e) {
-          console.error("Swiss: error in run:", e);
+          console.error("Swiss run: error:", e);
         }
         break;
       }
@@ -207,45 +199,55 @@
     }
   }
 
+
   //
-  // Init a single element
+  // Initialise one element with Swiss behaviour
   //
   function initElement(el) {
     const actionString = el.getAttribute("data-swiss") || "";
     const actions = parseActions(actionString);
-    if (actions.length === 0) return;
 
-    const eventString = el.getAttribute("data-swiss-on") || "click";
-    const events = eventString.split(/\s+/).filter(Boolean);
-
-    const wantsClickOutside = events.includes("clickOutside");
-
+    const hasActions = actions.length > 0;
+    const stopProp = el.hasAttribute("data-swiss-stop-propagation");
     const when = el.getAttribute("data-swiss-when");
     const restoreOnResize = el.hasAttribute("data-swiss-reset-on-resize");
+
+    // Whether this element should be initialized at all:
+    const shouldInit = hasActions || stopProp;
+
+    if (!shouldInit) return;
+
+    // Default "on" events to click, but ONLY for action elements.
+    const events = hasActions
+      ? (el.getAttribute("data-swiss-on") || "click")
+          .split(/\s+/)
+          .filter(Boolean)
+      : []; // stop-prop only → no events.
+
 
     let initialState = null;
     let active = false;
 
     function handler() {
-      actions.forEach((action) => runAction(el, action));
-    }
-
-    function outsideHandler(e) {
-      if (!el.contains(e.target)) {
-        actions.forEach((action) => runAction(el, action));
-      }
+      actions.forEach((a) => runAction(el, a));
     }
 
     function enable() {
       if (active) return;
       active = true;
 
-      initialState = getInitialState(el, actions);
+      // Stop propagation behaviour
+      if (stopProp) {
+        el.addEventListener(
+          "click",
+          (e) => e.stopPropagation(),
+          true // capture phase ensures early stop
+        );
+      }
 
-      if (wantsClickOutside) {
-        document.addEventListener("click", outsideHandler, true);
-      } else {
-        events.forEach(ev => {
+      if (hasActions) {
+        initialState = getInitialState(el, actions);
+        events.forEach((ev) => {
           el.addEventListener(ev, handler);
         });
       }
@@ -255,16 +257,14 @@
       if (!active) return;
       active = false;
 
-      if (wantsClickOutside) {
-        document.removeEventListener("click", outsideHandler, true);
-      } else {
-        events.forEach(ev => {
+      if (hasActions) {
+        events.forEach((ev) => {
           el.removeEventListener(ev, handler);
         });
-      }
 
-      if (restoreOnResize && initialState) {
-        restoreState(initialState);
+        if (restoreOnResize && initialState) {
+          restoreState(initialState);
+        }
       }
     }
 
@@ -280,18 +280,21 @@
 
     evaluate();
 
-    if (when || restoreOnResize || wantsClickOutside) {
+    if (when || restoreOnResize) {
       window.addEventListener("resize", evaluate);
     }
   }
 
 
   //
-  // Init all data-swiss elements
+  // Initialise all elements with:
+  // - data-swiss
+  // - data-swiss-stop-propagation
   //
   function initAll() {
-    const elements = document.querySelectorAll("[data-swiss]");
-    elements.forEach(initElement);
+    document
+      .querySelectorAll("[data-swiss], [data-swiss-stop-propagation]")
+      .forEach(initElement);
   }
 
   if (document.readyState !== "loading") {

@@ -138,19 +138,18 @@
 
             <!-- OPEN BUTTON -->
             <button class="cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
-              data-swiss="remove[#modal](opacity:0 pointer-events:none)">
+              data-swiss="remove[#modal](opacity:0 pointer-events:none) add[#modal](modal-is-active)">
               Open Modal
             </button>
 
             <!-- MODAL OVERLAY -->
             <div id="modal"
-              class="opacity:0 pointer-events:none fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
-              <!-- MODAL CONTENT -->
-              <div class="box bg:surface-a! rel pointer-events:auto"
-                data-swiss="add[#modal](opacity:0 pointer-events:none)" data-swiss-on="clickOutside">
+              class="opacity:0 pointer-events:none fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center"
+              data-swiss="add[#modal.modal-is-active](opacity:0 pointer-events:none)">
+              <div class="box bg:surface-a! rel" data-swiss-stop-propagation>
                 <div class="flex flex-direction:column gap:1em">
                   <button class="abs top:4x right:4x cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
-                    data-swiss="add[#modal](opacity:0 pointer-events:none)">
+                    data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)">
                     Close Modal
                   </button>
 
