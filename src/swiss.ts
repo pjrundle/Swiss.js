@@ -7,20 +7,28 @@
   //
   type TActionKind = "toggle" | "add" | "remove" | "run" | "event";
 
-  interface TClassAction {
+  interface TBaseClassAttrAction {
     type: "toggle" | "add" | "remove";
     selector: string;
+  }
+
+  interface TClassAction extends TBaseClassAttrAction {
     classNames: string[];
+    attrs?: undefined;
   }
 
   interface TAttrMap {
     [key: string]: string | null; // null = presence-toggle (boolean attribute)
   }
 
-  interface TAttrAction {
-    type: "toggle" | "add" | "remove";
-    selector: string;
+  interface TAttrAction extends TBaseClassAttrAction {
     attrs: TAttrMap; // e.g. { "data-open": null, "data-state": "active|inactive" }
+    classNames?: undefined;
+  }
+
+  interface TComboAction extends TBaseClassAttrAction {
+    classNames: string[];
+    attrs: TAttrMap;
   }
 
   interface TRunAction {
@@ -33,7 +41,12 @@
     name: string;
   }
 
-  type TParsedAction = TClassAction | TAttrAction | TRunAction | TEventAction;
+  type TParsedAction =
+    | TClassAction
+    | TAttrAction
+    | TComboAction
+    | TRunAction
+    | TEventAction;
 
   interface TInitialClassState {
     el: Element;
@@ -145,7 +158,7 @@
 
         //
         // attribute/class actions
-        // (type)[selector](payload)
+        // type[selector](payload)
         //
         const match = part.match(/^(\w+)\[(.+?)\]\((.+?)\)$/);
         if (!match) {
@@ -167,8 +180,7 @@
         const classNames: string[] = [];
         let attrs: TAttrMap = {};
 
-        // Payload can contain class tokens and/or one {attr block}
-        // We detect attribute blocks:
+        // Payload can contain class tokens and/or one or more {attr blocks}
         const tokens = splitOutside(payload, [" "]);
 
         tokens.forEach((token) => {
@@ -180,23 +192,37 @@
           }
         });
 
-        const isAttrAction = Object.keys(attrs).length > 0;
+        const hasClasses = classNames.length > 0;
+        const hasAttrs = Object.keys(attrs).length > 0;
 
-        if (isAttrAction) {
+        // MIXED ACTION → classes + attrs
+        if (hasClasses && hasAttrs) {
+          const comboAction: TComboAction = {
+            type: type as TBaseClassAttrAction["type"],
+            selector,
+            classNames,
+            attrs,
+          };
+          return comboAction;
+        }
+
+        // ATTR-ONLY
+        if (hasAttrs) {
           const attrAction: TAttrAction = {
-            type: type as "toggle" | "add" | "remove",
+            type: type as TBaseClassAttrAction["type"],
             selector,
             attrs,
           };
           return attrAction;
-        } else {
-          const classAction: TClassAction = {
-            type: type as "toggle" | "add" | "remove",
-            selector,
-            classNames,
-          };
-          return classAction;
         }
+
+        // CLASS-ONLY
+        const classAction: TClassAction = {
+          type: type as TBaseClassAttrAction["type"],
+          selector,
+          classNames,
+        };
+        return classAction;
       })
       .filter((a): a is TParsedAction => Boolean(a));
   }
@@ -229,13 +255,15 @@
         action.type === "add" ||
         action.type === "remove"
       ) {
-        const isAttrAction = "attrs" in action;
         const targets = resolveTargets(el, action.selector);
 
+        const hasAttrs = "attrs" in action;
+        const hasClasses = "classNames" in action;
+
         targets.forEach((target) => {
-          if (isAttrAction) {
-            // Attribute initial state
-            for (const attr in action.attrs) {
+          if (hasAttrs) {
+            const attrs = (action as TAttrAction | TComboAction).attrs;
+            for (const attr in attrs) {
               const value = target.getAttribute(attr);
               out.push({
                 el: target,
@@ -243,9 +271,12 @@
                 value: value !== null ? value : null,
               });
             }
-          } else {
-            // Class initial state
-            action.classNames.forEach((cls) => {
+          }
+
+          if (hasClasses) {
+            const classNames = (action as TClassAction | TComboAction)
+              .classNames;
+            classNames.forEach((cls) => {
               out.push({
                 el: target,
                 className: cls,
@@ -283,38 +314,48 @@
   function runAction(el: Element, action: TParsedAction): void {
     switch (action.type) {
       //
-      // CLASSES
+      // CLASS / ATTR / COMBO
       //
       case "toggle":
       case "add":
       case "remove": {
-        //
-        // ATTRIBUTE ACTION?
-        //
-        if ("attrs" in action) {
-          const targets = resolveTargets(el, action.selector);
-          targets.forEach((t) => {
-            for (const attr in action.attrs) {
-              const raw = action.attrs[attr];
+        const hasAttrs = "attrs" in action;
+        const hasClasses = "classNames" in action;
+        const targets = resolveTargets(el, action.selector);
 
-              // Remove?
-              if (action.type === "remove") {
+        //
+        // COMBO: classes + attrs
+        //
+        if (hasAttrs && hasClasses) {
+          const a = action as TComboAction;
+
+          targets.forEach((t) => {
+            // Classes
+            a.classNames.forEach((cls) => {
+              if (a.type === "toggle") t.classList.toggle(cls);
+              else if (a.type === "add") t.classList.add(cls);
+              else t.classList.remove(cls);
+            });
+
+            // Attributes
+            for (const attr in a.attrs) {
+              const raw = a.attrs[attr];
+
+              if (a.type === "remove") {
                 t.removeAttribute(attr);
                 continue;
               }
 
-              // Toggle?
-              if (action.type === "toggle") {
+              if (a.type === "toggle") {
                 // VALUE TOGGLE (e.g. active|inactive)
                 if (raw && raw.includes("|")) {
                   const [left, right] = raw.split("|");
                   const cur = t.getAttribute(attr);
-                  if (cur === left) t.setAttribute(attr, right);
-                  else t.setAttribute(attr, left);
+                  t.setAttribute(attr, cur === left ? right : left);
                   continue;
                 }
 
-                // PRESENCE TOGGLE
+                // PRESENCE TOGGLE (boolean attr)
                 if (raw === null) {
                   if (t.hasAttribute(attr)) t.removeAttribute(attr);
                   else t.setAttribute(attr, "");
@@ -327,8 +368,8 @@
                 continue;
               }
 
-              // Add (always sets)
-              if (action.type === "add") {
+              // ADD
+              if (a.type === "add") {
                 if (raw === null) t.setAttribute(attr, "");
                 else t.setAttribute(attr, raw);
               }
@@ -339,13 +380,60 @@
         }
 
         //
-        // CLASS ACTION
+        // ATTR-ONLY
         //
-        const targets = resolveTargets(el, action.selector);
+        if (hasAttrs) {
+          const a = action as TAttrAction;
+          targets.forEach((t) => {
+            for (const attr in a.attrs) {
+              const raw = a.attrs[attr];
+
+              if (a.type === "remove") {
+                t.removeAttribute(attr);
+                continue;
+              }
+
+              if (a.type === "toggle") {
+                // VALUE TOGGLE (e.g. active|inactive)
+                if (raw && raw.includes("|")) {
+                  const [left, right] = raw.split("|");
+                  const cur = t.getAttribute(attr);
+                  t.setAttribute(attr, cur === left ? right : left);
+                  continue;
+                }
+
+                // PRESENCE TOGGLE
+                if (raw === null) {
+                  if (t.hasAttribute(attr)) t.removeAttribute(attr);
+                  else t.setAttribute(attr, "");
+                  continue;
+                }
+
+                // Toggle with single value
+                if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
+                else t.setAttribute(attr, raw);
+                continue;
+              }
+
+              // ADD
+              if (a.type === "add") {
+                if (raw === null) t.setAttribute(attr, "");
+                else t.setAttribute(attr, raw);
+              }
+            }
+          });
+
+          return;
+        }
+
+        //
+        // CLASS-ONLY
+        //
+        const c = action as TClassAction;
         targets.forEach((t) => {
-          action.classNames.forEach((cls) => {
-            if (action.type === "toggle") t.classList.toggle(cls);
-            else if (action.type === "add") t.classList.add(cls);
+          c.classNames.forEach((cls) => {
+            if (c.type === "toggle") t.classList.toggle(cls);
+            else if (c.type === "add") t.classList.add(cls);
             else t.classList.remove(cls);
           });
         });
@@ -408,7 +496,7 @@
       actions.forEach((a) => runAction(htmlEl, a));
     }
 
-    function outsideListener(e: MouseEvent | TouchEvent) {
+    function outsideListener(e: MouseEvent | TouchEvent): void {
       if (!conditionActive()) return;
 
       const target = e.target as Element | null;
@@ -423,7 +511,7 @@
       handler(e);
     }
 
-    function enable() {
+    function enable(): void {
       if (active) return;
       active = true;
 
@@ -447,7 +535,7 @@
       }
     }
 
-    function disable() {
+    function disable(): void {
       if (!active) return;
       active = false;
 
@@ -465,18 +553,15 @@
       }
     }
 
-    function evaluate() {
+    function evaluate(): void {
       if (!whenMedia) {
         enable();
         return;
       }
 
       const match = window.matchMedia(whenMedia).matches;
-      if (match) {
-        enable();
-      } else {
-        disable();
-      }
+      if (match) enable();
+      else disable();
     }
 
     if (hasActions || stopProp) {
@@ -490,7 +575,7 @@
   //
   // INIT ALL
   //
-  function initAll() {
+  function initAll(): void {
     document
       .querySelectorAll(
         "[data-swiss], [data-swiss-stop-propagation], [data-swiss-on='clickOutside']",
