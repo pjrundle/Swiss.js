@@ -9,13 +9,13 @@
 
   type TBaseClassOrAttrActionType = "toggle" | "add" | "remove";
 
-  interface TBaseClassAttrAction {
+  interface TBaseClassOrAttrAction {
     type: TBaseClassOrAttrActionType;
     selector: string;
     options?: TActionOptions;
   }
 
-  interface TClassAction extends TBaseClassAttrAction {
+  interface TClassAction extends TBaseClassOrAttrAction {
     classNames: string[];
     attrs?: undefined;
   }
@@ -24,12 +24,12 @@
     [key: string]: string | null;
   }
 
-  interface TAttrAction extends TBaseClassAttrAction {
+  interface TAttrAction extends TBaseClassOrAttrAction {
     attrs: TAttrMap;
     classNames?: undefined;
   }
 
-  interface TComboAction extends TBaseClassAttrAction {
+  interface TComboAction extends TBaseClassOrAttrAction {
     classNames: string[];
     attrs: TAttrMap;
   }
