@@ -83,11 +83,11 @@
     return ["toggle", "add", "remove"].includes(actionType);
   }
 
+  /**
+   * Find matching closing parenthesis, respecting quotes
+   * Returns index of closing paren, or -1 if unbalanced
+   */
   function findClosingParen(str: string, startIndex: number): number {
-    /**
-     * Find matching closing parenthesis, respecting quotes
-     * Returns index of closing paren, or -1 if unbalanced
-     */
     let depth = 1;
     let inQuotes = false;
     let quote: string | null = null;
@@ -127,10 +127,10 @@
   |--------------------------------------------------------------------------
   */
 
+  /**
+   * Split a string on delimiters, ignoring content inside () and quotes
+   */
   function getParts(str: string, delims: string[]) {
-    /**
-     * Split a string on delimiters, ignoring content inside () and quotes
-     */
     const out: string[] = [];
     let curr = "";
     let depth = 0;
@@ -173,6 +173,9 @@
     return out;
   }
 
+  /**
+   * Parse an attribute block
+   */
   function parseAttrBlock(block: string) {
     const contents = block.slice(1, -1).trim();
     const out: TAttrMap = {};
@@ -191,6 +194,9 @@
     return out;
   }
 
+  /**
+   * Parse an options block
+   */
   function parseOptionsBlock(s: string) {
     const contents = s.slice(1, -1).trim();
     const opts: TActionOptions = {};
@@ -219,11 +225,10 @@
     return opts;
   }
 
+  /**
+   * Parse a run block
+   */
   function parseRunBlock(part: string): TRunAction | null {
-    /**
-     * Parse run(...) with balanced parentheses, optional (options)
-     */
-
     if (!part.startsWith("run(")) return null;
 
     const start = "run(".length;
@@ -250,11 +255,10 @@
     return { type: "run", js, options };
   }
 
+  /**
+   * Parse event block
+   */
   function parseEventBlock(part: string): TEventAction | null {
-    /**
-     * Parse event(...) with simple tokenised payload, optional (options)
-     */
-
     if (!part.startsWith("event(")) return null;
     if (!part.endsWith(")") && !part.includes(")(")) {
       console.warn("Swiss: invalid event() syntax:", part);
@@ -290,10 +294,10 @@
     return { type: "event", eventNames, options };
   }
 
+  /**
+   * Parse the data-swiss attribute into a list of actions
+   */
   function parseDataSwiss(raw: string): TParsedAction[] {
-    /**
-     * Parse the data-swiss attribute into a list of actions
-     */
     if (!raw) return [];
 
     return getParts(raw, [" ", ";"])
@@ -376,10 +380,10 @@
   |--------------------------------------------------------------------------
   */
 
+  /**
+   * Resolve a selector to a list of elements
+   */
   function resolveTargets(el: Element, sel: string): Element[] {
-    /**
-     * Resolve a selector to a list of elements
-     */
     if (sel === "this") return [el];
     try {
       return Array.from(document.querySelectorAll(sel));
@@ -395,13 +399,13 @@
   |--------------------------------------------------------------------------
   */
 
+  /**
+   * Get the initial state of the element
+   */
   function getInitialState(
     el: Element,
     actions: TParsedAction[],
   ): TInitialState {
-    /**
-     * Get the initial state of the element
-     */
     const out: TInitialState = [];
 
     actions.forEach((a) => {
@@ -436,10 +440,10 @@
     return out;
   }
 
+  /**
+   * Restore the state of the element
+   */
   function restoreState(initialState: TInitialState) {
-    /**
-     * Restore the state of the element
-     */
     initialState.forEach((item) => {
       if ("className" in item) {
         if (item.hasClass) item.el.classList.add(item.className);
@@ -793,10 +797,10 @@
   |--------------------------------------------------------------------------
   */
 
+  /**
+   * Init all elements with data-swiss attributes
+   */
   function initAll() {
-    /**
-     * Init all elements with data-swiss attributes
-     */
     document
       .querySelectorAll(
         "[data-swiss], [data-swiss-stop-propagation], [data-swiss-on='clickOutside']",
