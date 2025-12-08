@@ -1,11 +1,10 @@
-//
-// Swiss.ts v3 — classes, attrs, run(), event(), delay, debounce, enter/exit,
-// reset-on-resize + reset-when-disabled
-// -----------------------------------------------------------------------------
 (function () {
-  //
-  // TYPES
-  //
+  /*
+  |--------------------------------------------------------------------------
+  | Types
+  |--------------------------------------------------------------------------
+  */
+
   type TBaseClassOrAttrActionType = "toggle" | "add" | "remove";
 
   type TActionOptions = {
@@ -72,17 +71,66 @@
     attrs: TAttrMap;
   }
 
-  //
-  // HELPERS
-  //
+  /*
+  |--------------------------------------------------------------------------
+  | Utils
+  |--------------------------------------------------------------------------
+  */
+
   function isClassOrAttrActionType(
     actionType: string,
   ): actionType is TBaseClassOrAttrActionType {
     return ["toggle", "add", "remove"].includes(actionType);
   }
 
-  // Split a string on delimiters, ignoring content inside () and quotes
+  function findClosingParen(str: string, startIndex: number): number {
+    /**
+     * Find matching closing parenthesis, respecting quotes
+     * Returns index of closing paren, or -1 if unbalanced
+     */
+    let depth = 1;
+    let inQuotes = false;
+    let quote: string | null = null;
+
+    for (let i = startIndex; i < str.length; i++) {
+      const c = str[i];
+      const isQ = c === '"' || c === "'";
+
+      if (isQ && !inQuotes) {
+        inQuotes = true;
+        quote = c;
+        continue;
+      }
+      if (isQ && inQuotes && c === quote) {
+        inQuotes = false;
+        quote = null;
+        continue;
+      }
+
+      if (!inQuotes) {
+        if (c === "(") depth++;
+        else if (c === ")") {
+          depth--;
+          if (depth === 0) {
+            return i;
+          }
+        }
+      }
+    }
+
+    return -1; // unbalanced
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Parsers
+  |--------------------------------------------------------------------------
+  */
+
   function getParts(str: string, delims: string[]) {
+    /**
+     * Split a string on delimiters, ignoring content inside () and quotes
+     */
     const out: string[] = [];
     let curr = "";
     let depth = 0;
@@ -171,44 +219,11 @@
     return opts;
   }
 
-  // Find matching closing parenthesis, respecting quotes
-  // Returns index of closing paren, or -1 if unbalanced
-  function findClosingParen(str: string, startIndex: number): number {
-    let depth = 1;
-    let inQuotes = false;
-    let quote: string | null = null;
-
-    for (let i = startIndex; i < str.length; i++) {
-      const c = str[i];
-      const isQ = c === '"' || c === "'";
-
-      if (isQ && !inQuotes) {
-        inQuotes = true;
-        quote = c;
-        continue;
-      }
-      if (isQ && inQuotes && c === quote) {
-        inQuotes = false;
-        quote = null;
-        continue;
-      }
-
-      if (!inQuotes) {
-        if (c === "(") depth++;
-        else if (c === ")") {
-          depth--;
-          if (depth === 0) {
-            return i;
-          }
-        }
-      }
-    }
-
-    return -1; // unbalanced
-  }
-
-  // Parse run(...) with balanced parentheses, optional (options)
   function parseRunBlock(part: string): TRunAction | null {
+    /**
+     * Parse run(...) with balanced parentheses, optional (options)
+     */
+
     if (!part.startsWith("run(")) return null;
 
     const start = "run(".length;
@@ -235,8 +250,11 @@
     return { type: "run", js, options };
   }
 
-  // Parse event(...) with simple tokenised payload, optional (options)
   function parseEventBlock(part: string): TEventAction | null {
+    /**
+     * Parse event(...) with simple tokenised payload, optional (options)
+     */
+
     if (!part.startsWith("event(")) return null;
     if (!part.endsWith(")") && !part.includes(")(")) {
       console.warn("Swiss: invalid event() syntax:", part);
@@ -272,10 +290,10 @@
     return { type: "event", eventNames, options };
   }
 
-  //
-  // PARSE data-swiss
-  //
   function parseDataSwiss(raw: string): TParsedAction[] {
+    /**
+     * Parse the data-swiss attribute into a list of actions
+     */
     if (!raw) return [];
 
     return getParts(raw, [" ", ";"])
@@ -352,10 +370,16 @@
       .filter((x): x is TParsedAction => Boolean(x));
   }
 
-  //
-  // selectors
-  //
+  /*
+  |--------------------------------------------------------------------------
+  | Selectors
+  |--------------------------------------------------------------------------
+  */
+
   function resolveTargets(el: Element, sel: string): Element[] {
+    /**
+     * Resolve a selector to a list of elements
+     */
     if (sel === "this") return [el];
     try {
       return Array.from(document.querySelectorAll(sel));
@@ -365,13 +389,19 @@
     }
   }
 
-  //
-  // initial state tracking
-  //
+  /*
+  |--------------------------------------------------------------------------
+  | State Tracking
+  |--------------------------------------------------------------------------
+  */
+
   function getInitialState(
     el: Element,
     actions: TParsedAction[],
   ): TInitialState {
+    /**
+     * Get the initial state of the element
+     */
     const out: TInitialState = [];
 
     actions.forEach((a) => {
@@ -407,6 +437,9 @@
   }
 
   function restoreState(initialState: TInitialState) {
+    /**
+     * Restore the state of the element
+     */
     initialState.forEach((item) => {
       if ("className" in item) {
         if (item.hasClass) item.el.classList.add(item.className);
@@ -418,9 +451,12 @@
     });
   }
 
-  //
-  // ACTION EXECUTION
-  //
+  /*
+  |--------------------------------------------------------------------------
+  | Actions
+  |--------------------------------------------------------------------------
+  */
+
   function applyClassAction(
     target: Element,
     actionType: TBaseClassOrAttrActionType,
@@ -521,9 +557,12 @@
     }
   }
 
-  //
-  // ENTER / EXIT OBSERVER STATE
-  //
+  /*
+  |--------------------------------------------------------------------------
+  | Enter/Exit Observer
+  |--------------------------------------------------------------------------
+  */
+
   const enterExitMap = new WeakMap<
     Element,
     { entered: boolean; timers: Map<TParsedAction, number> }
@@ -600,9 +639,12 @@
     }
   }
 
-  //
-  // INIT ELEMENT
-  //
+  /*
+  |--------------------------------------------------------------------------
+  | Init Element
+  |--------------------------------------------------------------------------
+  */
+
   function initElement(el: Element) {
     const elHtml = el as HTMLElement;
 
@@ -745,10 +787,16 @@
     }
   }
 
-  //
-  // INIT ALL
-  //
+  /*
+  |--------------------------------------------------------------------------
+  | Init All
+  |--------------------------------------------------------------------------
+  */
+
   function initAll() {
+    /**
+     * Init all elements with data-swiss attributes
+     */
     document
       .querySelectorAll(
         "[data-swiss], [data-swiss-stop-propagation], [data-swiss-on='clickOutside']",
