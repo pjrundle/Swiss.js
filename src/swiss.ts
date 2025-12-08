@@ -8,11 +8,48 @@
   //
   type TBaseClassOrAttrActionType = "toggle" | "add" | "remove";
 
-  interface TActionOptions {
+  type TActionOptions = {
     delay?: number;
     debounce?: number;
     [key: string]: unknown;
-  }
+  };
+
+  type TAttrMap = {
+    [key: string]: string | null;
+  };
+
+  type TRunAction = {
+    type: "run";
+    js: string;
+    options?: TActionOptions;
+  };
+
+  type TEventAction = {
+    type: "event";
+    eventNames: string[]; // supports event(foo bar baz)
+    options?: TActionOptions;
+  };
+
+  type TParsedAction =
+    | TClassAction
+    | TAttrAction
+    | TComboAction
+    | TRunAction
+    | TEventAction;
+
+  type TInitialClassState = {
+    el: Element;
+    className: string;
+    hasClass: boolean;
+  };
+
+  type TInitialAttrState = {
+    el: Element;
+    attr: string;
+    value: string | null;
+  };
+
+  type TInitialState = (TInitialClassState | TInitialAttrState)[];
 
   interface TBaseClassOrAttrAction {
     type: TBaseClassOrAttrActionType;
@@ -25,10 +62,6 @@
     attrs?: undefined;
   }
 
-  interface TAttrMap {
-    [key: string]: string | null;
-  }
-
   interface TAttrAction extends TBaseClassOrAttrAction {
     attrs: TAttrMap;
     classNames?: undefined;
@@ -38,39 +71,6 @@
     classNames: string[];
     attrs: TAttrMap;
   }
-
-  interface TRunAction {
-    type: "run";
-    js: string;
-    options?: TActionOptions;
-  }
-
-  interface TEventAction {
-    type: "event";
-    eventNames: string[]; // supports event(foo bar baz)
-    options?: TActionOptions;
-  }
-
-  type TParsedAction =
-    | TClassAction
-    | TAttrAction
-    | TComboAction
-    | TRunAction
-    | TEventAction;
-
-  interface TInitialClassState {
-    el: Element;
-    className: string;
-    hasClass: boolean;
-  }
-
-  interface TInitialAttrState {
-    el: Element;
-    attr: string;
-    value: string | null;
-  }
-
-  type TInitialState = (TInitialClassState | TInitialAttrState)[];
 
   //
   // HELPERS
