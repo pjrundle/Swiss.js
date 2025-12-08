@@ -73,6 +73,15 @@
 
   /*
   |--------------------------------------------------------------------------
+  | Constants
+  |--------------------------------------------------------------------------
+  */
+
+  const DEFAULT_DEBOUNCE_MS = 100;
+  const DEFAULT_INTERSECTION_THRESHOLD = 0;
+
+  /*
+  |--------------------------------------------------------------------------
   | Utils
   |--------------------------------------------------------------------------
   */
@@ -81,6 +90,18 @@
     actionType: string,
   ): actionType is TBaseClassOrAttrActionType {
     return ["toggle", "add", "remove"].includes(actionType);
+  }
+
+  function hasClassNames(
+    action: TParsedAction,
+  ): action is TClassAction | TComboAction {
+    return "classNames" in action;
+  }
+
+  function hasAttrs(
+    action: TParsedAction,
+  ): action is TAttrAction | TComboAction {
+    return "attrs" in action;
   }
 
   /**
@@ -414,19 +435,15 @@
       const els = resolveTargets(el, a.selector);
 
       els.forEach((el) => {
-        if ("attrs" in a) {
-          const attrs = (a as TAttrAction | TComboAction).attrs;
-
-          for (const attr in attrs) {
+        if (hasAttrs(a)) {
+          for (const attr in a.attrs) {
             const v = el.getAttribute(attr);
             out.push({ el: el, attr, value: v });
           }
         }
 
-        if ("classNames" in a) {
-          const cls = (a as TClassAction | TComboAction).classNames;
-
-          for (const c of cls) {
+        if (hasClassNames(a)) {
+          for (const c of a.classNames) {
             out.push({
               el: el,
               className: c,
@@ -520,14 +537,11 @@
         const els = resolveTargets(el, action.selector);
 
         els.forEach((el) => {
-          if ("classNames" in action) {
-            const classNames = (action as TClassAction | TComboAction)
-              .classNames;
-            applyClassAction(el, action.type, classNames);
+          if (hasClassNames(action)) {
+            applyClassAction(el, action.type, action.classNames);
           }
-          if ("attrs" in action) {
-            const attrs = (action as TAttrAction | TComboAction).attrs;
-            applyAttrAction(el, action.type, attrs);
+          if (hasAttrs(action)) {
+            applyAttrAction(el, action.type, action.attrs);
           }
         });
         return;
@@ -584,7 +598,9 @@
       const delayMs =
         typeof a.options?.delay === "number" ? a.options.delay : 0;
       const debounceMs =
-        typeof a.options?.debounce === "number" ? a.options.debounce : 100;
+        typeof a.options?.debounce === "number"
+          ? a.options.debounce
+          : DEFAULT_DEBOUNCE_MS;
 
       const executeAction = () => {
         if (delayMs > 0) {
@@ -649,20 +665,13 @@
   |--------------------------------------------------------------------------
   */
 
-  function initElement(el: Element) {
-    const elHtml = el as HTMLElement;
-
+  /**
+   * Parse all data-swiss attributes from an element
+   */
+  function parseElementAttributes(elHtml: HTMLElement) {
     const raw = elHtml.getAttribute("data-swiss") || "";
     const actions = parseDataSwiss(raw);
     const hasActions = actions.length > 0;
-
-    const stopProp = elHtml.hasAttribute("data-swiss-stop-propagation");
-    const ifElSelector = elHtml.getAttribute("data-swiss-if");
-    const whenMedia = elHtml.getAttribute("data-swiss-when");
-    const resetOnResize = elHtml.hasAttribute("data-swiss-reset-on-resize");
-    const resetWhenDisabled = elHtml.hasAttribute(
-      "data-swiss-reset-when-disabled",
-    );
 
     const events =
       hasActions && elHtml.hasAttribute("data-swiss-on")
@@ -670,6 +679,33 @@
         : hasActions
           ? ["click"]
           : [];
+
+    return {
+      raw,
+      actions,
+      hasActions,
+      events,
+      stopProp: elHtml.hasAttribute("data-swiss-stop-propagation"),
+      ifElSelector: elHtml.getAttribute("data-swiss-if"),
+      whenMedia: elHtml.getAttribute("data-swiss-when"),
+      resetOnResize: elHtml.hasAttribute("data-swiss-reset-on-resize"),
+      resetWhenDisabled: elHtml.hasAttribute("data-swiss-reset-when-disabled"),
+    };
+  }
+
+  function initElement(el: Element) {
+    const elHtml = el as HTMLElement;
+
+    const {
+      actions,
+      hasActions,
+      events,
+      stopProp,
+      ifElSelector,
+      whenMedia,
+      resetOnResize,
+      resetWhenDisabled,
+    } = parseElementAttributes(elHtml);
 
     let initialState: TInitialState | null = null;
     let active = false;
@@ -752,8 +788,7 @@
         return;
       }
 
-      const match = window.matchMedia(whenMedia).matches;
-      if (match) enable();
+      if (window.matchMedia(whenMedia).matches) enable();
       else disable();
     }
 
@@ -767,7 +802,7 @@
             }
           });
         },
-        { threshold: 0 },
+        { threshold: DEFAULT_INTERSECTION_THRESHOLD },
       );
 
       observer.observe(elHtml);
