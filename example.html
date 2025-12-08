@@ -58,7 +58,14 @@
 
       <!-- HEADER -->
       <header
-        class="t:center mb:4x flex flex-direction:column flex-direction:row@md justify-content:between align-items:center gap:6x gap:10x@md">
+        class="t:center mb:4x flex flex-direction:column flex-direction:row-reverse@md justify-content:between align-items:center gap:6x gap:10x@md">
+
+        <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,70px)"
+          style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
+          <span class="cursor:pointer user-select:none"
+            data-swiss="toggle[this](color:accent!) toggle[#js](color:accent!)">Swiss</span>
+          <span id="js" class="color:accent!">.js</span>
+        </h1>
 
         <div class="flex:1 t:center t:left@md">
           <p class="inline-block opacity:0.85 max-w:32em f:14px f:16px@lg line-height:1.4 t:center t:left@md">
@@ -67,13 +74,6 @@
             repetitive code in non-react/vue etc projects.
           </p>
         </div>
-
-        <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,70px)"
-          style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
-          <span class="cursor:pointer user-select:none"
-            data-swiss="toggle[this](color:accent!) toggle[#js](color:accent!)">Swiss</span>
-          <span id="js" class="color:accent!">.js</span>
-        </h1>
       </header>
 
       <div class="mt:16x r:40px p:10x bg:rgba(255,255,255,0.05)">
@@ -83,7 +83,8 @@
           <div>
             <p class="f:12px ml:1x mb:2x">Toggle class on self</p>
             <div class="box cursor:pointer bg:accent!"
-              data-swiss="toggle[this](bg:accent! color:accent border-color:rgba(255,255,255,0.8)!)">
+              data-swiss="toggle[this](bg:accent! border-color:rgba(255,255,255,0.8)!)"
+              data-swiss-reset-on-resize="true">
               <div>Click</div>
             </div>
           </div>
@@ -93,7 +94,7 @@
             <p class="f:12px ml:1x mb:2x">Toggle class on this & another elements</p>
             <div class="box test-selector-class w:full">
               <div class="box mr:4x cursor:pointer"
-                data-swiss="toggle[#target-1](bg:accent!) toggle[this](color:accent) toggle[.test-selector-class](b:1px|solid|accent)">
+                data-swiss="toggle[#target-1](bg:accent!) toggle[this](border-color:rgba(255,255,255,0.8)!) toggle[.test-selector-class](b:1px|solid|accent)">
                 <div>Click</div>
               </div>
               <div id="target-1" class="box bg:accent!">
@@ -108,7 +109,7 @@
           <!-- mouseenter example -->
           <div class="flex:1">
             <p class="f:12px ml:1x mb:2x">Hover to toggle class</p>
-            <div class="box cursor:pointer w:full" data-swiss="toggle[this](color:accent!)"
+            <div class="box cursor:pointer w:full" data-swiss="toggle[this](bg:accent)"
               data-swiss-on="mouseenter mouseleave">
               Hover
             </div>
@@ -157,7 +158,7 @@
             <!-- TARGET ELEMENT -->
             <div id="target" class="box w:full align-items:center justify-content:center" data-state="closed" data-flag
               style="transition:all 0.3s ease; margin-bottom:20px;">
-              <div class="t:center">
+              <div class="t:center bg:surface-a p:1em r:5px">
                 Target Element
                 <br>
                 <p class="f:10px opacity:0.5 mt:2x">(watch attributes change in DevTools)</p>
