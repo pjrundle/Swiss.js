@@ -286,22 +286,22 @@
     if (!raw) return [];
 
     return splitOutside(raw, [" ", ";"])
-      .map<TParsedAction | null>((part) => {
+      .map<TParsedAction | null>((block) => {
         // 1) run(...)
-        if (part.startsWith("run(")) {
-          return parseRunBlock(part);
+        if (block.startsWith("run(")) {
+          return parseRunBlock(block);
         }
 
         // 2) event(...)
-        if (part.startsWith("event(")) {
-          return parseEventBlock(part);
+        if (block.startsWith("event(")) {
+          return parseEventBlock(block);
         }
 
         // 3) class/attr actions:
         //    type[selector](payload)(options?)
-        const match = part.match(/^(\w+)\[(.+?)\]\((.+?)\)(?:\((.+?)\))?$/);
+        const match = block.match(/^(\w+)\[(.+?)\]\((.+?)\)(?:\((.+?)\))?$/);
         if (!match) {
-          console.warn("Swiss: invalid action format:", part);
+          console.warn("Swiss: invalid action format:", block);
           return null;
         }
 
