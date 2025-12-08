@@ -172,7 +172,7 @@
   }
 
   // Parse run(...) with balanced parentheses, optional (options)
-  function parseRunPart(part: string): TRunAction | null {
+  function parseRunBlock(part: string): TRunAction | null {
     if (!part.startsWith("run(")) return null;
 
     let i = "run(".length;
@@ -230,7 +230,7 @@
   }
 
   // Parse event(...) with simple tokenised payload, optional (options)
-  function parseEventPart(part: string): TEventAction | null {
+  function parseEventBlock(part: string): TEventAction | null {
     if (!part.startsWith("event(")) return null;
     if (!part.endsWith(")") && !part.includes(")(")) {
       console.warn("Swiss: invalid event() syntax:", part);
@@ -282,19 +282,19 @@
   //
   // PARSE data-swiss
   //
-  function parseActions(raw: string): TParsedAction[] {
+  function parseDataSwiss(raw: string): TParsedAction[] {
     if (!raw) return [];
 
     return splitOutside(raw, [" ", ";"])
       .map<TParsedAction | null>((part) => {
         // 1) run(...)
         if (part.startsWith("run(")) {
-          return parseRunPart(part);
+          return parseRunBlock(part);
         }
 
         // 2) event(...)
         if (part.startsWith("event(")) {
-          return parseEventPart(part);
+          return parseEventBlock(part);
         }
 
         // 3) class/attr actions:
@@ -332,14 +332,13 @@
         const hasA = Object.keys(attrs).length > 0;
 
         if (hasC && hasA) {
-          const a: TComboAction = {
+          return {
             type: rawType,
             selector,
             classNames,
             attrs,
             options,
-          };
-          return a;
+          } as TComboAction;
         }
         if (hasA) {
           return {
@@ -385,27 +384,27 @@
       if (!("selector" in a)) return; // run/event have no selector
 
       const els = resolveTargets(el, a.selector);
-      const hasC = "classNames" in a;
-      const hasA = "attrs" in a;
 
-      els.forEach((t) => {
-        if (hasA) {
+      els.forEach((el) => {
+        if ("attrs" in a) {
           const attrs = (a as TAttrAction | TComboAction).attrs;
+
           for (const attr in attrs) {
-            const v = t.getAttribute(attr);
-            out.push({ el: t, attr, value: v !== null ? v : null });
+            const v = el.getAttribute(attr);
+            out.push({ el: el, attr, value: v !== null ? v : null });
           }
         }
 
-        if (hasC) {
+        if ("classNames" in a) {
           const cls = (a as TClassAction | TComboAction).classNames;
-          cls.forEach((c) =>
+
+          for (const c of cls) {
             out.push({
-              el: t,
+              el: el,
               className: c,
-              hasClass: t.classList.contains(c),
-            }),
-          );
+              hasClass: el.classList.contains(c),
+            });
+          }
         }
       });
     });
@@ -617,7 +616,7 @@
     const elHtml = el as HTMLElement;
 
     const raw = elHtml.getAttribute("data-swiss") || "";
-    const actions = parseActions(raw);
+    const actions = parseDataSwiss(raw);
     const hasActions = actions.length > 0;
 
     const stopProp = elHtml.hasAttribute("data-swiss-stop-propagation");
