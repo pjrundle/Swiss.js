@@ -73,7 +73,7 @@
   type TInitialState = (TInitialClassState | TInitialAttrState)[];
 
   //
-  // Utility: check if a string is a valid class action type
+  // Utility: check if a string is a valid class or attr action type
   //
   function isClassOrAttrActionType(
     type: string,
