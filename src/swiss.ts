@@ -1,13 +1,17 @@
 //
-// Swiss.ts v3 — with attribute + options block (delay) support
-// --------------------------------------------------------------
+// Swiss.ts v3 — enter/exit, debounce, delay, attrs, reset-on-resize / reset-when-disabled
+// ---------------------------------------------------------------------------------------
 (function () {
   //
   // TYPES
   //
-  type TActionType = "toggle" | "add" | "remove" | "run" | "event";
-
   type TBaseClassOrAttrActionType = "toggle" | "add" | "remove";
+
+  interface TActionOptions {
+    delay?: number;
+    debounce?: number;
+    [key: string]: unknown;
+  }
 
   interface TBaseClassOrAttrAction {
     type: TBaseClassOrAttrActionType;
@@ -46,11 +50,6 @@
     options?: TActionOptions;
   }
 
-  interface TActionOptions {
-    delay?: number;
-    [key: string]: unknown;
-  }
-
   type TParsedAction =
     | TClassAction
     | TAttrAction
@@ -73,38 +72,31 @@
   type TInitialState = (TInitialClassState | TInitialAttrState)[];
 
   //
-  // Utility: check if a string is a valid class or attr action type
+  // HELPERS
   //
-  function isClassOrAttrActionType(
-    type: string,
-  ): type is TBaseClassOrAttrActionType {
-    return ["toggle", "add", "remove"].includes(type);
+  function isClassOrAttrActionType(t: string): t is TBaseClassOrAttrActionType {
+    return t === "toggle" || t === "add" || t === "remove";
   }
 
-  //
-  // Utility: split ignoring quotes + parentheses
-  //
   function splitOutside(str: string, delims: string[]): string[] {
     const out: string[] = [];
     let curr = "";
+    let depth = 0;
     let inQuotes = false;
     let quote: string | null = null;
-    let depth = 0;
-
     const D = new Set(delims);
 
     for (let i = 0; i < str.length; i++) {
       const c = str[i];
-      const isQuote = c === '"' || c === "'";
+      const isQ = c === '"' || c === "'";
 
-      if (isQuote && !inQuotes) {
+      if (isQ && !inQuotes) {
         inQuotes = true;
         quote = c;
         curr += c;
         continue;
       }
-
-      if (isQuote && inQuotes && quote === c) {
+      if (isQ && inQuotes && c === quote) {
         inQuotes = false;
         quote = null;
         curr += c;
@@ -129,9 +121,6 @@
     return out;
   }
 
-  //
-  // Parse attribute block: {foo:true aria-expanded:false}
-  //
   function parseAttrBlock(block: string): TAttrMap {
     const inside = block.slice(1, -1).trim();
     const out: TAttrMap = {};
@@ -150,13 +139,9 @@
     return out;
   }
 
-  //
-  // Parse options block: (delay:200 foo:bar)
-  //
-  function parseOptionsBlock(block: string): TActionOptions {
-    const inside = block.slice(1, -1).trim();
+  function parseOptionsBlock(s: string): TActionOptions {
+    const inside = s.slice(1, -1).trim();
     const opts: TActionOptions = {};
-
     if (!inside) return opts;
 
     const tokens = splitOutside(inside, [" "]);
@@ -165,12 +150,17 @@
       if (!k) return;
 
       if (k === "delay") {
-        const num = Number(v);
-        if (!Number.isNaN(num)) opts.delay = num;
+        const n = Number(v);
+        if (!Number.isNaN(n)) opts.delay = n;
         return;
       }
 
-      // store raw values for now
+      if (k === "debounce") {
+        const n = Number(v);
+        if (!Number.isNaN(n)) opts.debounce = n;
+        return;
+      }
+
       opts[k] = v ?? true;
     });
 
@@ -178,63 +168,52 @@
   }
 
   //
-  // Parse Swiss actions from `data-swiss`
+  // PARSE data-swiss
   //
-  function parseActions(str: string): TParsedAction[] {
-    if (!str) return [];
+  function parseActions(raw: string): TParsedAction[] {
+    if (!raw) return [];
 
-    const parts = splitOutside(str, [" ", ";"]);
-
-    return parts
+    return splitOutside(raw, [" ", ";"])
       .map<TParsedAction | null>((part) => {
         //
-        // 1) run:
+        // run:
         //
         const runMatch = part.match(/^run:(.+?)(\(.+?\))?$/);
         if (runMatch) {
           const js = runMatch[1];
-          const optsBlock = runMatch[2];
-          const options = optsBlock ? parseOptionsBlock(optsBlock) : undefined;
-          return { type: "run", js, options };
+          const opts = runMatch[2] ? parseOptionsBlock(runMatch[2]) : undefined;
+          return { type: "run", js, options: opts };
         }
 
         //
-        // 2) event:
+        // event:
         //
-        const eventMatch = part.match(/^event:(.+?)(\(.+?\))?$/);
-        if (eventMatch) {
-          const name = eventMatch[1];
-          const optsBlock = eventMatch[2];
-          const options = optsBlock ? parseOptionsBlock(optsBlock) : undefined;
-          return { type: "event", name, options };
+        const evMatch = part.match(/^event:(.+?)(\(.+?\))?$/);
+        if (evMatch) {
+          const name = evMatch[1];
+          const opts = evMatch[2] ? parseOptionsBlock(evMatch[2]) : undefined;
+          return { type: "event", name, options: opts };
         }
 
         //
-        // 3) class/attr actions:
-        //    type[selector](payload)(options?)
+        // class/attr
         //
-        const actionRegex = /^(\w+)\[(.+?)\]\((.+?)\)(?:\((.+?)\))?$/;
-        const match = part.match(actionRegex);
-
+        const match = part.match(/^(\w+)\[(.+?)\]\((.+?)\)(?:\((.+?)\))?$/);
         if (!match) {
-          console.warn("Swiss: invalid action format:", part);
+          console.warn("Swiss: invalid action:", part);
           return null;
         }
 
-        const [, rawType, selectorRaw, payloadRaw, optsRaw] = match;
-
-        const type = rawType as TActionType;
-        if (!["toggle", "add", "remove"].includes(type)) {
-          console.warn("Swiss: unsupported action type:", rawType);
+        const [, rawType, selRaw, payloadRaw, optsRaw] = match;
+        if (!isClassOrAttrActionType(rawType)) {
+          console.warn("Swiss: unsupported type:", rawType);
           return null;
         }
 
-        const selector = selectorRaw.trim();
-        const payload = payloadRaw.trim();
-
+        const selector = selRaw.trim();
+        const tokens = splitOutside(payloadRaw.trim(), [" "]);
         const classNames: string[] = [];
         let attrs: TAttrMap = {};
-        const tokens = splitOutside(payload, [" "]);
 
         tokens.forEach((t) => {
           if (t.startsWith("{") && t.endsWith("}")) {
@@ -246,12 +225,12 @@
 
         const options = optsRaw ? parseOptionsBlock(`(${optsRaw})`) : undefined;
 
-        const hasClasses = classNames.length > 0;
-        const hasAttrs = Object.keys(attrs).length > 0;
+        const hasC = classNames.length > 0;
+        const hasA = Object.keys(attrs).length > 0;
 
-        if (hasClasses && hasAttrs && isClassOrAttrActionType(type)) {
+        if (hasC && hasA) {
           const a: TComboAction = {
-            type,
+            type: rawType,
             selector,
             classNames,
             attrs,
@@ -259,41 +238,39 @@
           };
           return a;
         }
-        if (hasAttrs && isClassOrAttrActionType(type)) {
-          const a: TAttrAction = {
-            type,
+        if (hasA) {
+          return {
+            type: rawType,
             selector,
             attrs,
             options,
-          };
-          return a;
+          } as TAttrAction;
         }
-        const a: TClassAction = {
-          type: type as TBaseClassOrAttrActionType,
+        return {
+          type: rawType,
           selector,
           classNames,
           options,
-        };
-        return a;
+        } as TClassAction;
       })
       .filter((x): x is TParsedAction => Boolean(x));
   }
 
   //
-  // Resolve selector
+  // selectors
   //
-  function resolveTargets(el: Element, selector: string): Element[] {
-    if (selector === "this") return [el];
+  function resolveTargets(el: Element, sel: string): Element[] {
+    if (sel === "this") return [el];
     try {
-      return Array.from(document.querySelectorAll(selector));
+      return Array.from(document.querySelectorAll(sel));
     } catch {
-      console.warn("Swiss: invalid selector:", selector);
+      console.warn("Swiss: bad selector:", sel);
       return [];
     }
   }
 
   //
-  // Track initial state
+  // initial state tracking
   //
   function getInitialState(
     el: Element,
@@ -301,35 +278,31 @@
   ): TInitialState {
     const out: TInitialState = [];
 
-    actions.forEach((action) => {
-      if (!("selector" in action)) return;
+    actions.forEach((a) => {
+      if (!("selector" in a)) return;
+      const tgs = resolveTargets(el, a.selector);
 
-      const targets = resolveTargets(el, action.selector);
-      const hasAttrs = "attrs" in action;
-      const hasClasses = "classNames" in action;
+      const hasC = "classNames" in a;
+      const hasA = "attrs" in a;
 
-      targets.forEach((t) => {
-        if (hasAttrs) {
-          const attrs = (action as TAttrAction | TComboAction).attrs;
+      tgs.forEach((t) => {
+        if (hasA) {
+          const attrs = (a as TAttrAction | TComboAction).attrs;
           for (const attr in attrs) {
             const v = t.getAttribute(attr);
-            out.push({
-              el: t,
-              attr,
-              value: v !== null ? v : null,
-            });
+            out.push({ el: t, attr, value: v !== null ? v : null });
           }
         }
 
-        if (hasClasses) {
-          const cls = (action as TClassAction | TComboAction).classNames;
-          cls.forEach((className) => {
+        if (hasC) {
+          const cls = (a as TClassAction | TComboAction).classNames;
+          cls.forEach((c) =>
             out.push({
               el: t,
-              className,
-              hasClass: t.classList.contains(className),
-            });
-          });
+              className: c,
+              hasClass: t.classList.contains(c),
+            }),
+          );
         }
       });
     });
@@ -337,91 +310,58 @@
     return out;
   }
 
-  //
-  // Restore initial
-  //
   function restoreState(initial: TInitialState) {
-    initial.forEach((item) => {
-      if ("className" in item) {
-        if (item.hasClass) item.el.classList.add(item.className);
-        else item.el.classList.remove(item.className);
+    initial.forEach((i) => {
+      if ("className" in i) {
+        if (i.hasClass) i.el.classList.add(i.className);
+        else i.el.classList.remove(i.className);
       } else {
-        if (item.value === null) item.el.removeAttribute(item.attr);
-        else item.el.setAttribute(item.attr, item.value);
+        if (i.value === null) i.el.removeAttribute(i.attr);
+        else i.el.setAttribute(i.attr, i.value);
       }
     });
   }
 
   //
-  // Run one action with optional delay
+  // ACTION EXECUTION
   //
-  function runActionWithDelay(
-    el: Element,
-    action: TParsedAction,
-    runNow: (a: TParsedAction) => void,
-  ) {
-    const delay = action.options?.delay;
-    if (delay && delay > 0) {
-      setTimeout(() => runNow(action), delay);
-    } else {
-      runNow(action);
-    }
-  }
-
-  //
-  // Run action (immediate)
-  //
-  function runActionImmediate(el: Element, action: TParsedAction): void {
+  function runActionImmediate(el: Element, action: TParsedAction) {
     switch (action.type) {
       case "toggle":
       case "add":
       case "remove": {
-        const targets = resolveTargets(el, action.selector);
-        const hasAttrs = "attrs" in action;
-        const hasClasses = "classNames" in action;
+        const tgs = resolveTargets(el, action.selector);
+        const hasC = "classNames" in action;
+        const hasA = "attrs" in action;
 
-        //
-        // COMBO
-        //
-        if (hasAttrs && hasClasses) {
+        if (hasC && hasA) {
           const a = action as TComboAction;
-          targets.forEach((t) => {
-            // classes
+          tgs.forEach((t) => {
             a.classNames.forEach((cls) => {
               if (a.type === "toggle") t.classList.toggle(cls);
               else if (a.type === "add") t.classList.add(cls);
               else t.classList.remove(cls);
             });
 
-            // attrs
             for (const attr in a.attrs) {
               const raw = a.attrs[attr];
-
               if (a.type === "remove") {
                 t.removeAttribute(attr);
                 continue;
               }
-
               if (a.type === "toggle") {
                 if (raw && raw.includes("|")) {
                   const [l, r] = raw.split("|");
                   const cur = t.getAttribute(attr);
                   t.setAttribute(attr, cur === l ? r : l);
-                  continue;
-                }
-
-                if (raw === null) {
+                } else if (raw === null) {
                   if (t.hasAttribute(attr)) t.removeAttribute(attr);
                   else t.setAttribute(attr, "");
-                  continue;
+                } else {
+                  if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
+                  else t.setAttribute(attr, raw);
                 }
-
-                if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
-                else t.setAttribute(attr, raw);
-                continue;
-              }
-
-              if (a.type === "add") {
+              } else if (a.type === "add") {
                 if (raw === null) t.setAttribute(attr, "");
                 else t.setAttribute(attr, raw);
               }
@@ -430,40 +370,28 @@
           return;
         }
 
-        //
-        // ATTR ONLY
-        //
-        if (hasAttrs) {
+        if (hasA) {
           const a = action as TAttrAction;
-          targets.forEach((t) => {
+          tgs.forEach((t) => {
             for (const attr in a.attrs) {
               const raw = a.attrs[attr];
-
               if (a.type === "remove") {
                 t.removeAttribute(attr);
                 continue;
               }
-
               if (a.type === "toggle") {
                 if (raw && raw.includes("|")) {
                   const [l, r] = raw.split("|");
                   const cur = t.getAttribute(attr);
                   t.setAttribute(attr, cur === l ? r : l);
-                  continue;
-                }
-
-                if (raw === null) {
+                } else if (raw === null) {
                   if (t.hasAttribute(attr)) t.removeAttribute(attr);
                   else t.setAttribute(attr, "");
-                  continue;
+                } else {
+                  if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
+                  else t.setAttribute(attr, raw);
                 }
-
-                if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
-                else t.setAttribute(attr, raw);
-                continue;
-              }
-
-              if (a.type === "add") {
+              } else if (a.type === "add") {
                 if (raw === null) t.setAttribute(attr, "");
                 else t.setAttribute(attr, raw);
               }
@@ -472,11 +400,8 @@
           return;
         }
 
-        //
-        // CLASS ONLY
-        //
         const c = action as TClassAction;
-        targets.forEach((t) => {
+        tgs.forEach((t) => {
           c.classNames.forEach((cls) => {
             if (c.type === "toggle") t.classList.toggle(cls);
             else if (c.type === "add") t.classList.add(cls);
@@ -486,74 +411,195 @@
         return;
       }
 
-      //
-      // RUN
-      //
       case "run":
         try {
           new Function(action.js)();
-        } catch (e) {
-          console.error("Swiss run error:", e);
+        } catch (err) {
+          console.error("Swiss run error:", err);
         }
         return;
 
-      //
-      // EVENT
-      //
       case "event":
         el.dispatchEvent(new CustomEvent(action.name, { bubbles: true }));
         return;
     }
   }
 
+  function runActionWithDelay(
+    el: Element,
+    action: TParsedAction,
+    exec: (a: TParsedAction) => void,
+  ) {
+    const d = action.options?.delay;
+    if (d && d > 0) {
+      setTimeout(() => exec(action), d);
+    } else {
+      exec(action);
+    }
+  }
+
+  //
+  // ENTER / EXIT OBSERVER STATE
+  //
+  const enterExitMap = new WeakMap<
+    Element,
+    { entered: boolean; timers: Map<TParsedAction, number> }
+  >();
+
+  function handleEnterExit(
+    el: Element,
+    events: string[],
+    actions: TParsedAction[],
+    entry: IntersectionObserverEntry,
+  ) {
+    if (!events.includes("enter") && !events.includes("exit")) return;
+
+    let rec = enterExitMap.get(el);
+    if (!rec) {
+      rec = { entered: false, timers: new Map() };
+      enterExitMap.set(el, rec);
+    }
+
+    const isVisible = entry.isIntersecting;
+
+    //
+    // ENTER: only on true transitions into visibility (but we allow the
+    // "first time visible" event as a natural transition).
+    //
+    if (isVisible) {
+      if (!rec.entered) {
+        rec.entered = true;
+
+        if (events.includes("enter")) {
+          actions.forEach((a) => {
+            const debounceEnabled =
+              a.options?.debounce !== undefined ? a.options.debounce > 0 : true; // default ON for enter/exit
+
+            const delayMs =
+              typeof a.options?.delay === "number" ? a.options.delay : 0;
+            const debMs =
+              typeof a.options?.debounce === "number"
+                ? a.options.debounce
+                : 100;
+
+            if (debounceEnabled) {
+              const existing = rec!.timers.get(a);
+              if (existing) clearTimeout(existing);
+
+              const id = window.setTimeout(() => {
+                if (delayMs > 0) {
+                  setTimeout(() => runActionImmediate(el, a), delayMs);
+                } else {
+                  runActionImmediate(el, a);
+                }
+              }, debMs);
+
+              rec!.timers.set(a, id);
+            } else {
+              if (delayMs > 0) {
+                setTimeout(() => runActionImmediate(el, a), delayMs);
+              } else {
+                runActionImmediate(el, a);
+              }
+            }
+          });
+        }
+      }
+      return;
+    }
+
+    //
+    // EXIT: only on transitions from visible → not visible
+    //
+    if (!isVisible && rec.entered) {
+      rec.entered = false;
+
+      if (events.includes("exit")) {
+        actions.forEach((a) => {
+          const debounceEnabled =
+            a.options?.debounce !== undefined ? a.options.debounce > 0 : true;
+          const delayMs =
+            typeof a.options?.delay === "number" ? a.options.delay : 0;
+          const debMs =
+            typeof a.options?.debounce === "number" ? a.options.debounce : 100;
+
+          if (debounceEnabled) {
+            const existing = rec!.timers.get(a);
+            if (existing) clearTimeout(existing);
+
+            const id = window.setTimeout(() => {
+              if (delayMs > 0) {
+                setTimeout(() => runActionImmediate(el, a), delayMs);
+              } else {
+                runActionImmediate(el, a);
+              }
+            }, debMs);
+
+            rec!.timers.set(a, id);
+          } else {
+            if (delayMs > 0) {
+              setTimeout(() => runActionImmediate(el, a), delayMs);
+            } else {
+              runActionImmediate(el, a);
+            }
+          }
+        });
+      }
+    }
+  }
+
   //
   // INIT ELEMENT
   //
-  function initElement(el: Element): void {
-    const htmlEl = el as HTMLElement;
+  function initElement(el: Element) {
+    const elHtml = el as HTMLElement;
 
-    const actionString = htmlEl.getAttribute("data-swiss") || "";
-    const actions = parseActions(actionString);
+    const raw = elHtml.getAttribute("data-swiss") || "";
+    const actions = parseActions(raw);
     const hasActions = actions.length > 0;
 
-    const stopProp = htmlEl.hasAttribute("data-swiss-stop-propagation");
-    const whenSelector = htmlEl.getAttribute("data-swiss-if");
-    const whenMedia = htmlEl.getAttribute("data-swiss-when");
-    const resetOnResize = htmlEl.hasAttribute("data-swiss-reset-on-resize");
+    const stopProp = elHtml.hasAttribute("data-swiss-stop-propagation");
+    const whenSelector = elHtml.getAttribute("data-swiss-if");
+    const whenMedia = elHtml.getAttribute("data-swiss-when");
+    const resetOnResize = elHtml.hasAttribute("data-swiss-reset-on-resize");
+    const resetWhenDisabled = elHtml.hasAttribute(
+      "data-swiss-reset-when-disabled",
+    );
 
     const events =
-      hasActions && htmlEl.hasAttribute("data-swiss-on")
-        ? htmlEl.getAttribute("data-swiss-on")!.split(/\s+/).filter(Boolean)
+      hasActions && elHtml.hasAttribute("data-swiss-on")
+        ? elHtml.getAttribute("data-swiss-on")!.split(/\s+/).filter(Boolean)
         : hasActions
           ? ["click"]
           : [];
 
-    let initialState: TInitialState | null = null;
+    let initial: TInitialState | null = null;
     let active = false;
 
-    function conditionActive(): boolean {
+    function conditionActive() {
       if (!whenSelector) return true;
-      const match = document.querySelector(whenSelector);
-      return Boolean(match && match.matches(whenSelector));
+      const m = document.querySelector(whenSelector);
+      return !!(m && m.matches(whenSelector));
+    }
+
+    function triggerAllActions() {
+      if (!conditionActive()) return;
+      actions.forEach((a) =>
+        runActionWithDelay(elHtml, a, (act) => runActionImmediate(elHtml, act)),
+      );
     }
 
     function handler(_e: Event) {
-      if (!conditionActive()) return;
-      actions.forEach((a) =>
-        runActionWithDelay(htmlEl, a, (action) =>
-          runActionImmediate(htmlEl, action),
-        ),
-      );
+      triggerAllActions();
     }
 
     function outsideListener(e: MouseEvent | TouchEvent) {
       if (!conditionActive()) return;
-      const target = e.target as Element | null;
-      if (!target) return;
-      if (htmlEl.contains(target)) return;
-      if (target.closest("[data-swiss]")) return;
-
-      handler(e);
+      const t = e.target as Element | null;
+      if (!t) return;
+      if (elHtml.contains(t)) return;
+      if (t.closest("[data-swiss]")) return;
+      triggerAllActions();
     }
 
     function enable() {
@@ -561,20 +607,22 @@
       active = true;
 
       if (stopProp) {
-        htmlEl.addEventListener("click", (e) => {
-          if (e.target === htmlEl) e.stopPropagation();
+        elHtml.addEventListener("click", (e) => {
+          if (e.target === elHtml) e.stopPropagation();
         });
       }
 
       if (hasActions) {
-        initialState = getInitialState(htmlEl, actions);
+        initial = getInitialState(elHtml, actions);
 
         events.forEach((ev) => {
           if (ev === "clickOutside") {
             document.addEventListener("mousedown", outsideListener);
             document.addEventListener("touchstart", outsideListener);
+          } else if (ev === "enter" || ev === "exit") {
+            // handled by IntersectionObserver below
           } else {
-            htmlEl.addEventListener(ev, handler);
+            elHtml.addEventListener(ev, handler);
           }
         });
       }
@@ -589,12 +637,16 @@
           if (ev === "clickOutside") {
             document.removeEventListener("mousedown", outsideListener);
             document.removeEventListener("touchstart", outsideListener);
+          } else if (ev === "enter" || ev === "exit") {
+            // IntersectionObserver disconnect is handled by GC;
+            // we don't need explicit off here.
           } else {
-            htmlEl.removeEventListener(ev, handler);
+            elHtml.removeEventListener(ev, handler);
           }
         });
 
-        if (resetOnResize && initialState) restoreState(initialState);
+        // Only restore on disable if explicitly asked:
+        if (resetWhenDisabled && initial) restoreState(initial);
       }
     }
 
@@ -603,15 +655,46 @@
         enable();
         return;
       }
-      const matches = window.matchMedia(whenMedia).matches;
-      if (matches) enable();
+
+      const match = window.matchMedia(whenMedia).matches;
+      if (match) enable();
       else disable();
     }
 
+    //
+    // ENTER/EXIT observer setup
+    //
+    if (events.includes("enter") || events.includes("exit")) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.target === elHtml) {
+              handleEnterExit(elHtml, events, actions, entry);
+            }
+          });
+        },
+        { threshold: 0 },
+      );
+
+      observer.observe(elHtml);
+    }
+
+    //
+    // BOOT
+    //
     if (hasActions || stopProp) {
       evaluate();
-      if (whenMedia || resetOnResize) {
+
+      // Media-driven enable/disable:
+      if (whenMedia) {
         window.addEventListener("resize", evaluate);
+      }
+
+      // Reset on ANY resize, irrespective of whenMedia:
+      if (resetOnResize) {
+        window.addEventListener("resize", () => {
+          if (initial) restoreState(initial);
+        });
       }
     }
   }
@@ -619,7 +702,7 @@
   //
   // INIT ALL
   //
-  function initAll(): void {
+  function initAll() {
     document
       .querySelectorAll(
         "[data-swiss], [data-swiss-stop-propagation], [data-swiss-on='clickOutside']",
