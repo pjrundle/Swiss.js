@@ -75,12 +75,14 @@
   //
   // HELPERS
   //
-  function isClassOrAttrActionType(t: string): t is TBaseClassOrAttrActionType {
-    return t === "toggle" || t === "add" || t === "remove";
+  function isClassOrAttrActionType(
+    actionType: string,
+  ): actionType is TBaseClassOrAttrActionType {
+    return ["toggle", "add", "remove"].includes(actionType);
   }
 
   // Split a string on delimiters, ignoring content inside () and quotes
-  function splitOutside(str: string, delims: string[]): string[] {
+  function splitOutside(str: string, delims: string[]) {
     const out: string[] = [];
     let curr = "";
     let depth = 0;
@@ -123,7 +125,7 @@
     return out;
   }
 
-  function parseAttrBlock(block: string): TAttrMap {
+  function parseAttrBlock(block: string) {
     const inside = block.slice(1, -1).trim();
     const out: TAttrMap = {};
     if (!inside) return out;
@@ -141,7 +143,7 @@
     return out;
   }
 
-  function parseOptionsBlock(s: string): TActionOptions {
+  function parseOptionsBlock(s: string) {
     const inside = s.slice(1, -1).trim();
     const opts: TActionOptions = {};
     if (!inside) return opts;
