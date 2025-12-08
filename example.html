@@ -22,7 +22,6 @@
           "display": "inline-flex",
           "align-items": "center",
           "justify-content": "center",
-          "padding": "6rem",
           "user-select": "none",
           "border-radius": "30px",
           "border": "1px solid rgba(255, 255, 255, 0.2)",
@@ -82,7 +81,7 @@
           <!-- Toggle class on itself -->
           <div>
             <p class="f:12px ml:1x mb:2x">Toggle class on self</p>
-            <div class="box cursor:pointer bg:accent!"
+            <div class="box cursor:pointer bg:accent! p:20x"
               data-swiss="toggle[this](bg:accent! border-color:rgba(255,255,255,0.8)!)"
               data-swiss-reset-on-resize="true">
               <div>Click</div>
@@ -92,12 +91,12 @@
           <!-- Toggle class on another element -->
           <div class="flex:1">
             <p class="f:12px ml:1x mb:2x">Toggle class on this & another elements</p>
-            <div class="box test-selector-class w:full">
-              <div class="box mr:4x cursor:pointer"
+            <div class="box test-selector-class w:full p:20x">
+              <div class="box mr:4x cursor:pointer p:20x"
                 data-swiss="toggle[#target-1](bg:accent!) toggle[this](border-color:rgba(255,255,255,0.8)!) toggle[.test-selector-class](b:1px|solid|accent)">
                 <div>Click</div>
               </div>
-              <div id="target-1" class="box bg:accent!">
+              <div id="target-1" class="box bg:accent! p:20x">
                 <div style="opacity: 0;">To Change</div>
               </div>
             </div>
@@ -109,7 +108,7 @@
           <!-- mouseenter example -->
           <div class="flex:1">
             <p class="f:12px ml:1x mb:2x">Hover to toggle class</p>
-            <div class="box cursor:pointer w:full" data-swiss="toggle[this](bg:accent)"
+            <div class="box cursor:pointer w:full px:20x py:5x" data-swiss="toggle[this](bg:accent)"
               data-swiss-on="mouseenter mouseleave">
               Hover
             </div>
@@ -117,7 +116,7 @@
           <!-- run: example -->
           <div class="flex:1">
             <p class="f:12px ml:1x mb:2x">Trigger an alert</p>
-            <div class="box cursor:pointer w:full"
+            <div class="box cursor:pointer w:full px:20x py:5x"
               data-swiss="toggle[this](border-color:accent!) run:alert('Hello from Swiss.js!')">
               <div>Click</div>
             </div>
@@ -125,7 +124,7 @@
           <!-- dispatch event example -->
           <div class="flex:1">
             <p class="f:12px ml:1x mb:2x">Click to trigger an event</p>
-            <div class="box cursor:pointer w:full" id="event-listener-box"
+            <div class="box cursor:pointer w:full px:20x py:5x" id="event-listener-box"
               data-swiss="toggle[this](color:accent) event:myCustomEvent">
               <div>Click</div>
             </div>
@@ -153,11 +152,11 @@
 
 
         <section>
-          <div class="box block!">
+          <div class="box block! p:5x">
 
             <!-- TARGET ELEMENT -->
-            <div id="target" class="box w:full align-items:center justify-content:center" data-state="closed" data-flag
-              style="transition:all 0.3s ease; margin-bottom:20px;">
+            <div id="target" class="box p:10x w:full align-items:center justify-content:center" data-state="closed"
+              data-flag style="transition:all 0.3s ease; margin-bottom:20px;">
               <div class="t:center bg:surface-a p:1em r:5px">
                 Target Element
                 <br>
@@ -188,6 +187,28 @@
               </button>
             </div>
 
+          </div>
+        </section>
+
+        <section>
+          <!-- TEST: data-swiss-when -->
+          <div style="margin-bottom: 40px;">
+            <p><strong>Resize window above/below 600px</strong></p>
+
+            <div class="box cursor:pointer bg:accent!" data-swiss="toggle[this](bg:accent!)"
+              data-swiss-when="(min-width: 600px)">
+              Click me (works only ≥ 600px)
+            </div>
+          </div>
+
+          <!-- TEST: data-swiss-reset-on-resize -->
+          <div>
+            <p><strong>Resize above/below 600px — state resets when disabled</strong></p>
+
+            <div class="box cursor:pointer bg:accent!" data-swiss="toggle[this](color:accent!)"
+              data-swiss-when="(min-width: 600px)" data-swiss-reset-on-resize>
+              Click me (resets on resize)
+            </div>
           </div>
         </section>
       </div>
