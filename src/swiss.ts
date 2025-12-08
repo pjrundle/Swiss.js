@@ -572,6 +572,43 @@
     { entered: boolean; timers: Map<TParsedAction, number> }
   >();
 
+  function executeActionsWithTiming(
+    el: Element,
+    actions: TParsedAction[],
+    rec: { entered: boolean; timers: Map<TParsedAction, number> },
+  ) {
+    actions.forEach((a) => {
+      const debounceEnabled =
+        a.options?.debounce !== undefined ? a.options.debounce > 0 : true; // default ON for enter/exit
+
+      const delayMs =
+        typeof a.options?.delay === "number" ? a.options.delay : 0;
+      const debMs =
+        typeof a.options?.debounce === "number" ? a.options.debounce : 100;
+
+      if (debounceEnabled) {
+        const existing = rec.timers.get(a);
+        if (existing) clearTimeout(existing);
+
+        const id = window.setTimeout(() => {
+          if (delayMs > 0) {
+            setTimeout(() => runActionImmediate(el, a), delayMs);
+          } else {
+            runActionImmediate(el, a);
+          }
+        }, debMs);
+
+        rec.timers.set(a, id);
+      } else {
+        if (delayMs > 0) {
+          setTimeout(() => runActionImmediate(el, a), delayMs);
+        } else {
+          runActionImmediate(el, a);
+        }
+      }
+    });
+  }
+
   function handleEnterExit(
     el: Element,
     events: string[],
@@ -594,38 +631,7 @@
         rec.entered = true;
 
         if (events.includes("enter")) {
-          actions.forEach((a) => {
-            const debounceEnabled =
-              a.options?.debounce !== undefined ? a.options.debounce > 0 : true; // default ON for enter/exit
-
-            const delayMs =
-              typeof a.options?.delay === "number" ? a.options.delay : 0;
-            const debMs =
-              typeof a.options?.debounce === "number"
-                ? a.options.debounce
-                : 100;
-
-            if (debounceEnabled) {
-              const existing = rec!.timers.get(a);
-              if (existing) clearTimeout(existing);
-
-              const id = window.setTimeout(() => {
-                if (delayMs > 0) {
-                  setTimeout(() => runActionImmediate(el, a), delayMs);
-                } else {
-                  runActionImmediate(el, a);
-                }
-              }, debMs);
-
-              rec!.timers.set(a, id);
-            } else {
-              if (delayMs > 0) {
-                setTimeout(() => runActionImmediate(el, a), delayMs);
-              } else {
-                runActionImmediate(el, a);
-              }
-            }
-          });
+          executeActionsWithTiming(el, actions, rec!);
         }
       }
       return;
@@ -636,35 +642,7 @@
       rec.entered = false;
 
       if (events.includes("exit")) {
-        actions.forEach((a) => {
-          const debounceEnabled =
-            a.options?.debounce !== undefined ? a.options.debounce > 0 : true;
-          const delayMs =
-            typeof a.options?.delay === "number" ? a.options.delay : 0;
-          const debMs =
-            typeof a.options?.debounce === "number" ? a.options.debounce : 100;
-
-          if (debounceEnabled) {
-            const existing = rec!.timers.get(a);
-            if (existing) clearTimeout(existing);
-
-            const id = window.setTimeout(() => {
-              if (delayMs > 0) {
-                setTimeout(() => runActionImmediate(el, a), delayMs);
-              } else {
-                runActionImmediate(el, a);
-              }
-            }, debMs);
-
-            rec!.timers.set(a, id);
-          } else {
-            if (delayMs > 0) {
-              setTimeout(() => runActionImmediate(el, a), delayMs);
-            } else {
-              runActionImmediate(el, a);
-            }
-          }
-        });
+        executeActionsWithTiming(el, actions, rec!);
       }
     }
   }
