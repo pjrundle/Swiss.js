@@ -242,14 +242,31 @@
     const start = "event(".length;
     let i = start;
     let depth = 1;
+    let inQuotes = false;
+    let quote: string | null = null;
     const len = part.length;
 
     for (; i < len; i++) {
       const c = part[i];
-      if (c === "(") depth++;
-      else if (c === ")") {
-        depth--;
-        if (depth === 0) break;
+      const isQ = c === '"' || c === "'";
+
+      if (isQ && !inQuotes) {
+        inQuotes = true;
+        quote = c;
+        continue;
+      }
+      if (isQ && inQuotes && c === quote) {
+        inQuotes = false;
+        quote = null;
+        continue;
+      }
+
+      if (!inQuotes) {
+        if (c === "(") depth++;
+        else if (c === ")") {
+          depth--;
+          if (depth === 0) break;
+        }
       }
     }
 
