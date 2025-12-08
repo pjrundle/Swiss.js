@@ -426,6 +426,45 @@
   //
   // ACTION EXECUTION
   //
+  function applyAttrAction(
+    target: Element,
+    actionType: TBaseClassOrAttrActionType,
+    attrs: TAttrMap,
+  ) {
+    for (const attr in attrs) {
+      const raw = attrs[attr];
+
+      if (actionType === "remove") {
+        target.removeAttribute(attr);
+        continue;
+      }
+
+      if (actionType === "toggle") {
+        if (raw && raw.includes("|")) {
+          const [l, r] = raw.split("|");
+          const cur = target.getAttribute(attr);
+          target.setAttribute(attr, cur === l ? r : l);
+          continue;
+        }
+
+        if (raw === null) {
+          if (target.hasAttribute(attr)) target.removeAttribute(attr);
+          else target.setAttribute(attr, "");
+          continue;
+        }
+
+        if (target.getAttribute(attr) === raw) target.removeAttribute(attr);
+        else target.setAttribute(attr, raw);
+        continue;
+      }
+
+      if (actionType === "add") {
+        if (raw === null) target.setAttribute(attr, "");
+        else target.setAttribute(attr, raw);
+      }
+    }
+  }
+
   function runActionImmediate(el: Element, action: TParsedAction) {
     switch (action.type) {
       case "toggle":
@@ -447,38 +486,7 @@
             });
 
             // attrs
-            for (const attr in a.attrs) {
-              const raw = a.attrs[attr];
-
-              if (a.type === "remove") {
-                t.removeAttribute(attr);
-                continue;
-              }
-
-              if (a.type === "toggle") {
-                if (raw && raw.includes("|")) {
-                  const [l, r] = raw.split("|");
-                  const cur = t.getAttribute(attr);
-                  t.setAttribute(attr, cur === l ? r : l);
-                  continue;
-                }
-
-                if (raw === null) {
-                  if (t.hasAttribute(attr)) t.removeAttribute(attr);
-                  else t.setAttribute(attr, "");
-                  continue;
-                }
-
-                if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
-                else t.setAttribute(attr, raw);
-                continue;
-              }
-
-              if (a.type === "add") {
-                if (raw === null) t.setAttribute(attr, "");
-                else t.setAttribute(attr, raw);
-              }
-            }
+            applyAttrAction(t, a.type, a.attrs);
           });
           return;
         }
@@ -487,38 +495,7 @@
         if (hasA) {
           const a = action as TAttrAction;
           tgs.forEach((t) => {
-            for (const attr in a.attrs) {
-              const raw = a.attrs[attr];
-
-              if (a.type === "remove") {
-                t.removeAttribute(attr);
-                continue;
-              }
-
-              if (a.type === "toggle") {
-                if (raw && raw.includes("|")) {
-                  const [l, r] = raw.split("|");
-                  const cur = t.getAttribute(attr);
-                  t.setAttribute(attr, cur === l ? r : l);
-                  continue;
-                }
-
-                if (raw === null) {
-                  if (t.hasAttribute(attr)) t.removeAttribute(attr);
-                  else t.setAttribute(attr, "");
-                  continue;
-                }
-
-                if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
-                else t.setAttribute(attr, raw);
-                continue;
-              }
-
-              if (a.type === "add") {
-                if (raw === null) t.setAttribute(attr, "");
-                else t.setAttribute(attr, raw);
-              }
-            }
+            applyAttrAction(t, a.type, a.attrs);
           });
           return;
         }
