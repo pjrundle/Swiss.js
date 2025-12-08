@@ -47,7 +47,7 @@
 
   interface TEventAction {
     type: "event";
-    names: string[]; // supports event(foo bar baz)
+    eventNames: string[]; // supports event(foo bar baz)
     options?: TActionOptions;
   }
 
@@ -82,7 +82,7 @@
   }
 
   // Split a string on delimiters, ignoring content inside () and quotes
-  function splitOutside(str: string, delims: string[]) {
+  function getParts(str: string, delims: string[]) {
     const out: string[] = [];
     let curr = "";
     let depth = 0;
@@ -126,17 +126,17 @@
   }
 
   function parseAttrBlock(block: string) {
-    const inside = block.slice(1, -1).trim();
+    const contents = block.slice(1, -1).trim();
     const out: TAttrMap = {};
-    if (!inside) return out;
+    if (!contents) return out;
 
-    const tokens = splitOutside(inside, [" "]);
-    tokens.forEach((t) => {
-      if (!t.includes(":")) {
-        out[t] = null;
+    const parts = getParts(contents, [" "]);
+    parts.forEach((part) => {
+      if (!part.includes(":")) {
+        out[part] = null;
         return;
       }
-      const [k, v] = t.split(":");
+      const [k, v] = part.split(":");
       out[k] = v;
     });
 
@@ -144,13 +144,13 @@
   }
 
   function parseOptionsBlock(s: string) {
-    const inside = s.slice(1, -1).trim();
+    const contents = s.slice(1, -1).trim();
     const opts: TActionOptions = {};
-    if (!inside) return opts;
+    if (!contents) return opts;
 
-    const tokens = splitOutside(inside, [" "]);
-    tokens.forEach((t) => {
-      const [k, v] = t.split(":");
+    const parts = getParts(contents, [" "]);
+    parts.forEach((part) => {
+      const [k, v] = part.split(":");
       if (!k) return;
 
       if (k === "delay") {
@@ -264,7 +264,7 @@
       return null;
     }
 
-    const names = splitOutside(payload, [" "]);
+    const eventNames = getParts(payload, [" "]);
     let options: TActionOptions | undefined;
 
     const rest = part.slice(i + 1).trim();
@@ -276,7 +276,7 @@
       }
     }
 
-    return { type: "event", names, options };
+    return { type: "event", eventNames, options };
   }
 
   //
@@ -285,7 +285,7 @@
   function parseDataSwiss(raw: string): TParsedAction[] {
     if (!raw) return [];
 
-    return splitOutside(raw, [" ", ";"])
+    return getParts(raw, [" ", ";"])
       .map<TParsedAction | null>((block) => {
         // 1) run(...)
         if (block.startsWith("run(")) {
@@ -316,9 +316,9 @@
 
         const classNames: string[] = [];
         let attrs: TAttrMap = {};
-        const tokens = splitOutside(payload, [" "]);
+        const parts = getParts(payload, [" "]);
 
-        tokens.forEach((t) => {
+        parts.forEach((t) => {
           if (t.startsWith("{") && t.endsWith("}")) {
             attrs = { ...attrs, ...parseAttrBlock(t) };
           } else {
@@ -508,7 +508,7 @@
         return;
 
       case "event":
-        action.names.forEach((name) => {
+        action.eventNames.forEach((name) => {
           el.dispatchEvent(new CustomEvent(name, { bubbles: true }));
         });
         return;
