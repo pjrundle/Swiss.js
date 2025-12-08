@@ -1,6 +1,7 @@
 //
-// Swiss.ts v3 — enter/exit, debounce, delay, attrs, reset-on-resize / reset-when-disabled
-// ---------------------------------------------------------------------------------------
+// Swiss.ts v3 — classes, attrs, run(), event(), delay, debounce, enter/exit,
+// reset-on-resize + reset-when-disabled
+// -----------------------------------------------------------------------------
 (function () {
   //
   // TYPES
@@ -46,7 +47,7 @@
 
   interface TEventAction {
     type: "event";
-    name: string;
+    names: string[]; // supports event(foo bar baz)
     options?: TActionOptions;
   }
 
@@ -78,6 +79,7 @@
     return t === "toggle" || t === "add" || t === "remove";
   }
 
+  // Split a string on delimiters, ignoring content inside () and quotes
   function splitOutside(str: string, delims: string[]): string[] {
     const out: string[] = [];
     let curr = "";
@@ -167,6 +169,114 @@
     return opts;
   }
 
+  // Parse run(...) with balanced parentheses, optional (options)
+  function parseRunPart(part: string): TRunAction | null {
+    if (!part.startsWith("run(")) return null;
+
+    let i = "run(".length;
+    let depth = 1;
+    let inQuotes = false;
+    let quote: string | null = null;
+    const len = part.length;
+
+    // Find the matching closing ) for the JS payload
+    for (; i < len; i++) {
+      const c = part[i];
+      const isQ = c === '"' || c === "'";
+
+      if (isQ && !inQuotes) {
+        inQuotes = true;
+        quote = c;
+        continue;
+      }
+      if (isQ && inQuotes && c === quote) {
+        inQuotes = false;
+        quote = null;
+        continue;
+      }
+
+      if (!inQuotes) {
+        if (c === "(") depth++;
+        else if (c === ")") {
+          depth--;
+          if (depth === 0) {
+            break;
+          }
+        }
+      }
+    }
+
+    if (depth !== 0) {
+      console.warn("Swiss: unbalanced parentheses in run()", part);
+      return null;
+    }
+
+    const js = part.slice("run(".length, i);
+
+    let options: TActionOptions | undefined;
+    const rest = part.slice(i + 1).trim();
+
+    if (rest) {
+      if (rest.startsWith("(") && rest.endsWith(")")) {
+        options = parseOptionsBlock(rest);
+      } else {
+        console.warn("Swiss: invalid options block in run()", part);
+      }
+    }
+
+    return { type: "run", js, options };
+  }
+
+  // Parse event(...) with simple tokenised payload, optional (options)
+  function parseEventPart(part: string): TEventAction | null {
+    if (!part.startsWith("event(")) return null;
+    if (!part.endsWith(")") && !part.includes(")(")) {
+      console.warn("Swiss: invalid event() syntax:", part);
+      return null;
+    }
+
+    // We support: event(payload) or event(payload)(options)
+    // Find first closing ) after "event("
+    const start = "event(".length;
+    let i = start;
+    let depth = 1;
+    const len = part.length;
+
+    for (; i < len; i++) {
+      const c = part[i];
+      if (c === "(") depth++;
+      else if (c === ")") {
+        depth--;
+        if (depth === 0) break;
+      }
+    }
+
+    if (depth !== 0) {
+      console.warn("Swiss: unbalanced parentheses in event()", part);
+      return null;
+    }
+
+    const payload = part.slice(start, i).trim();
+    if (!payload) {
+      console.warn("Swiss: empty event() payload:", part);
+      return null;
+    }
+
+    const names = splitOutside(payload, [" "]);
+    let options: TActionOptions | undefined;
+
+    const rest = part.slice(i + 1).trim();
+    if (rest) {
+      if (rest.startsWith("(") && rest.endsWith(")")) {
+        options = parseOptionsBlock(rest);
+      } else {
+        console.warn("Swiss: invalid options block in event()", part);
+      }
+    }
+
+    return { type: "event", names, options };
+  }
+
   //
   // PARSE data-swiss
   //
@@ -175,45 +285,36 @@
 
     return splitOutside(raw, [" ", ";"])
       .map<TParsedAction | null>((part) => {
-        //
-        // run:
-        //
-        const runMatch = part.match(/^run:(.+?)(\(.+?\))?$/);
-        if (runMatch) {
-          const js = runMatch[1];
-          const opts = runMatch[2] ? parseOptionsBlock(runMatch[2]) : undefined;
-          return { type: "run", js, options: opts };
+        // 1) run(...)
+        if (part.startsWith("run(")) {
+          return parseRunPart(part);
         }
 
-        //
-        // event:
-        //
-        const evMatch = part.match(/^event:(.+?)(\(.+?\))?$/);
-        if (evMatch) {
-          const name = evMatch[1];
-          const opts = evMatch[2] ? parseOptionsBlock(evMatch[2]) : undefined;
-          return { type: "event", name, options: opts };
+        // 2) event(...)
+        if (part.startsWith("event(")) {
+          return parseEventPart(part);
         }
 
-        //
-        // class/attr
-        //
+        // 3) class/attr actions:
+        //    type[selector](payload)(options?)
         const match = part.match(/^(\w+)\[(.+?)\]\((.+?)\)(?:\((.+?)\))?$/);
         if (!match) {
-          console.warn("Swiss: invalid action:", part);
+          console.warn("Swiss: invalid action format:", part);
           return null;
         }
 
         const [, rawType, selRaw, payloadRaw, optsRaw] = match;
         if (!isClassOrAttrActionType(rawType)) {
-          console.warn("Swiss: unsupported type:", rawType);
+          console.warn("Swiss: unsupported action type:", rawType);
           return null;
         }
 
         const selector = selRaw.trim();
-        const tokens = splitOutside(payloadRaw.trim(), [" "]);
+        const payload = payloadRaw.trim();
+
         const classNames: string[] = [];
         let attrs: TAttrMap = {};
+        const tokens = splitOutside(payload, [" "]);
 
         tokens.forEach((t) => {
           if (t.startsWith("{") && t.endsWith("}")) {
@@ -279,9 +380,9 @@
     const out: TInitialState = [];
 
     actions.forEach((a) => {
-      if (!("selector" in a)) return;
-      const tgs = resolveTargets(el, a.selector);
+      if (!("selector" in a)) return; // run/event have no selector
 
+      const tgs = resolveTargets(el, a.selector);
       const hasC = "classNames" in a;
       const hasA = "attrs" in a;
 
@@ -334,34 +435,46 @@
         const hasC = "classNames" in action;
         const hasA = "attrs" in action;
 
+        // COMBO
         if (hasC && hasA) {
           const a = action as TComboAction;
           tgs.forEach((t) => {
+            // classes
             a.classNames.forEach((cls) => {
               if (a.type === "toggle") t.classList.toggle(cls);
               else if (a.type === "add") t.classList.add(cls);
               else t.classList.remove(cls);
             });
 
+            // attrs
             for (const attr in a.attrs) {
               const raw = a.attrs[attr];
+
               if (a.type === "remove") {
                 t.removeAttribute(attr);
                 continue;
               }
+
               if (a.type === "toggle") {
                 if (raw && raw.includes("|")) {
                   const [l, r] = raw.split("|");
                   const cur = t.getAttribute(attr);
                   t.setAttribute(attr, cur === l ? r : l);
-                } else if (raw === null) {
+                  continue;
+                }
+
+                if (raw === null) {
                   if (t.hasAttribute(attr)) t.removeAttribute(attr);
                   else t.setAttribute(attr, "");
-                } else {
-                  if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
-                  else t.setAttribute(attr, raw);
+                  continue;
                 }
-              } else if (a.type === "add") {
+
+                if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
+                else t.setAttribute(attr, raw);
+                continue;
+              }
+
+              if (a.type === "add") {
                 if (raw === null) t.setAttribute(attr, "");
                 else t.setAttribute(attr, raw);
               }
@@ -370,28 +483,38 @@
           return;
         }
 
+        // ATTR ONLY
         if (hasA) {
           const a = action as TAttrAction;
           tgs.forEach((t) => {
             for (const attr in a.attrs) {
               const raw = a.attrs[attr];
+
               if (a.type === "remove") {
                 t.removeAttribute(attr);
                 continue;
               }
+
               if (a.type === "toggle") {
                 if (raw && raw.includes("|")) {
                   const [l, r] = raw.split("|");
                   const cur = t.getAttribute(attr);
                   t.setAttribute(attr, cur === l ? r : l);
-                } else if (raw === null) {
+                  continue;
+                }
+
+                if (raw === null) {
                   if (t.hasAttribute(attr)) t.removeAttribute(attr);
                   else t.setAttribute(attr, "");
-                } else {
-                  if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
-                  else t.setAttribute(attr, raw);
+                  continue;
                 }
-              } else if (a.type === "add") {
+
+                if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
+                else t.setAttribute(attr, raw);
+                continue;
+              }
+
+              if (a.type === "add") {
                 if (raw === null) t.setAttribute(attr, "");
                 else t.setAttribute(attr, raw);
               }
@@ -400,6 +523,7 @@
           return;
         }
 
+        // CLASS ONLY
         const c = action as TClassAction;
         tgs.forEach((t) => {
           c.classNames.forEach((cls) => {
@@ -420,7 +544,9 @@
         return;
 
       case "event":
-        el.dispatchEvent(new CustomEvent(action.name, { bubbles: true }));
+        action.names.forEach((name) => {
+          el.dispatchEvent(new CustomEvent(name, { bubbles: true }));
+        });
         return;
     }
   }
@@ -462,10 +588,7 @@
 
     const isVisible = entry.isIntersecting;
 
-    //
-    // ENTER: only on true transitions into visibility (but we allow the
-    // "first time visible" event as a natural transition).
-    //
+    // ENTER: fire only when we transition into visible at least once
     if (isVisible) {
       if (!rec.entered) {
         rec.entered = true;
@@ -508,9 +631,7 @@
       return;
     }
 
-    //
-    // EXIT: only on transitions from visible → not visible
-    //
+    // EXIT: fire only on visible → not visible transitions
     if (!isVisible && rec.entered) {
       rec.entered = false;
 
@@ -620,7 +741,7 @@
             document.addEventListener("mousedown", outsideListener);
             document.addEventListener("touchstart", outsideListener);
           } else if (ev === "enter" || ev === "exit") {
-            // handled by IntersectionObserver below
+            // handled via IntersectionObserver
           } else {
             elHtml.addEventListener(ev, handler);
           }
@@ -638,14 +759,12 @@
             document.removeEventListener("mousedown", outsideListener);
             document.removeEventListener("touchstart", outsideListener);
           } else if (ev === "enter" || ev === "exit") {
-            // IntersectionObserver disconnect is handled by GC;
-            // we don't need explicit off here.
+            // observer cleanup is handled via GC
           } else {
             elHtml.removeEventListener(ev, handler);
           }
         });
 
-        // Only restore on disable if explicitly asked:
         if (resetWhenDisabled && initial) restoreState(initial);
       }
     }
@@ -661,9 +780,7 @@
       else disable();
     }
 
-    //
     // ENTER/EXIT observer setup
-    //
     if (events.includes("enter") || events.includes("exit")) {
       const observer = new IntersectionObserver(
         (entries) => {
@@ -679,18 +796,16 @@
       observer.observe(elHtml);
     }
 
-    //
     // BOOT
-    //
     if (hasActions || stopProp) {
       evaluate();
 
-      // Media-driven enable/disable:
+      // media-query driven enable/disable
       if (whenMedia) {
         window.addEventListener("resize", evaluate);
       }
 
-      // Reset on ANY resize, irrespective of whenMedia:
+      // reset-on-resize always restores initial on ANY resize
       if (resetOnResize) {
         window.addEventListener("resize", () => {
           if (initial) restoreState(initial);

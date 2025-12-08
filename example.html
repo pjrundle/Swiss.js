@@ -161,12 +161,12 @@
             </button>
 
             <!-- TRIGGER AN ALERT -->
-            <button class="btn" data-swiss="run:alert('Hello from Swiss.js!')">
+            <button class="btn" data-swiss="run(alert('Hello from Swiss.js!'))">
               Trigger alert
             </button>
 
             <!-- DISPATCH A CUSTOM EVENT -->
-            <button class="btn" data-swiss="event:myCustomEvent" id="event-listener-example">
+            <button class="btn" data-swiss="event(myCustomEvent)" id="event-listener-example">
               Dispatch custom event
             </button>
           </div>
@@ -214,7 +214,7 @@
 
 
         <section class="mt:8x mb:800px">
-          <div class="grid grid-columns:2 gap:5x">
+          <div class="grid grid-columns:3 gap:5x">
             <div>
               <p class="f:12px mb:2x">Enter</p>
               <div class="box w:full cursor:pointer px:20x py:10x transition:background-color|0.3s|ease-in-out"
@@ -247,16 +247,16 @@
 
   <div id="modal"
     class="opacity:0 pointer-events:none fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
-    <div class="box bg:surface-a! rel"
+    <div class="box p:20x bg:surface-a! rel"
       data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)"
       data-swiss-on="clickOutside" data-swiss-if="#modal.modal-is-active">
       <div class="flex flex-direction:column gap:1em">
-        <button class="abs top:4x right:4x cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
+        <p class="f:12px">Some kind of modal...</p>
+
+        <button class="cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
           data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)">
           Close Modal
         </button>
-
-        <p class="f:12px">Some kind of modal...</p>
       </div>
     </div>
   </div>
