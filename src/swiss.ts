@@ -384,11 +384,11 @@
     actions.forEach((a) => {
       if (!("selector" in a)) return; // run/event have no selector
 
-      const tgs = resolveTargets(el, a.selector);
+      const els = resolveTargets(el, a.selector);
       const hasC = "classNames" in a;
       const hasA = "attrs" in a;
 
-      tgs.forEach((t) => {
+      els.forEach((t) => {
         if (hasA) {
           const attrs = (a as TAttrAction | TComboAction).attrs;
           for (const attr in attrs) {
@@ -413,14 +413,14 @@
     return out;
   }
 
-  function restoreState(initial: TInitialState) {
-    initial.forEach((i) => {
-      if ("className" in i) {
-        if (i.hasClass) i.el.classList.add(i.className);
-        else i.el.classList.remove(i.className);
+  function restoreState(initialState: TInitialState) {
+    initialState.forEach((item) => {
+      if ("className" in item) {
+        if (item.hasClass) item.el.classList.add(item.className);
+        else item.el.classList.remove(item.className);
       } else {
-        if (i.value === null) i.el.removeAttribute(i.attr);
-        else i.el.setAttribute(i.attr, i.value);
+        if (item.value === null) item.el.removeAttribute(item.attr);
+        else item.el.setAttribute(item.attr, item.value);
       }
     });
   }
@@ -605,14 +605,13 @@
 
     // ENTER: fire only when we transition into visible at least once
     if (isVisible) {
-      if (!rec.entered) {
-        rec.entered = true;
+      if (rec.entered) return;
 
-        if (events.includes("enter")) {
-          executeActionsWithTiming(el, actions, rec!);
-        }
+      rec.entered = true;
+
+      if (events.includes("enter")) {
+        executeActionsWithTiming(el, actions, rec!);
       }
-      return;
     }
 
     // EXIT: fire only on visible → not visible transitions
@@ -636,7 +635,7 @@
     const hasActions = actions.length > 0;
 
     const stopProp = elHtml.hasAttribute("data-swiss-stop-propagation");
-    const whenSelector = elHtml.getAttribute("data-swiss-if");
+    const ifElSelector = elHtml.getAttribute("data-swiss-if");
     const whenMedia = elHtml.getAttribute("data-swiss-when");
     const resetOnResize = elHtml.hasAttribute("data-swiss-reset-on-resize");
     const resetWhenDisabled = elHtml.hasAttribute(
@@ -650,13 +649,13 @@
           ? ["click"]
           : [];
 
-    let initial: TInitialState | null = null;
+    let initialState: TInitialState | null = null;
     let active = false;
 
     function conditionActive() {
-      if (!whenSelector) return true;
-      const m = document.querySelector(whenSelector);
-      return !!(m && m.matches(whenSelector));
+      if (!ifElSelector) return true;
+      const m = document.querySelector(ifElSelector);
+      return !!(m && m.matches(ifElSelector));
     }
 
     function triggerAllActions() {
@@ -690,7 +689,7 @@
       }
 
       if (hasActions) {
-        initial = getInitialState(elHtml, actions);
+        initialState = getInitialState(elHtml, actions);
 
         events.forEach((ev) => {
           if (ev === "clickOutside") {
@@ -714,14 +713,14 @@
           if (ev === "clickOutside") {
             document.removeEventListener("mousedown", outsideListener);
             document.removeEventListener("touchstart", outsideListener);
-          } else if (ev === "enter" || ev === "exit") {
+          } else if (["enter", "exit"].includes(ev)) {
             // observer cleanup is handled via GC
           } else {
             elHtml.removeEventListener(ev, handler);
           }
         });
 
-        if (resetWhenDisabled && initial) restoreState(initial);
+        if (resetWhenDisabled && initialState) restoreState(initialState);
       }
     }
 
@@ -764,7 +763,7 @@
       // reset-on-resize always restores initial on ANY resize
       if (resetOnResize) {
         window.addEventListener("resize", () => {
-          if (initial) restoreState(initial);
+          if (initialState) restoreState(initialState);
         });
       }
     }
