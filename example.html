@@ -15,7 +15,8 @@
     window.masterCSSConfig = {
       variables: {
         "surface-a": '#0e141f',
-        accent: '#e31d65'
+        accent: '#e31d65',
+        'accent-muted': "#63112f",
       },
       utilities: {
         "box": {
@@ -90,7 +91,7 @@
           <!-- Toggle class on another element -->
           <div class="flex:1">
             <p class="f:12px ml:1x mb:2x">Toggle class on this & another elements</p>
-            <div class="box test-selector-class w:full p:20x">
+            <div class="box test-selector-class w:full px:20x py:10x">
               <div class="box mr:4x cursor:pointer p:20x"
                 data-swiss="toggle[#target-1](bg:accent!) toggle[this](border-color:rgba(255,255,255,0.8)!) toggle[.test-selector-class](b:1px|solid|accent)"
                 data-swiss-when="(min-width: 600px)" data-swiss-reset-when-disabled>
@@ -178,7 +179,7 @@
             <!-- TARGET ELEMENT -->
             <div id="target" class="box p:10x mb:10x w:full align-items:center justify-content:center"
               data-state="closed" data-flag style="transition:all 0.3s ease;">
-              <div class="t:center bg:surface-a p:1em r:5px">
+              <div class="t:center">
                 Target Element
                 <br>
                 <p class="f:10px opacity:0.5 mt:2x">(watch attributes change in DevTools)</p>
@@ -203,7 +204,7 @@
                 Toggle data-state="open|closed"
               </button>
               <!-- MIX CLASS + ATTRIBUTE -->
-              <button class="btn" data-swiss="toggle[#target](bg:accent! {data-mixed:true})">
+              <button class="btn" data-swiss="toggle[#target](bg:accent-muted {data-mixed:true})">
                 Toggle class + add/remove attribute
               </button>
             </div>
