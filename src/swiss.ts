@@ -88,7 +88,7 @@
     let depth = 0;
     let inQuotes = false;
     let quote: string | null = null;
-    const D = new Set(delims);
+    const delimiterSet = new Set(delims);
 
     for (let i = 0; i < str.length; i++) {
       const c = str[i];
@@ -111,7 +111,7 @@
         if (c === "(") depth++;
         else if (c === ")" && depth > 0) depth--;
 
-        if (depth === 0 && D.has(c)) {
+        if (depth === 0 && delimiterSet.has(c)) {
           if (curr.trim()) out.push(curr.trim());
           curr = "";
           continue;
@@ -391,7 +391,7 @@
 
           for (const attr in attrs) {
             const v = el.getAttribute(attr);
-            out.push({ el: el, attr, value: v !== null ? v : null });
+            out.push({ el: el, attr, value: v });
           }
         }
 
@@ -485,15 +485,15 @@
       case "remove": {
         const els = resolveTargets(el, action.selector);
 
-        els.forEach((t) => {
+        els.forEach((el) => {
           if ("classNames" in action) {
             const classNames = (action as TClassAction | TComboAction)
               .classNames;
-            applyClassAction(t, action.type, classNames);
+            applyClassAction(el, action.type, classNames);
           }
           if ("attrs" in action) {
             const attrs = (action as TAttrAction | TComboAction).attrs;
-            applyAttrAction(t, action.type, attrs);
+            applyAttrAction(el, action.type, attrs);
           }
         });
         return;
@@ -549,25 +549,22 @@
       const debounceMs =
         typeof a.options?.debounce === "number" ? a.options.debounce : 100;
 
-      if (debounceEnabled) {
-        const existing = rec.timers.get(a);
-        if (existing) clearTimeout(existing);
-
-        const id = window.setTimeout(() => {
-          if (delayMs > 0) {
-            setTimeout(() => runActionImmediate(el, a), delayMs);
-          } else {
-            runActionImmediate(el, a);
-          }
-        }, debounceMs);
-
-        rec.timers.set(a, id);
-      } else {
+      const executeAction = () => {
         if (delayMs > 0) {
           setTimeout(() => runActionImmediate(el, a), delayMs);
         } else {
           runActionImmediate(el, a);
         }
+      };
+
+      if (debounceEnabled) {
+        const existing = rec.timers.get(a);
+        if (existing) clearTimeout(existing);
+
+        const id = window.setTimeout(executeAction, debounceMs);
+        rec.timers.set(a, id);
+      } else {
+        executeAction();
       }
     });
   }
@@ -595,7 +592,7 @@
       rec.entered = true;
 
       if (events.includes("enter")) {
-        executeActionsWithTiming(el, actions, rec!);
+        executeActionsWithTiming(el, actions, rec);
       }
     }
 
@@ -604,7 +601,7 @@
       rec.entered = false;
 
       if (events.includes("exit")) {
-        executeActionsWithTiming(el, actions, rec!);
+        executeActionsWithTiming(el, actions, rec);
       }
     }
   }
@@ -656,10 +653,10 @@
 
     function outsideListener(e: MouseEvent | TouchEvent) {
       if (!conditionActive()) return;
-      const t = e.target as Element | null;
-      if (!t) return;
-      if (elHtml.contains(t)) return;
-      if (t.closest("[data-swiss]")) return;
+      const target = e.target as Element | null;
+      if (!target) return;
+      if (elHtml.contains(target)) return;
+      if (target.closest("[data-swiss]")) return;
       triggerAllActions();
     }
 
@@ -680,7 +677,7 @@
           if (ev === "clickOutside") {
             document.addEventListener("mousedown", outsideListener);
             document.addEventListener("touchstart", outsideListener);
-          } else if (ev === "enter" || ev === "exit") {
+          } else if (["enter", "exit"].includes(ev)) {
             // handled via IntersectionObserver
           } else {
             elHtml.addEventListener(ev, handler);
