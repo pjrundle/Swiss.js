@@ -428,6 +428,18 @@
   //
   // ACTION EXECUTION
   //
+  function applyClassAction(
+    target: Element,
+    actionType: TBaseClassOrAttrActionType,
+    classNames: string[],
+  ) {
+    classNames.forEach((cls) => {
+      if (actionType === "toggle") target.classList.toggle(cls);
+      else if (actionType === "add") target.classList.add(cls);
+      else target.classList.remove(cls);
+    });
+  }
+
   function applyAttrAction(
     target: Element,
     actionType: TBaseClassOrAttrActionType,
@@ -472,44 +484,18 @@
       case "toggle":
       case "add":
       case "remove": {
-        const tgs = resolveTargets(el, action.selector);
-        const hasC = "classNames" in action;
-        const hasA = "attrs" in action;
+        const els = resolveTargets(el, action.selector);
 
-        // COMBO
-        if (hasC && hasA) {
-          const a = action as TComboAction;
-          tgs.forEach((t) => {
-            // classes
-            a.classNames.forEach((cls) => {
-              if (a.type === "toggle") t.classList.toggle(cls);
-              else if (a.type === "add") t.classList.add(cls);
-              else t.classList.remove(cls);
-            });
-
-            // attrs
-            applyAttrAction(t, a.type, a.attrs);
-          });
-          return;
-        }
-
-        // ATTR ONLY
-        if (hasA) {
-          const a = action as TAttrAction;
-          tgs.forEach((t) => {
-            applyAttrAction(t, a.type, a.attrs);
-          });
-          return;
-        }
-
-        // CLASS ONLY
-        const c = action as TClassAction;
-        tgs.forEach((t) => {
-          c.classNames.forEach((cls) => {
-            if (c.type === "toggle") t.classList.toggle(cls);
-            else if (c.type === "add") t.classList.add(cls);
-            else t.classList.remove(cls);
-          });
+        els.forEach((t) => {
+          if ("classNames" in action) {
+            const classNames = (action as TClassAction | TComboAction)
+              .classNames;
+            applyClassAction(t, action.type, classNames);
+          }
+          if ("attrs" in action) {
+            const attrs = (action as TAttrAction | TComboAction).attrs;
+            applyAttrAction(t, action.type, attrs);
+          }
         });
         return;
       }
@@ -534,9 +520,9 @@
     action: TParsedAction,
     exec: (a: TParsedAction) => void,
   ) {
-    const d = action.options?.delay;
-    if (d && d > 0) {
-      setTimeout(() => exec(action), d);
+    const delay = action.options?.delay;
+    if (delay && delay > 0) {
+      setTimeout(() => exec(action), delay);
     } else {
       exec(action);
     }
@@ -561,7 +547,7 @@
 
       const delayMs =
         typeof a.options?.delay === "number" ? a.options.delay : 0;
-      const debMs =
+      const debounceMs =
         typeof a.options?.debounce === "number" ? a.options.debounce : 100;
 
       if (debounceEnabled) {
@@ -574,7 +560,7 @@
           } else {
             runActionImmediate(el, a);
           }
-        }, debMs);
+        }, debounceMs);
 
         rec.timers.set(a, id);
       } else {
