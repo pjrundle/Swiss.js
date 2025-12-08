@@ -1,6 +1,6 @@
 //
-// Swiss.ts v3 — with attribute support
-// ---------------------------------------------
+// Swiss.ts v3.1 — Class + Attribute Actions, Media Conditions, ClickOutside, Reset Semantics
+// ------------------------------------------------------------------------------------------
 (function () {
   //
   // TYPES
@@ -18,11 +18,11 @@
   }
 
   interface TAttrMap {
-    [key: string]: string | null; // null = presence-toggle (boolean attribute)
+    [key: string]: string | null;
   }
 
   interface TAttrAction extends TBaseClassAttrAction {
-    attrs: TAttrMap; // e.g. { "data-open": null, "data-state": "active|inactive" }
+    attrs: TAttrMap;
     classNames?: undefined;
   }
 
@@ -57,13 +57,13 @@
   interface TInitialAttrState {
     el: Element;
     attr: string;
-    value: string | null; // null = attribute absent
+    value: string | null;
   }
 
   type TInitialState = (TInitialClassState | TInitialAttrState)[];
 
   //
-  // Split ignoring quotes + parentheses
+  // Utility: split ignoring quotes + parentheses
   //
   function splitOutside(str: string, delims: string[]): string[] {
     const parts: string[] = [];
@@ -102,31 +102,24 @@
       }
       current += c;
     }
-
     if (current.trim()) parts.push(current.trim());
     return parts;
   }
 
   //
-  // Parse attribute block: {data-open:true aria-expanded:false}
+  // Parse attr block: {data-x:true aria-label:value}
   //
   function parseAttrBlock(block: string): TAttrMap {
     const attrs: TAttrMap = {};
-
-    // remove { }
     const inside = block.slice(1, -1).trim();
     if (!inside) return attrs;
 
     const tokens = splitOutside(inside, [" "]);
-
     tokens.forEach((token) => {
-      // presence toggle: data-open
       if (!token.includes(":")) {
         attrs[token] = null;
         return;
       }
-
-      // key:value or key:a|b
       const [attr, rawValue] = token.split(":");
       attrs[attr] = rawValue;
     });
@@ -135,31 +128,23 @@
   }
 
   //
-  // Parse swiss actions
+  // Parse actions
   //
   function parseActions(str: string): TParsedAction[] {
     if (!str) return [];
-
     const parts = splitOutside(str, [" ", ";"]);
 
     return parts
       .map<TParsedAction | null>((part) => {
-        //
         // run:
-        //
         const runMatch = part.match(/^run:(.+)$/);
         if (runMatch) return { type: "run", js: runMatch[1] };
 
-        //
         // event:
-        //
         const eventMatch = part.match(/^event:(.+)$/);
         if (eventMatch) return { type: "event", name: eventMatch[1] };
 
-        //
-        // attribute/class actions
         // type[selector](payload)
-        //
         const match = part.match(/^(\w+)\[(.+?)\]\((.+?)\)$/);
         if (!match) {
           console.warn("Swiss: invalid action format", part);
@@ -168,7 +153,6 @@
 
         const [, rawType, selectorRaw, payloadRaw] = match;
         const type = rawType as TActionKind;
-
         if (!["toggle", "add", "remove"].includes(type)) {
           console.warn("Swiss: unsupported action type", rawType);
           return null;
@@ -180,9 +164,7 @@
         const classNames: string[] = [];
         let attrs: TAttrMap = {};
 
-        // Payload can contain class tokens and/or one or more {attr blocks}
         const tokens = splitOutside(payload, [" "]);
-
         tokens.forEach((token) => {
           if (token.startsWith("{") && token.endsWith("}")) {
             const map = parseAttrBlock(token);
@@ -195,40 +177,34 @@
         const hasClasses = classNames.length > 0;
         const hasAttrs = Object.keys(attrs).length > 0;
 
-        // MIXED ACTION → classes + attrs
         if (hasClasses && hasAttrs) {
-          const comboAction: TComboAction = {
-            type: type as TBaseClassAttrAction["type"],
+          return {
+            type,
             selector,
             classNames,
             attrs,
-          };
-          return comboAction;
+          } as TComboAction;
         }
 
-        // ATTR-ONLY
         if (hasAttrs) {
-          const attrAction: TAttrAction = {
-            type: type as TBaseClassAttrAction["type"],
+          return {
+            type,
             selector,
             attrs,
-          };
-          return attrAction;
+          } as TAttrAction;
         }
 
-        // CLASS-ONLY
-        const classAction: TClassAction = {
-          type: type as TBaseClassAttrAction["type"],
+        return {
+          type,
           selector,
           classNames,
-        };
-        return classAction;
+        } as TClassAction;
       })
       .filter((a): a is TParsedAction => Boolean(a));
   }
 
   //
-  // Resolve selector
+  // Resolve target elements
   //
   function resolveTargets(el: Element, selector: string): Element[] {
     if (selector === "this") return [el];
@@ -241,7 +217,7 @@
   }
 
   //
-  // Track initial state for classes + attrs
+  // Record initial state
   //
   function getInitialState(
     el: Element,
@@ -256,7 +232,6 @@
         action.type === "remove"
       ) {
         const targets = resolveTargets(el, action.selector);
-
         const hasAttrs = "attrs" in action;
         const hasClasses = "classNames" in action;
 
@@ -272,7 +247,6 @@
               });
             }
           }
-
           if (hasClasses) {
             const classNames = (action as TClassAction | TComboAction)
               .classNames;
@@ -292,16 +266,14 @@
   }
 
   //
-  // Restore all recorded initial values
+  // Restore recorded state
   //
   function restoreState(initial: TInitialState): void {
     initial.forEach((item) => {
       if ("className" in item) {
-        // class state
         if (item.hasClass) item.el.classList.add(item.className);
         else item.el.classList.remove(item.className);
       } else {
-        // attribute state
         if (item.value === null) item.el.removeAttribute(item.attr);
         else item.el.setAttribute(item.attr, item.value);
       }
@@ -309,13 +281,10 @@
   }
 
   //
-  // Run a parsed action
+  // Execute action
   //
   function runAction(el: Element, action: TParsedAction): void {
     switch (action.type) {
-      //
-      // CLASS / ATTR / COMBO
-      //
       case "toggle":
       case "add":
       case "remove": {
@@ -324,20 +293,19 @@
         const targets = resolveTargets(el, action.selector);
 
         //
-        // COMBO: classes + attrs
+        // COMBO
         //
         if (hasAttrs && hasClasses) {
           const a = action as TComboAction;
-
           targets.forEach((t) => {
-            // Classes
+            // classes
             a.classNames.forEach((cls) => {
               if (a.type === "toggle") t.classList.toggle(cls);
               else if (a.type === "add") t.classList.add(cls);
               else t.classList.remove(cls);
             });
 
-            // Attributes
+            // attrs
             for (const attr in a.attrs) {
               const raw = a.attrs[attr];
 
@@ -347,7 +315,6 @@
               }
 
               if (a.type === "toggle") {
-                // VALUE TOGGLE (e.g. active|inactive)
                 if (raw && raw.includes("|")) {
                   const [left, right] = raw.split("|");
                   const cur = t.getAttribute(attr);
@@ -355,27 +322,23 @@
                   continue;
                 }
 
-                // PRESENCE TOGGLE (boolean attr)
                 if (raw === null) {
                   if (t.hasAttribute(attr)) t.removeAttribute(attr);
                   else t.setAttribute(attr, "");
                   continue;
                 }
 
-                // Toggle with single value: apply if missing, remove if present
                 if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
                 else t.setAttribute(attr, raw);
                 continue;
               }
 
-              // ADD
               if (a.type === "add") {
                 if (raw === null) t.setAttribute(attr, "");
                 else t.setAttribute(attr, raw);
               }
             }
           });
-
           return;
         }
 
@@ -394,7 +357,6 @@
               }
 
               if (a.type === "toggle") {
-                // VALUE TOGGLE (e.g. active|inactive)
                 if (raw && raw.includes("|")) {
                   const [left, right] = raw.split("|");
                   const cur = t.getAttribute(attr);
@@ -402,27 +364,23 @@
                   continue;
                 }
 
-                // PRESENCE TOGGLE
                 if (raw === null) {
                   if (t.hasAttribute(attr)) t.removeAttribute(attr);
                   else t.setAttribute(attr, "");
                   continue;
                 }
 
-                // Toggle with single value
                 if (t.getAttribute(attr) === raw) t.removeAttribute(attr);
                 else t.setAttribute(attr, raw);
                 continue;
               }
 
-              // ADD
               if (a.type === "add") {
                 if (raw === null) t.setAttribute(attr, "");
                 else t.setAttribute(attr, raw);
               }
             }
           });
-
           return;
         }
 
@@ -440,9 +398,6 @@
         return;
       }
 
-      //
-      // RUN JS
-      //
       case "run":
         try {
           new Function(action.js)();
@@ -451,9 +406,6 @@
         }
         return;
 
-      //
-      // DISPATCH EVENT
-      //
       case "event":
         el.dispatchEvent(new CustomEvent(action.name, { bubbles: true }));
         return;
@@ -466,16 +418,19 @@
   function initElement(el: Element): void {
     const htmlEl = el as HTMLElement;
 
-    const actionString = htmlEl.getAttribute("data-swiss") || "";
-    const actions = parseActions(actionString);
+    const actionStr = htmlEl.getAttribute("data-swiss") || "";
+    const actions = parseActions(actionStr);
     const hasActions = actions.length > 0;
 
     const stopProp = htmlEl.hasAttribute("data-swiss-stop-propagation");
     const whenSelector = htmlEl.getAttribute("data-swiss-if");
     const whenMedia = htmlEl.getAttribute("data-swiss-when");
     const resetOnResize = htmlEl.hasAttribute("data-swiss-reset-on-resize");
+    const resetWhenDisabled = htmlEl.hasAttribute(
+      "data-swiss-reset-when-disabled",
+    );
 
-    const events: string[] =
+    const events =
       hasActions && htmlEl.hasAttribute("data-swiss-on")
         ? htmlEl.getAttribute("data-swiss-on")!.split(/\s+/).filter(Boolean)
         : hasActions
@@ -484,6 +439,8 @@
 
     let initialState: TInitialState | null = null;
     let active = false;
+
+    let lastWidth = window.innerWidth;
 
     function conditionActive(): boolean {
       if (!whenSelector) return true;
@@ -502,10 +459,7 @@
       const target = e.target as Element | null;
       if (!target) return;
 
-      // Inside element → ignore
       if (htmlEl.contains(target)) return;
-
-      // If clicking another Swiss element → ignore
       if (target.closest("[data-swiss]")) return;
 
       handler(e);
@@ -549,11 +503,13 @@
           }
         });
 
-        if (resetOnResize && initialState) restoreState(initialState);
+        if (resetWhenDisabled && initialState) {
+          restoreState(initialState);
+        }
       }
     }
 
-    function evaluate(): void {
+    function evaluateMedia(): void {
       if (!whenMedia) {
         enable();
         return;
@@ -564,10 +520,24 @@
       else disable();
     }
 
+    function handleResize(): void {
+      const w = window.innerWidth;
+
+      if (resetOnResize && active && initialState) {
+        if (w !== lastWidth) {
+          restoreState(initialState);
+        }
+      }
+
+      lastWidth = w;
+
+      if (whenMedia) evaluateMedia();
+    }
+
     if (hasActions || stopProp) {
-      evaluate();
+      evaluateMedia();
       if (whenMedia || resetOnResize) {
-        window.addEventListener("resize", evaluate);
+        window.addEventListener("resize", handleResize);
       }
     }
   }

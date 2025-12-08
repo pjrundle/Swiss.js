@@ -82,8 +82,7 @@
           <div>
             <p class="f:12px ml:1x mb:2x">Toggle class on self</p>
             <div class="box cursor:pointer bg:accent! p:20x"
-              data-swiss="toggle[this](bg:accent! border-color:rgba(255,255,255,0.8)!)"
-              data-swiss-reset-on-resize="true">
+              data-swiss="toggle[this](bg:accent! border-color:rgba(255,255,255,0.8)!)">
               <div>Click</div>
             </div>
           </div>
@@ -93,7 +92,8 @@
             <p class="f:12px ml:1x mb:2x">Toggle class on this & another elements</p>
             <div class="box test-selector-class w:full p:20x">
               <div class="box mr:4x cursor:pointer p:20x"
-                data-swiss="toggle[#target-1](bg:accent!) toggle[this](border-color:rgba(255,255,255,0.8)!) toggle[.test-selector-class](b:1px|solid|accent)">
+                data-swiss="toggle[#target-1](bg:accent!) toggle[this](border-color:rgba(255,255,255,0.8)!) toggle[.test-selector-class](b:1px|solid|accent)"
+                data-swiss-when="(min-width: 600px)" data-swiss-reset-when-disabled>
                 <div>Click</div>
               </div>
               <div id="target-1" class="box bg:accent! p:20x">
@@ -196,7 +196,7 @@
             <p><strong>Resize window above/below 600px</strong></p>
 
             <div class="box cursor:pointer bg:accent!" data-swiss="toggle[this](bg:accent!)"
-              data-swiss-when="(min-width: 600px)">
+              data-swiss-when="(min-width: 600px)" data-swiss-reset-when-disabled>
               Click me (works only ≥ 600px)
             </div>
           </div>
@@ -236,7 +236,7 @@
 
   <script>
     const box = document.getElementById('event-listener-box');
-    box.addEventListener('myCustomEvent', () => alert('myCustomEvent triggered by Swiss.js'));
+    box.addEventListener('myCustomEvent', () => alert('”myCustomEvent” triggered by Swiss.js!'));
   </script>
 </body>
 
