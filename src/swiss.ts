@@ -171,19 +171,15 @@
     return opts;
   }
 
-  // Parse run(...) with balanced parentheses, optional (options)
-  function parseRunBlock(part: string): TRunAction | null {
-    if (!part.startsWith("run(")) return null;
-
-    let i = "run(".length;
+  // Find matching closing parenthesis, respecting quotes
+  // Returns index of closing paren, or -1 if unbalanced
+  function findClosingParen(str: string, startIndex: number): number {
     let depth = 1;
     let inQuotes = false;
     let quote: string | null = null;
-    const len = part.length;
 
-    // Find the matching closing ) for the JS payload
-    for (; i < len; i++) {
-      const c = part[i];
+    for (let i = startIndex; i < str.length; i++) {
+      const c = str[i];
       const isQ = c === '"' || c === "'";
 
       if (isQ && !inQuotes) {
@@ -202,21 +198,31 @@
         else if (c === ")") {
           depth--;
           if (depth === 0) {
-            break;
+            return i;
           }
         }
       }
     }
 
-    if (depth !== 0) {
+    return -1; // unbalanced
+  }
+
+  // Parse run(...) with balanced parentheses, optional (options)
+  function parseRunBlock(part: string): TRunAction | null {
+    if (!part.startsWith("run(")) return null;
+
+    const start = "run(".length;
+    const closingIndex = findClosingParen(part, start);
+
+    if (closingIndex === -1) {
       console.warn("Swiss: unbalanced parentheses in run()", part);
       return null;
     }
 
-    const js = part.slice("run(".length, i);
+    const js = part.slice(start, closingIndex);
 
     let options: TActionOptions | undefined;
-    const rest = part.slice(i + 1).trim();
+    const rest = part.slice(closingIndex + 1).trim();
 
     if (rest) {
       if (rest.startsWith("(") && rest.endsWith(")")) {
@@ -237,45 +243,15 @@
       return null;
     }
 
-    // We support: event(payload) or event(payload)(options)
-    // Find first closing ) after "event("
     const start = "event(".length;
-    let i = start;
-    let depth = 1;
-    let inQuotes = false;
-    let quote: string | null = null;
-    const len = part.length;
+    const closingIndex = findClosingParen(part, start);
 
-    for (; i < len; i++) {
-      const c = part[i];
-      const isQ = c === '"' || c === "'";
-
-      if (isQ && !inQuotes) {
-        inQuotes = true;
-        quote = c;
-        continue;
-      }
-      if (isQ && inQuotes && c === quote) {
-        inQuotes = false;
-        quote = null;
-        continue;
-      }
-
-      if (!inQuotes) {
-        if (c === "(") depth++;
-        else if (c === ")") {
-          depth--;
-          if (depth === 0) break;
-        }
-      }
-    }
-
-    if (depth !== 0) {
+    if (closingIndex === -1) {
       console.warn("Swiss: unbalanced parentheses in event()", part);
       return null;
     }
 
-    const payload = part.slice(start, i).trim();
+    const payload = part.slice(start, closingIndex).trim();
     if (!payload) {
       console.warn("Swiss: empty event() payload:", part);
       return null;
@@ -284,7 +260,7 @@
     const eventNames = getParts(payload, [" "]);
     let options: TActionOptions | undefined;
 
-    const rest = part.slice(i + 1).trim();
+    const rest = part.slice(closingIndex + 1).trim();
     if (rest) {
       if (rest.startsWith("(") && rest.endsWith(")")) {
         options = parseOptionsBlock(rest);
@@ -345,10 +321,11 @@
 
         const options = optsRaw ? parseOptionsBlock(`(${optsRaw})`) : undefined;
 
-        const hasC = classNames.length > 0;
-        const hasA = Object.keys(attrs).length > 0;
+        const hasClassAction = classNames.length > 0;
+        const hasAttrAction = Object.keys(attrs).length > 0;
+        const hasComboAction = hasClassAction && hasAttrAction;
 
-        if (hasC && hasA) {
+        if (hasComboAction) {
           return {
             type: rawType,
             selector,
@@ -357,7 +334,7 @@
             options,
           } as TComboAction;
         }
-        if (hasA) {
+        if (hasAttrAction) {
           return {
             type: rawType,
             selector,
