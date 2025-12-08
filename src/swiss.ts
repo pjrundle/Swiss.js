@@ -529,7 +529,6 @@
   }
 
   function runActionWithDelay(
-    el: Element,
     action: TParsedAction,
     exec: (a: TParsedAction) => void,
   ) {
@@ -661,7 +660,7 @@
     function triggerAllActions() {
       if (!conditionActive()) return;
       actions.forEach((a) =>
-        runActionWithDelay(elHtml, a, (act) => runActionImmediate(elHtml, act)),
+        runActionWithDelay(a, (act) => runActionImmediate(elHtml, act)),
       );
     }
 
