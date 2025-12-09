@@ -88,7 +88,7 @@
       <header
         class="t:center mb:4x flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md">
 
-        <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,70px)"
+        <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,60px)"
           style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
           <span class="cursor:pointer user-select:none"
             data-swiss="toggle[this](color:accent!) toggle[#js](color:accent!)">Swiss</span>
@@ -290,44 +290,38 @@
             <section class="example bt:none">
               <div class="example-col-1">
                 <h2 class="example-heading">Menu</h2>
+                <div class="flex flex-direction:column gap:1.5x mt:4x">
+                  <!-- ADD ATTRIBUTE -->
+                  <button class="btn" data-swiss="add[#target]({data-open:true})">
+                    Add attribute: data-open="true"
+                  </button>
+                  <!-- REMOVE ATTRIBUTE -->
+                  <button class="btn" data-swiss="remove[#target]({data-open})">
+                    Remove attribute: data-open
+                  </button>
+                  <!-- TOGGLE PRESENCE -->
+                  <button class="btn" data-swiss="toggle[#target]({data-flag})">
+                    Toggle presence: data-flag
+                  </button>
+                  <!-- TOGGLE VALUE (open|closed) -->
+                  <button class="btn" data-swiss="toggle[#target]({data-state:open|closed})">
+                    Toggle data-state="open|closed"
+                  </button>
+                  <!-- MIX CLASS + ATTRIBUTE -->
+                  <button class="btn" data-swiss="toggle[#target](bg:accent-muted {data-mixed:true})">
+                    Toggle class + add/remove attribute
+                  </button>
+                </div>
               </div>
               <div class="example-col-2">
-                <div class="box block! p:10x">
-
-                  <!-- TARGET ELEMENT -->
-                  <div id="target"
-                    class="box box-interactive p:10x mb:10x w:full align-items:center justify-content:center"
-                    data-state="closed" data-flag style="transition:all 0.3s ease;">
-                    <div class="t:center">
-                      Target Element
-                      <br>
-                      <p class="f:10px opacity:0.5 mt:2x">(watch attributes change in DevTools)</p>
-                    </div>
+                <!-- TARGET ELEMENT -->
+                <div id="target" class="box box-interactive p:10x w:full align-items:center justify-content:center"
+                  data-state="closed" data-flag style="transition:all 0.3s ease;">
+                  <div class="t:center">
+                    Target Element
+                    <br>
+                    <p class="f:10px opacity:0.5 mt:2x">(watch attributes change in DevTools)</p>
                   </div>
-
-                  <div class="flex gap:2x">
-                    <!-- ADD ATTRIBUTE -->
-                    <button class="btn" data-swiss="add[#target]({data-open:true})">
-                      Add attribute: data-open="true"
-                    </button>
-                    <!-- REMOVE ATTRIBUTE -->
-                    <button class="btn" data-swiss="remove[#target]({data-open})">
-                      Remove attribute: data-open
-                    </button>
-                    <!-- TOGGLE PRESENCE -->
-                    <button class="btn" data-swiss="toggle[#target]({data-flag})">
-                      Toggle presence: data-flag
-                    </button>
-                    <!-- TOGGLE VALUE (open|closed) -->
-                    <button class="btn" data-swiss="toggle[#target]({data-state:open|closed})">
-                      Toggle data-state="open|closed"
-                    </button>
-                    <!-- MIX CLASS + ATTRIBUTE -->
-                    <button class="btn" data-swiss="toggle[#target](bg:accent-muted {data-mixed:true})">
-                      Toggle class + add/remove attribute
-                    </button>
-                  </div>
-
                 </div>
               </div>
             </section>
@@ -343,8 +337,7 @@
                 <h2 class="example-heading">Enter</h2>
               </div>
               <div class="example-col-2">
-                <div
-                  class="box box-interactive w:full cursor:pointer px:20x py:10x transition:background-color|0.3s|ease-in-out"
+                <div class="box box-interactive w:full px:20x py:10x transition:background-color|0.3s|ease-in-out"
                   data-swiss="add[this](bg:accent!)" data-swiss-on="enter"></div>
               </div>
             </section>
@@ -355,7 +348,7 @@
               </div>
               <div class="example-col-2">
                 <div
-                  class="box box-interactive w:full cursor:pointer px:20x py:10x bg:accent! transition:background-color|0.3s|ease-in-out"
+                  class="box box-interactive w:full px:20x py:10x bg:accent! transition:background-color|0.3s|ease-in-out"
                   data-swiss="remove[this](bg:accent!)" data-swiss-on="exit"></div>
               </div>
             </section>
@@ -365,7 +358,7 @@
                 <h2 class="example-heading">Enter + Exit</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive rel w:full cursor:pointer px:20x py:10x transition:all|0.3s|ease-in-out"
+                <div class="box box-interactive rel w:full px:20x py:10x transition:all|0.3s|ease-in-out"
                   data-swiss="toggle[this](bg:accent)" data-swiss-on="enter exit"></div>
               </div>
             </section>
@@ -378,7 +371,7 @@
                 <div data-swiss="toggle[#enter-exit-transform](bg:accent left:0px! opacity:1!)"
                   data-swiss-on="enter exit">
                   <div id="enter-exit-transform"
-                    class="box box-interactive left:-300px opacity:0 rel w:full cursor:pointer px:20x py:10x transition:all|0.3s|ease-in-out">
+                    class="box box-interactive left:-300px opacity:0 rel w:full px:20x py:10x transition:all|0.3s|ease-in-out">
                   </div>
                 </div>
               </div>
