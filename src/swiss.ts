@@ -194,9 +194,6 @@
     return out;
   }
 
-  /**
-   * Parse an attribute block
-   */
   function parseAttrBlock(block: string) {
     const contents = block.slice(1, -1).trim();
     const out: TAttrMap = {};
@@ -215,9 +212,6 @@
     return out;
   }
 
-  /**
-   * Parse an options block
-   */
   function parseOptionsBlock(s: string) {
     const contents = s.slice(1, -1).trim();
     const opts: TActionOptions = {};
@@ -246,9 +240,6 @@
     return opts;
   }
 
-  /**
-   * Parse a run block
-   */
   function parseRunBlock(part: string): TRunAction | null {
     if (!part.startsWith("run(")) return null;
 
@@ -276,9 +267,6 @@
     return { type: "run", js, options };
   }
 
-  /**
-   * Parse event block
-   */
   function parseEventBlock(part: string): TEventAction | null {
     if (!part.startsWith("event(")) return null;
     if (!part.endsWith(")") && !part.includes(")(")) {
@@ -318,7 +306,7 @@
   /**
    * Parse the data-swiss attribute into a list of actions
    */
-  function parseDataSwiss(raw: string): TParsedAction[] {
+  function parseDataSwissActionsAttr(raw: string): TParsedAction[] {
     if (!raw) return [];
 
     return getParts(raw, [" ", ";"])
@@ -395,6 +383,34 @@
       .filter((x): x is TParsedAction => Boolean(x));
   }
 
+  /**
+   * Parse all data-swiss attributes from an element
+   */
+  function parseElementAttributes(elHtml: HTMLElement) {
+    const raw = elHtml.getAttribute("data-swiss") || "";
+    const actions = parseDataSwissActionsAttr(raw);
+    const hasActions = actions.length > 0;
+
+    const events =
+      hasActions && elHtml.hasAttribute("data-swiss-on")
+        ? elHtml.getAttribute("data-swiss-on")!.split(/\s+/).filter(Boolean)
+        : hasActions
+          ? ["click"]
+          : [];
+
+    return {
+      raw,
+      actions,
+      hasActions,
+      events,
+      stopProp: elHtml.hasAttribute("data-swiss-stop-propagation"),
+      ifElSelector: elHtml.getAttribute("data-swiss-if"),
+      whenMedia: elHtml.getAttribute("data-swiss-when"),
+      resetOnResize: elHtml.hasAttribute("data-swiss-reset-on-resize"),
+      resetWhenDisabled: elHtml.hasAttribute("data-swiss-reset-when-disabled"),
+    };
+  }
+
   /*
   |--------------------------------------------------------------------------
   | Selectors
@@ -420,10 +436,7 @@
   |--------------------------------------------------------------------------
   */
 
-  /**
-   * Get the initial state of the element
-   */
-  function getInitialState(
+  function getElementInitialState(
     el: Element,
     actions: TParsedAction[],
   ): TInitialState {
@@ -457,10 +470,7 @@
     return out;
   }
 
-  /**
-   * Restore the state of the element
-   */
-  function restoreState(initialState: TInitialState) {
+  function restoreElementStateToInitial(initialState: TInitialState) {
     initialState.forEach((item) => {
       if ("className" in item) {
         if (item.hasClass) item.el.classList.add(item.className);
@@ -603,11 +613,8 @@
           : DEFAULT_DEBOUNCE_MS;
 
       const executeAction = () => {
-        if (delayMs > 0) {
-          setTimeout(() => runActionImmediate(el, a), delayMs);
-        } else {
-          runActionImmediate(el, a);
-        }
+        if (delayMs > 0) setTimeout(() => runActionImmediate(el, a), delayMs);
+        else runActionImmediate(el, a);
       };
 
       if (debounceEnabled) {
@@ -665,34 +672,6 @@
   |--------------------------------------------------------------------------
   */
 
-  /**
-   * Parse all data-swiss attributes from an element
-   */
-  function parseElementAttributes(elHtml: HTMLElement) {
-    const raw = elHtml.getAttribute("data-swiss") || "";
-    const actions = parseDataSwiss(raw);
-    const hasActions = actions.length > 0;
-
-    const events =
-      hasActions && elHtml.hasAttribute("data-swiss-on")
-        ? elHtml.getAttribute("data-swiss-on")!.split(/\s+/).filter(Boolean)
-        : hasActions
-          ? ["click"]
-          : [];
-
-    return {
-      raw,
-      actions,
-      hasActions,
-      events,
-      stopProp: elHtml.hasAttribute("data-swiss-stop-propagation"),
-      ifElSelector: elHtml.getAttribute("data-swiss-if"),
-      whenMedia: elHtml.getAttribute("data-swiss-when"),
-      resetOnResize: elHtml.hasAttribute("data-swiss-reset-on-resize"),
-      resetWhenDisabled: elHtml.hasAttribute("data-swiss-reset-when-disabled"),
-    };
-  }
-
   function initElement(el: Element) {
     const elHtml = el as HTMLElement;
 
@@ -716,15 +695,11 @@
       return !!(m && m.matches(ifElSelector));
     }
 
-    function triggerAllActions() {
+    function actionHandler() {
       if (!conditionActive()) return;
       actions.forEach((a) =>
         runActionWithDelay(a, (act) => runActionImmediate(elHtml, act)),
       );
-    }
-
-    function handler(_e: Event) {
-      triggerAllActions();
     }
 
     function outsideListener(e: MouseEvent | TouchEvent) {
@@ -733,7 +708,7 @@
       if (!target) return;
       if (elHtml.contains(target)) return;
       if (target.closest("[data-swiss]")) return;
-      triggerAllActions();
+      actionHandler();
     }
 
     function enable() {
@@ -747,7 +722,7 @@
       }
 
       if (hasActions) {
-        initialState = getInitialState(elHtml, actions);
+        initialState = getElementInitialState(elHtml, actions);
 
         events.forEach((ev) => {
           if (ev === "clickOutside") {
@@ -756,7 +731,7 @@
           } else if (["enter", "exit"].includes(ev)) {
             // handled via IntersectionObserver
           } else {
-            elHtml.addEventListener(ev, handler);
+            elHtml.addEventListener(ev, actionHandler);
           }
         });
       }
@@ -774,21 +749,17 @@
           } else if (["enter", "exit"].includes(ev)) {
             // observer cleanup is handled via GC
           } else {
-            elHtml.removeEventListener(ev, handler);
+            elHtml.removeEventListener(ev, actionHandler);
           }
         });
 
-        if (resetWhenDisabled && initialState) restoreState(initialState);
+        if (resetWhenDisabled && initialState)
+          restoreElementStateToInitial(initialState);
       }
     }
 
     function evaluate() {
-      if (!whenMedia) {
-        enable();
-        return;
-      }
-
-      if (window.matchMedia(whenMedia).matches) enable();
+      if (!whenMedia || window.matchMedia(whenMedia).matches) enable();
       else disable();
     }
 
@@ -820,7 +791,7 @@
       // reset-on-resize always restores initial on ANY resize
       if (resetOnResize) {
         window.addEventListener("resize", () => {
-          if (initialState) restoreState(initialState);
+          if (initialState) restoreElementStateToInitial(initialState);
         });
       }
     }
