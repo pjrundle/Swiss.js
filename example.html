@@ -19,15 +19,15 @@
         'accent-muted': "#63112f",
       },
       utilities: {
-        "box": {
-          "display": "inline-flex",
-          "align-items": "center",
-          "justify-content": "center",
-          "user-select": "none",
-          "border-radius": "30px",
-          "border": "1px solid rgba(255, 255, 255, 0.2)",
-          "box-shadow": "0 1rem 20rem -0.5rem rgba(0, 0, 0, 0.85)",
-        },
+        // "box": {
+        //   "display": "inline-flex",
+        //   "align-items": "center",
+        //   "justify-content": "center",
+        //   "user-select": "none",
+        //   "border-radius": "30px",
+        //   "border": "1px solid rgba(255, 255, 255, 0.2)",
+        //   "box-shadow": "0 1rem 20rem -0.5rem rgba(0, 0, 0, 0.85)",
+        // },
         "btn": {
           "cursor": "pointer",
           "border": "1px solid #e31d65",
@@ -50,6 +50,9 @@
           "heading": 'f:12px f:13px@md',
           "col-1": "grid-col-span:12 grid-col-span:5@md p:4x p:8x@md br:1px|solid|rgba(255,255,255,0.1)@md",
           "col-2": "grid-col-span:12 grid-col-span:7@md p:5x p:8x@md flex justify-content:center bg:rgba(0,0,0,0.1)",
+        },
+        "box": {
+          "": "inline-flex align-items:center justify-content:center user-select:none r:30px b:1px|solid|rgba(255,255,255,0.2) px:20x py:10x",
         }
       }
     }
@@ -114,7 +117,7 @@
                 <h2 class="example-heading">Toggle class on self</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer bg:accent px:20x py:10x"
+                <div class="box box-interactive cursor:pointer bg:accent"
                   data-swiss="toggle[this](bg:accent border-color:rgba(255,255,255,0.8)!)">
                   <div>Click</div>
                 </div>
@@ -126,7 +129,7 @@
                 <h2 class="example-heading">Hover to toggle class on self</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer px:20x py:10x" data-swiss="toggle[this](bg:accent)"
+                <div class="box box-interactive cursor:pointer" data-swiss="toggle[this](bg:accent)"
                   data-swiss-on="mouseenter mouseleave">
                   Hover
                 </div>
@@ -139,11 +142,11 @@
               </div>
               <div class="example-col-2">
                 <div class="flex gap:4x">
-                  <div class="box box-interactive cursor:pointer px:20x py:10x"
+                  <div class="box box-interactive cursor:pointer"
                     data-swiss="toggle[#target-1](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)">
                     <div>Click</div>
                   </div>
-                  <div id="target-1" class="box bg:accent px:20x py:10x">
+                  <div id="target-1" class="box bg:accent">
                     <div style="opacity: 0;">To Change</div>
                   </div>
                 </div>
@@ -156,12 +159,12 @@
               </div>
               <div class="example-col-2">
                 <div class="flex gap:4x">
-                  <div class="box box-interactive cursor:pointer px:20x py:10x"
+                  <div class="box box-interactive cursor:pointer"
                     data-swiss="toggle[#target-2](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)"
                     data-swiss-on="mouseenter mouseleave">
                     <div>Hover</div>
                   </div>
-                  <div id="target-2" class="box bg:accent px:20x py:10x">
+                  <div id="target-2" class="box bg:accent">
                     <div style="opacity: 0;">To Change</div>
                   </div>
                 </div>
@@ -179,8 +182,8 @@
                 <h2 class="example-heading">Reset state on resize</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent"
-                  data-swiss="toggle[this](bg:accent)" data-swiss-reset-on-resize>
+                <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle[this](bg:accent)"
+                  data-swiss-reset-on-resize>
                   Click
                 </div>
               </div>
@@ -191,8 +194,8 @@
                 <h2 class="example-heading">Works only below 600px width viewport</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent"
-                  data-swiss="toggle[this](bg:accent)" data-swiss-when="(max-width: 600px)">
+                <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle[this](bg:accent)"
+                  data-swiss-when="(max-width: 600px)">
                   Click
                 </div>
               </div>
@@ -203,9 +206,8 @@
                 <h2 class="example-heading">Works only above 600px width viewport + reset when disabled</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent"
-                  data-swiss="toggle[this](bg:accent)" data-swiss-when="(min-width: 600px)"
-                  data-swiss-reset-when-disabled>
+                <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle[this](bg:accent)"
+                  data-swiss-when="(min-width: 600px)" data-swiss-reset-when-disabled>
                   Click
                 </div>
               </div>
@@ -337,7 +339,7 @@
                 <h2 class="example-heading">Enter</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive w:full px:20x py:10x transition:background-color|0.3s|ease-in-out"
+                <div class="box box-interactive w:full transition:background-color|0.3s|ease-in-out"
                   data-swiss="add[this](bg:accent)" data-swiss-on="enter"></div>
               </div>
             </section>
@@ -347,8 +349,7 @@
                 <h2 class="example-heading">Exit</h2>
               </div>
               <div class="example-col-2">
-                <div
-                  class="box box-interactive w:full px:20x py:10x bg:accent transition:background-color|0.3s|ease-in-out"
+                <div class="box box-interactive w:full bg:accent transition:background-color|0.3s|ease-in-out"
                   data-swiss="remove[this](bg:accent)" data-swiss-on="exit"></div>
               </div>
             </section>
@@ -358,7 +359,7 @@
                 <h2 class="example-heading">Enter + Exit</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive rel w:full px:20x py:10x transition:all|0.3s|ease-in-out"
+                <div class="box box-interactive rel w:full transition:all|0.3s|ease-in-out"
                   data-swiss="toggle[this](bg:accent)" data-swiss-on="enter exit"></div>
               </div>
             </section>
@@ -371,7 +372,7 @@
                 <div data-swiss="toggle[#enter-exit-transform](bg:accent left:0px! opacity:1!)"
                   data-swiss-on="enter exit">
                   <div id="enter-exit-transform"
-                    class="box box-interactive left:-300px opacity:0 rel w:full px:20x py:10x transition:all|0.3s|ease-in-out">
+                    class="box box-interactive left:-300px opacity:0 rel w:full transition:all|0.3s|ease-in-out">
                   </div>
                 </div>
               </div>
