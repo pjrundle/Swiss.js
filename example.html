@@ -43,10 +43,11 @@
       components: {
         "example-section": {
           "": "r:40px bg:rgba(255,255,255,0.05) b:1px|solid|rgba(255,255,255,0.1)",
-          "heading": 'mb:4x f:20px',
+          "heading": 'mb:4x f:18px',
         },
         "example": {
           "": 'grid grid-cols:12 bt:1px|solid|rgba(255,255,255,0.1)',
+          "heading": 'mb:2x f:14px',
           "col-1": "grid-col-span:12 grid-col-span:5@md p:8x br:1px|solid|rgba(255,255,255,0.1)",
           "col-2": "grid-col-span:12 grid-col-span:7@md p:8x flex justify-content:center bg:rgba(0,0,0,0.1)",
         }
@@ -63,6 +64,18 @@
 
     .debug {
       border: 1px solid red;
+    }
+
+    .box-interactive {
+      box-shadow:
+        0px 8px 0px 0px rgba(255, 255, 255, 0.1),
+        /* button thickness */
+        0px 0 20px rgba(255, 255, 255, .2) inset,
+        /* inner glow */
+        2px 30px 0px rgba(255, 255, 255, .1) inset,
+        /* subtle reflection */
+        5px 15px 30px -10px rgba(0, 0, 0, 0.8);
+      /* dark shadow underneath */
     }
   </style>
 </head>
@@ -94,17 +107,14 @@
 
       <div class="mt:20x flex flex-direction:column gap:20x">
         <section>
-          <h2 class="example-section-heading">Simple Examples</h2>
+          <h2 class="example-section-heading">Class Management</h2>
           <div class="example-section">
             <section class="example bt:none">
               <div class="example-col-1">
-                <h2 class="mb:2x">Toggle class on self</h2>
-                <p class="copy">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
-                </p>
+                <h2 class="example-heading">Toggle class on self</h2>
               </div>
               <div class="example-col-2">
-                <div class="box cursor:pointer bg:accent! p:20x"
+                <div class="box box-interactive cursor:pointer bg:accent! p:20x"
                   data-swiss="toggle[this](bg:accent! border-color:rgba(255,255,255,0.8)!)">
                   <div>Click</div>
                 </div>
@@ -113,14 +123,11 @@
 
             <section class="example">
               <div class="example-col-1">
-                <h2 class="mb:2x">Toggle class on self & another element</h2>
-                <p class="copy">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
-                </p>
+                <h2 class="example-heading">Toggle class on self & another element</h2>
               </div>
               <div class="example-col-2">
                 <div>
-                  <div class="box mr:4x cursor:pointer p:20x"
+                  <div class="box box-interactive mr:4x cursor:pointer p:20x"
                     data-swiss="toggle[#target-1](bg:accent!) toggle[this](border-color:rgba(255,255,255,0.8)!)">
                     <div>Click</div>
                   </div>
@@ -133,13 +140,10 @@
 
             <section class="example">
               <div class="example-col-1">
-                <h2 class="mb:2x">Hover to toggle class on self</h2>
-                <p class="copy">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
-                </p>
+                <h2 class="example-heading">Hover to toggle class on self</h2>
               </div>
               <div class="example-col-2">
-                <div class="box cursor:pointer px:20x py:10x" data-swiss="toggle[this](bg:accent)"
+                <div class="box box-interactive cursor:pointer px:20x py:10x" data-swiss="toggle[this](bg:accent)"
                   data-swiss-on="mouseenter mouseleave">
                   Hover
                 </div>
@@ -148,14 +152,11 @@
 
             <section class="example">
               <div class="example-col-1">
-                <h2 class="mb:2x">Hover to toggle class on self & another element</h2>
-                <p class="copy">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
-                </p>
+                <h2 class="example-heading">Hover to toggle class on self & another element</h2>
               </div>
               <div class="example-col-2">
                 <div>
-                  <div class="box mr:4x cursor:pointer p:20x"
+                  <div class="box box-interactive mr:4x cursor:pointer p:20x"
                     data-swiss="toggle[#target-2](bg:accent!) toggle[this](border-color:rgba(255,255,255,0.8)!)"
                     data-swiss-on="mouseenter mouseleave">
                     <div>Hover</div>
@@ -171,18 +172,15 @@
 
 
         <section>
-          <h2 class="example-section-heading">Conditional Examples</h2>
+          <h2 class="example-section-heading">Conditional Behavior</h2>
           <div class="example-section">
             <section class="example bt:none">
               <div class="example-col-1">
-                <h2 class="mb:2x">Reset state on resize</h2>
-                <p class="copy">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
-                </p>
+                <h2 class="example-heading">Reset state on resize</h2>
               </div>
               <div class="example-col-2">
-                <div class="box w:full cursor:pointer px:20x py:10x bg:accent!" data-swiss="toggle[this](bg:accent!)"
-                  data-swiss-reset-on-resize>
+                <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent!"
+                  data-swiss="toggle[this](bg:accent!)" data-swiss-reset-on-resize>
                   Click
                 </div>
               </div>
@@ -190,14 +188,11 @@
 
             <section class="example">
               <div class="example-col-1">
-                <h2 class="mb:2x">Works only below 600px width viewport!</h2>
-                <p class="copy">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
-                </p>
+                <h2 class="example-heading">Works only below 600px width viewport!</h2>
               </div>
               <div class="example-col-2">
-                <div class="box w:full cursor:pointer px:20x py:10x bg:accent!" data-swiss="toggle[this](bg:accent!)"
-                  data-swiss-when="(max-width: 600px)">
+                <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent!"
+                  data-swiss="toggle[this](bg:accent!)" data-swiss-when="(max-width: 600px)">
                   Click
                 </div>
               </div>
@@ -205,22 +200,91 @@
 
             <section class="example">
               <div class="example-col-1">
-                <h2 class="mb:2x">Works only above 600px width viewport! And resets when disabled!</h2>
-                <p class="copy">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
-                </p>
+                <h2 class="example-heading">Works only above 600px width viewport! And resets when disabled!</h2>
               </div>
               <div class="example-col-2">
-                <div class="box w:full cursor:pointer px:20x py:10x bg:accent!" data-swiss="toggle[this](bg:accent!)"
-                  data-swiss-when="(min-width: 600px)" data-swiss-reset-when-disabled>
+                <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent!"
+                  data-swiss="toggle[this](bg:accent!)" data-swiss-when="(min-width: 600px)"
+                  data-swiss-reset-when-disabled>
                   Click
                 </div>
               </div>
             </section>
           </div>
         </section>
+
+
+        <section>
+          <h2 class="example-section-heading">Events + Run Inline JS</h2>
+          <div class="example-section">
+            <section class="example bt:none">
+              <div class="example-col-1">
+                <h2 class="example-heading">Dispatch a custom event</h2>
+              </div>
+              <div class="example-col-2">
+                <div class="rel flex align-items:center justify-content:center">
+                  <!-- DISPATCH A CUSTOM EVENT -->
+                  <button class="btn" data-swiss="event(myCustomEvent)" id="event-listener-example">
+                    Dispatch custom event
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <section class="example">
+              <div class="example-col-1">
+                <h2 class="example-heading">Trigger an alert</h2>
+              </div>
+              <div class="example-col-2">
+                <div class="flex align-items:center justify-content:center">
+                  <!-- TRIGGER AN ALERT -->
+                  <button class="btn" data-swiss="run(alert('Hello from Swiss.js!'))">
+                    Trigger alert
+                  </button>
+                </div>
+              </div>
+          </div>
+        </section>
+
+
+        <section>
+          <h2 class="example-section-heading">UI Examples</h2>
+          <div class="example-section">
+            <section class="example bt:none">
+              <div class="example-col-1">
+                <h2 class="example-heading">Menu</h2>
+              </div>
+              <div class="example-col-2">
+                <div class="rel flex align-items:center justify-content:center">
+                  <button class="btn" data-swiss="toggle[#my-menu](opacity:0 menu-is-active)">Menu</button>
+                  <div id="my-menu"
+                    class="abs w:200px top:40px opacity:0 f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|0.1s|ease-in-out"
+                    data-swiss="toggle[#my-menu](opacity:0 menu-is-active)" data-swiss-on="clickOutside"
+                    data-swiss-if="#my-menu.menu-is-active">
+                    <p>Some kind of menu...</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="example">
+              <div class="example-col-1">
+                <h2 class="example-heading">Modal</h2>
+              </div>
+              <div class="example-col-2">
+                <div class="flex align-items:center justify-content:center">
+                  <button class="btn"
+                    data-swiss="remove[#modal](opacity:0 pointer-events:none) add[#modal](modal-is-active)">
+                    Open Modal
+                  </button>
+                </div>
+              </div>
+          </div>
+        </section>
       </div>
+      </section>
     </div>
+  </div>
   </div>
 
   <div id="modal"
