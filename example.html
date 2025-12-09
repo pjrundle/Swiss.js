@@ -43,7 +43,7 @@
       components: {
         "example-section": {
           "": "r:40px bg:rgba(255,255,255,0.05) b:1px|solid|rgba(255,255,255,0.1)",
-          "heading": 'mb:4x f:18px',
+          "heading": 'mb:5x f:18px',
         },
         "example": {
           "": 'grid grid-cols:12 bt:1px|solid|rgba(255,255,255,0.1)',
@@ -114,26 +114,9 @@
                 <h2 class="example-heading">Toggle class on self</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer bg:accent! p:20x"
+                <div class="box box-interactive cursor:pointer bg:accent! px:20x py:10x"
                   data-swiss="toggle[this](bg:accent! border-color:rgba(255,255,255,0.8)!)">
                   <div>Click</div>
-                </div>
-              </div>
-            </section>
-
-            <section class="example">
-              <div class="example-col-1">
-                <h2 class="example-heading">Toggle class on self & another element</h2>
-              </div>
-              <div class="example-col-2">
-                <div>
-                  <div class="box box-interactive mr:4x cursor:pointer p:20x"
-                    data-swiss="toggle[#target-1](bg:accent!) toggle[this](border-color:rgba(255,255,255,0.8)!)">
-                    <div>Click</div>
-                  </div>
-                  <div id="target-1" class="box bg:accent! p:20x">
-                    <div style="opacity: 0;">To Change</div>
-                  </div>
                 </div>
               </div>
             </section>
@@ -152,16 +135,33 @@
 
             <section class="example">
               <div class="example-col-1">
+                <h2 class="example-heading">Toggle class on self & another element</h2>
+              </div>
+              <div class="example-col-2">
+                <div>
+                  <div class="box box-interactive mr:4x cursor:pointer px:20x py:10x"
+                    data-swiss="toggle[#target-1](bg:accent!) toggle[this](border-color:rgba(255,255,255,0.8)!)">
+                    <div>Click</div>
+                  </div>
+                  <div id="target-1" class="box bg:accent! px:20x py:10x">
+                    <div style="opacity: 0;">To Change</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="example">
+              <div class="example-col-1">
                 <h2 class="example-heading">Hover to toggle class on self & another element</h2>
               </div>
               <div class="example-col-2">
                 <div>
-                  <div class="box box-interactive mr:4x cursor:pointer p:20x"
+                  <div class="box box-interactive mr:4x cursor:pointer px:20x py:10x"
                     data-swiss="toggle[#target-2](bg:accent!) toggle[this](border-color:rgba(255,255,255,0.8)!)"
                     data-swiss-on="mouseenter mouseleave">
                     <div>Hover</div>
                   </div>
-                  <div id="target-2" class="box bg:accent! p:20x">
+                  <div id="target-2" class="box bg:accent! px:20x py:10x">
                     <div style="opacity: 0;">To Change</div>
                   </div>
                 </div>
@@ -188,7 +188,7 @@
 
             <section class="example">
               <div class="example-col-1">
-                <h2 class="example-heading">Works only below 600px width viewport!</h2>
+                <h2 class="example-heading">Works only below 600px width viewport</h2>
               </div>
               <div class="example-col-2">
                 <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent!"
@@ -200,7 +200,7 @@
 
             <section class="example">
               <div class="example-col-1">
-                <h2 class="example-heading">Works only above 600px width viewport! And resets when disabled!</h2>
+                <h2 class="example-heading">Works only above 600px width viewport + reset when disabled</h2>
               </div>
               <div class="example-col-2">
                 <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent!"
