@@ -91,8 +91,8 @@
         <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,60px)"
           style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
           <span class="cursor:pointer user-select:none"
-            data-swiss="toggle[this](color:accent!) toggle[#js](color:accent!)">Swiss</span>
-          <span id="js" class="color:accent!">.js</span>
+            data-swiss="toggle[this](color:accent) toggle[#js](color:accent)">Swiss</span>
+          <span id="js" class="color:accent">.js</span>
         </h1>
 
         <div class="flex:1 t:center t:right@md">
@@ -114,8 +114,8 @@
                 <h2 class="example-heading">Toggle class on self</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer bg:accent! px:20x py:10x"
-                  data-swiss="toggle[this](bg:accent! border-color:rgba(255,255,255,0.8)!)">
+                <div class="box box-interactive cursor:pointer bg:accent px:20x py:10x"
+                  data-swiss="toggle[this](bg:accent border-color:rgba(255,255,255,0.8)!)">
                   <div>Click</div>
                 </div>
               </div>
@@ -140,10 +140,10 @@
               <div class="example-col-2">
                 <div class="flex gap:4x">
                   <div class="box box-interactive cursor:pointer px:20x py:10x"
-                    data-swiss="toggle[#target-1](bg:accent!) toggle[this](border-color:rgba(255,255,255,0.8)!)">
+                    data-swiss="toggle[#target-1](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)">
                     <div>Click</div>
                   </div>
-                  <div id="target-1" class="box bg:accent! px:20x py:10x">
+                  <div id="target-1" class="box bg:accent px:20x py:10x">
                     <div style="opacity: 0;">To Change</div>
                   </div>
                 </div>
@@ -157,11 +157,11 @@
               <div class="example-col-2">
                 <div class="flex gap:4x">
                   <div class="box box-interactive cursor:pointer px:20x py:10x"
-                    data-swiss="toggle[#target-2](bg:accent!) toggle[this](border-color:rgba(255,255,255,0.8)!)"
+                    data-swiss="toggle[#target-2](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)"
                     data-swiss-on="mouseenter mouseleave">
                     <div>Hover</div>
                   </div>
-                  <div id="target-2" class="box bg:accent! px:20x py:10x">
+                  <div id="target-2" class="box bg:accent px:20x py:10x">
                     <div style="opacity: 0;">To Change</div>
                   </div>
                 </div>
@@ -179,8 +179,8 @@
                 <h2 class="example-heading">Reset state on resize</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent!"
-                  data-swiss="toggle[this](bg:accent!)" data-swiss-reset-on-resize>
+                <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent"
+                  data-swiss="toggle[this](bg:accent)" data-swiss-reset-on-resize>
                   Click
                 </div>
               </div>
@@ -191,8 +191,8 @@
                 <h2 class="example-heading">Works only below 600px width viewport</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent!"
-                  data-swiss="toggle[this](bg:accent!)" data-swiss-when="(max-width: 600px)">
+                <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent"
+                  data-swiss="toggle[this](bg:accent)" data-swiss-when="(max-width: 600px)">
                   Click
                 </div>
               </div>
@@ -203,8 +203,8 @@
                 <h2 class="example-heading">Works only above 600px width viewport + reset when disabled</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent!"
-                  data-swiss="toggle[this](bg:accent!)" data-swiss-when="(min-width: 600px)"
+                <div class="box box-interactive cursor:pointer px:20x py:10x bg:accent"
+                  data-swiss="toggle[this](bg:accent)" data-swiss-when="(min-width: 600px)"
                   data-swiss-reset-when-disabled>
                   Click
                 </div>
@@ -338,7 +338,7 @@
               </div>
               <div class="example-col-2">
                 <div class="box box-interactive w:full px:20x py:10x transition:background-color|0.3s|ease-in-out"
-                  data-swiss="add[this](bg:accent!)" data-swiss-on="enter"></div>
+                  data-swiss="add[this](bg:accent)" data-swiss-on="enter"></div>
               </div>
             </section>
 
@@ -348,8 +348,8 @@
               </div>
               <div class="example-col-2">
                 <div
-                  class="box box-interactive w:full px:20x py:10x bg:accent! transition:background-color|0.3s|ease-in-out"
-                  data-swiss="remove[this](bg:accent!)" data-swiss-on="exit"></div>
+                  class="box box-interactive w:full px:20x py:10x bg:accent transition:background-color|0.3s|ease-in-out"
+                  data-swiss="remove[this](bg:accent)" data-swiss-on="exit"></div>
               </div>
             </section>
 
@@ -392,7 +392,7 @@
       <div class="flex flex-direction:column gap:1em">
         <p class="f:12px">Some kind of modal...</p>
 
-        <button class="cursor:pointer b:1px|solid|accent! px:1em py:0.5em r:5px f:11px"
+        <button class="cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px"
           data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)">
           Close Modal
         </button>
