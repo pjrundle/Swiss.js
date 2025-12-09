@@ -47,7 +47,7 @@
         },
         "example": {
           "": 'grid grid-cols:12 bt:1px|solid|rgba(255,255,255,0.1)',
-          "heading": 'mb:2x f:14px',
+          "heading": 'f:14px',
           "col-1": "grid-col-span:12 grid-col-span:5@md p:8x br:1px|solid|rgba(255,255,255,0.1)",
           "col-2": "grid-col-span:12 grid-col-span:7@md p:8x flex justify-content:center bg:rgba(0,0,0,0.1)",
         }
@@ -86,7 +86,7 @@
 
       <!-- HEADER -->
       <header
-        class="t:center mb:4x flex flex-direction:column flex-direction:row-reverse@md justify-content:between align-items:center gap:6x gap:10x@md">
+        class="t:center mb:4x flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md">
 
         <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,70px)"
           style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
@@ -95,7 +95,7 @@
           <span id="js" class="color:accent!">.js</span>
         </h1>
 
-        <div class="flex:1 t:center t:left@md">
+        <div class="flex:1 t:center t:right@md">
           <p class="inline-block opacity:0.85 max-w:32em f:14px f:16px@lg line-height:1.4 t:center t:left@md">
             A simple javascript utility for declaratively adding, removing
             and toggling classes + more via data-attributes. Use it for fast prototyping and eliminating scattered,
@@ -279,6 +279,57 @@
                   </button>
                 </div>
               </div>
+          </div>
+        </section>
+
+
+        <section>
+          <h2 class="example-section-heading">Data Attributes</h2>
+          <div class="example-section">
+            <section class="example bt:none">
+              <div class="example-col-1">
+                <h2 class="example-heading">Menu</h2>
+              </div>
+              <div class="example-col-2">
+                <div class="box block! p:10x">
+
+                  <!-- TARGET ELEMENT -->
+                  <div id="target"
+                    class="box box-interactive p:10x mb:10x w:full align-items:center justify-content:center"
+                    data-state="closed" data-flag style="transition:all 0.3s ease;">
+                    <div class="t:center">
+                      Target Element
+                      <br>
+                      <p class="f:10px opacity:0.5 mt:2x">(watch attributes change in DevTools)</p>
+                    </div>
+                  </div>
+
+                  <div class="flex gap:2x">
+                    <!-- ADD ATTRIBUTE -->
+                    <button class="btn" data-swiss="add[#target]({data-open:true})">
+                      Add attribute: data-open="true"
+                    </button>
+                    <!-- REMOVE ATTRIBUTE -->
+                    <button class="btn" data-swiss="remove[#target]({data-open})">
+                      Remove attribute: data-open
+                    </button>
+                    <!-- TOGGLE PRESENCE -->
+                    <button class="btn" data-swiss="toggle[#target]({data-flag})">
+                      Toggle presence: data-flag
+                    </button>
+                    <!-- TOGGLE VALUE (open|closed) -->
+                    <button class="btn" data-swiss="toggle[#target]({data-state:open|closed})">
+                      Toggle data-state="open|closed"
+                    </button>
+                    <!-- MIX CLASS + ATTRIBUTE -->
+                    <button class="btn" data-swiss="toggle[#target](bg:accent-muted {data-mixed:true})">
+                      Toggle class + add/remove attribute
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </section>
           </div>
         </section>
       </div>
