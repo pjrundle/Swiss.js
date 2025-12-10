@@ -11,6 +11,10 @@
   <link rel="preload" as="script" href="https://cdn.master.co/css-runtime@rc">
   <link rel="preload" as="style" href="https://cdn.master.co/normal.css">
   <link rel="stylesheet" href="https://cdn.master.co/normal.css">
+
+  <link href="prism.css" rel="stylesheet">
+  <script src="prism.js"></script>
+
   <script>
     window.masterCSSConfig = {
       variables: {
@@ -71,6 +75,41 @@
         5px 15px 30px -10px rgba(0, 0, 0, 0.8);
       /* dark shadow underneath */
     }
+
+    :not(pre)>code[class*=language-],
+    pre[class*=language-] {
+      background: #0c1320;
+    }
+
+    .language-markup {
+      margin-top: 15px !important;
+      font-size: 13px !important;
+      border-radius: 5px !important;
+    }
+
+    .token.constant,
+    .token.deleted,
+    .token.property,
+    .token.symbol,
+    .token.tag {
+      color: #3e99ff;
+    }
+
+    .token.attr-name,
+    .token.builtin,
+    .token.char,
+    .token.inserted,
+    .token.selector,
+    .token.string {
+      color: #ff518f;
+    }
+
+    .token.atrule,
+    .token.attr-value,
+    .token.class-name,
+    .token.function {
+      color: #ffa546;
+    }
   </style>
 </head>
 
@@ -109,12 +148,12 @@
             <section class="example bt:none">
               <div class="example-col-1">
                 <h2 class="example-heading">Toggle class on self</h2>
-                <pre class="f:10px opacity:0.5">
-                    &lt;div class="bg:accent"
-                      data-swiss="toggle[this](bg:accent border-color:rgba(255,255,255,0.8)!)">
-                      Click
-                    &lt;/div>
-                </pre>
+                <script type="text/plain" class="language-markup f:13px!">
+                  <div class="bg:accent"
+                       data-swiss="toggle[this](bg:accent border-color:rgba(255,255,255,0.8)!)">
+                    Click
+                  </div>
+                </script>
               </div>
               <div class="example-col-2">
                 <div class="box box-interactive cursor:pointer bg:accent"
@@ -127,6 +166,12 @@
             <section class="example">
               <div class="example-col-1">
                 <h2 class="example-heading">Hover to toggle class on self</h2>
+                <script type="text/plain" class="language-markup f:13px!">
+                  <div data-swiss="toggle[this](bg:accent)"
+                       data-swiss-on="mouseenter mouseleave">
+                    Hover
+                  </div>
+                </script>
               </div>
               <div class="example-col-2">
                 <div class="box box-interactive cursor:pointer" data-swiss="toggle[this](bg:accent)"
