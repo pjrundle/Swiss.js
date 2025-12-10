@@ -14,7 +14,8 @@
   <script>
     window.masterCSSConfig = {
       variables: {
-        "surface-a": '#0e141f',
+        // "surface-a": '#0e141f',
+        "surface-a": '#121b2c',
         accent: '#e31d65',
         'accent-muted': "#63112f",
       },
@@ -42,13 +43,13 @@
       },
       components: {
         "example-section": {
-          "": "r:20px r:40px@md bg:rgba(255,255,255,0.05) b:1px|solid|rgba(255,255,255,0.1)",
+          "": "r:20px r:40px@md b:1px|solid|rgba(255,255,255,0.1) overflow:hidden shadow:0px|23px|25px|6px|rgba(0,0,0,0.25)",
           "heading": 'mb:5x f:16px f:18px@md',
         },
         "example": {
           "": 'grid grid-cols:12 bt:1px|solid|rgba(255,255,255,0.1)',
           "heading": 'f:12px f:13px@md',
-          "col-1": "grid-col-span:12 grid-col-span:5@md p:4x p:8x@md br:1px|solid|rgba(255,255,255,0.1)@md",
+          "col-1": "grid-col-span:12 grid-col-span:5@md p:4x p:8x@md br:1px|solid|rgba(255,255,255,0.1)@md bg:rgba(0,0,0,0.1)",
           "col-2": "grid-col-span:12 grid-col-span:7@md p:5x p:8x@md flex justify-content:center bg:rgba(0,0,0,0.1)",
         },
         "box": {
@@ -71,9 +72,9 @@
 
     .box-interactive {
       box-shadow:
-        0px 8px 0px 0px rgba(255, 255, 255, 0.1),
+        0px 8px 0px 0px rgba(255, 255, 255, 0),
         /* button thickness */
-        0px 0 20px rgba(255, 255, 255, .2) inset,
+        0px 0 20px rgba(255, 255, 255, .1) inset,
         /* inner glow */
         2px 30px 0px rgba(255, 255, 255, .1) inset,
         /* subtle reflection */
@@ -88,23 +89,26 @@
     <div class="mx:auto max-w:1200px pt:16x pb:32x">
 
       <!-- HEADER -->
-      <header
-        class="t:center mb:4x flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md">
+      <header class="t:center mb:4x">
 
-        <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,60px)"
-          style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
-          <span class="cursor:pointer user-select:none"
-            data-swiss="toggle[this](color:accent) toggle[#js](color:accent)">Swiss</span>
-          <span id="js" class="color:accent">.js</span>
-        </h1>
-
-        <div class="flex:1 t:center t:right@md">
-          <p class="inline-block opacity:0.85 max-w:32em f:14px f:16px@lg line-height:1.4 t:center t:left@md">
-            A simple javascript utility for declaratively adding, removing
-            and toggling classes + more via data-attributes. Use it for fast prototyping and eliminating scattered,
-            repetitive code in non-react/vue etc projects.
-          </p>
+        <div
+          class="flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md">
+          <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,60px)"
+            style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
+            <span class="cursor:pointer user-select:none"
+              data-swiss="toggle[this](color:accent) toggle[#js](color:accent)">Swiss</span>
+            <span id="js" class="color:accent">.js</span>
+          </h1>
+          <div class="flex:1 t:center t:right@md">
+            <p class="inline-block opacity:0.85 max-w:32em f:14px f:16px@lg line-height:1.4 t:center t:left@md">
+              A simple javascript utility for declaratively adding, removing
+              and toggling classes + more via data-attributes. Use it for fast prototyping and eliminating scattered,
+              repetitive code in non-react/vue etc projects.
+            </p>
+          </div>
         </div>
+
+        <!-- <div class="mt:10x py:4x by:1px|solid|rgba(255,255,255,0.1)"></div> -->
       </header>
 
 
@@ -119,7 +123,7 @@
               <div class="example-col-2">
                 <div class="box box-interactive cursor:pointer bg:accent"
                   data-swiss="toggle[this](bg:accent border-color:rgba(255,255,255,0.8)!)">
-                  <div>Click</div>
+                  Click
                 </div>
               </div>
             </section>
@@ -144,10 +148,10 @@
                 <div class="flex gap:4x">
                   <div class="box box-interactive cursor:pointer"
                     data-swiss="toggle[#target-1](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)">
-                    <div>Click</div>
+                    Click
                   </div>
-                  <div id="target-1" class="box bg:accent">
-                    <div style="opacity: 0;">To Change</div>
+                  <div id="target-1" class="box box-interactive bg:accent">
+                    <span style="opacity: 0;">To Change</span>
                   </div>
                 </div>
               </div>
@@ -162,10 +166,10 @@
                   <div class="box box-interactive cursor:pointer"
                     data-swiss="toggle[#target-2](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)"
                     data-swiss-on="mouseenter mouseleave">
-                    <div>Hover</div>
+                    Hover
                   </div>
-                  <div id="target-2" class="box bg:accent">
-                    <div style="opacity: 0;">To Change</div>
+                  <div id="target-2" class="box box-interactive bg:accent">
+                    <span style="opacity: 0;">To Change</span>
                   </div>
                 </div>
               </div>
