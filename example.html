@@ -113,41 +113,41 @@
   </style>
 </head>
 
-<body class="min-w:100vw min-h:100vh bg:surface-a">
-  <div class="">
+<body class="min-w:100vw min-h:100vh bg:surface-b">
 
-    <!-- HEADER -->
-    <header class="t:center mb:4x bg:surface-b px:4x px:7x@md bb:0px|solid|color-default-border">
+  <header class="t:center bg:surface-b px:4x px:7x@md bb:0px|solid|color-default-border">
 
-      <div class="mx:auto max-w:1200px py:10x">
-        <div
-          class="flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md">
-          <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,50px)"
-            style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
-            <span class="cursor:pointer user-select:none"
-              data-swiss="toggle[this](color:accent) toggle[#js](color:accent)">Swiss</span>
-            <span id="js" class="color:accent">.js</span>
-          </h1>
-          <div class="flex:1 t:center t:right@md">
-            <p class="inline-block opacity:0.85 max-w:32em f:14px line-height:1.4 t:center t:left@md">
-              A simple javascript utility for declaratively adding, removing
-              and toggling classes + more via data-attributes. Use it for fast prototyping and eliminating scattered,
-              repetitive code in non-react/vue etc projects.
-            </p>
-          </div>
+    <div class="mx:auto max-w:1200px py:10x">
+      <div
+        class="flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md">
+        <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,50px)"
+          style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
+          <span class="cursor:pointer user-select:none"
+            data-swiss="toggle[this](color:accent) toggle[#js](color:accent)">Swiss</span>
+          <span id="js" class="color:accent">.js</span>
+        </h1>
+        <div class="flex:1 t:center t:right@md">
+          <p class="inline-block opacity:0.85 max-w:32em f:14px line-height:1.4 t:center t:left@md">
+            A simple javascript utility for declaratively adding, removing
+            and toggling classes + more via data-attributes. Use it for fast prototyping and eliminating scattered,
+            repetitive code in non-react/vue etc projects.
+          </p>
         </div>
       </div>
+    </div>
 
-      <div class="by:1px|solid|color-default-border">
-        <div class="max-w:1200px mx:auto flex {cursor:pointer;px:4x;py:4x;opacity:0.66;bb:2px|solid|transparent}>*">
-          <div class="opacity:1! border-color:accent!">Examples</div>
-          <div>Installation</div>
-          <div>About</div>
-        </div>
+    <div class="by:1px|solid|color-default-border">
+      <div
+        class="max-w:1200px mx:auto flex {cursor:pointer;px:4x;py:4x;opacity:0.66;bb:2px|solid|transparent}>* f:14px">
+        <div class="opacity:1! border-color:accent!">Examples</div>
+        <div>Installation</div>
+        <div>About</div>
       </div>
-    </header>
+    </div>
+  </header>
 
-    <div class="mx:auto max-w:1200px pt:20x pb:32x">
+  <main class="bg:surface-a pt:20x pb:32x">
+    <div class="mx:auto max-w:1200px">
       <div class="flex flex-direction:column gap:20x">
         <section>
           <h2 class="example-section-heading">Class Management</h2>
@@ -156,11 +156,11 @@
               <div class="example-col-1">
                 <h2 class="example-heading">Toggle class on self</h2>
                 <script type="text/plain" class="language-markup f:13px!">
-                <div class="bg:accent"
-                     data-swiss="toggle[this](bg:accent border-color:rgba(255,255,255,0.8)!)">
-                  Click
-                </div>
-                </script>
+                  <div class="bg:accent"
+                       data-swiss="toggle[this](bg:accent border-color:rgba(255,255,255,0.8)!)">
+                    Click
+                  </div>
+                  </script>
               </div>
               <div class="example-col-2">
                 <div class="box box-interactive cursor:pointer bg:accent"
@@ -169,16 +169,15 @@
                 </div>
               </div>
             </section>
-
             <section class="example">
               <div class="example-col-1">
                 <h2 class="example-heading">Hover to toggle class on self</h2>
                 <script type="text/plain" class="language-markup f:13px!">
-                  <div data-swiss="toggle[this](bg:accent)"
-                       data-swiss-on="mouseenter mouseleave">
-                    Hover
-                  </div>
-                </script>
+                    <div data-swiss="toggle[this](bg:accent)"
+                         data-swiss-on="mouseenter mouseleave">
+                      Hover
+                    </div>
+                  </script>
               </div>
               <div class="example-col-2">
                 <div class="box box-interactive cursor:pointer" data-swiss="toggle[this](bg:accent)"
@@ -187,17 +186,15 @@
                 </div>
               </div>
             </section>
-
             <section class="example">
               <div class="example-col-1">
                 <h2 class="example-heading">Toggle class on self & another element</h2>
                 <script type="text/plain" class="language-markup f:13px!">
-                  <div data-swiss="toggle[#target-1](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)">
-                    Click
-                  </div>
-
-                  <div id="target-1" class="bg:accent" />
-                </script>
+                    <div data-swiss="toggle[#target-1](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)">
+                      Click
+                    </div>
+                    <div id="target-1" class="bg:accent" />
+                  </script>
               </div>
               <div class="example-col-2">
                 <div class="flex gap:4x">
@@ -211,10 +208,16 @@
                 </div>
               </div>
             </section>
-
             <section class="example">
               <div class="example-col-1">
                 <h2 class="example-heading">Hover to toggle class on self & another element</h2>
+                <script type="text/plain" class="language-markup f:13px!">
+                    <div data-swiss="toggle[#target-2](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)"
+                         data-swiss-on="mouseenter mouseleave">
+                      Hover
+                    </div>
+                    <div id="target-2" class="bg:accent" />
+                  </script>
               </div>
               <div class="example-col-2">
                 <div class="flex gap:4x">
@@ -231,8 +234,6 @@
             </section>
           </div>
         </section>
-
-
         <section>
           <h2 class="example-section-heading">Conditional Behavior</h2>
           <div class="example-section">
@@ -247,7 +248,6 @@
                 </div>
               </div>
             </section>
-
             <section class="example">
               <div class="example-col-1">
                 <h2 class="example-heading">Works only below 600px width viewport</h2>
@@ -259,7 +259,6 @@
                 </div>
               </div>
             </section>
-
             <section class="example">
               <div class="example-col-1">
                 <h2 class="example-heading">Works only above 600px width viewport + reset when disabled</h2>
@@ -273,8 +272,6 @@
             </section>
           </div>
         </section>
-
-
         <section>
           <h2 class="example-section-heading">Events + Run Inline JS</h2>
           <div class="example-section">
@@ -291,7 +288,6 @@
                 </div>
               </div>
             </section>
-
             <section class="example">
               <div class="example-col-1">
                 <h2 class="example-heading">Trigger an alert</h2>
@@ -306,8 +302,6 @@
               </div>
           </div>
         </section>
-
-
         <section>
           <h2 class="example-section-heading">UI Examples</h2>
           <div class="example-section">
@@ -327,7 +321,6 @@
                 </div>
               </div>
             </section>
-
             <section class="example">
               <div class="example-col-1">
                 <h2 class="example-heading">Modal</h2>
@@ -343,8 +336,6 @@
             </section>
           </div>
         </section>
-
-
         <section>
           <h2 class="example-section-heading">Data Attributes</h2>
           <div class="example-section">
@@ -388,8 +379,6 @@
             </section>
           </div>
         </section>
-
-
         <section>
           <h2 class="example-section-heading">Enter/Exit</h2>
           <div class="example-section">
@@ -402,7 +391,6 @@
                   data-swiss="add[this](bg:accent)" data-swiss-on="enter"></div>
               </div>
             </section>
-
             <section class="example">
               <div class="example-col-1">
                 <h2 class="example-heading">Exit</h2>
@@ -412,7 +400,6 @@
                   data-swiss="remove[this](bg:accent)" data-swiss-on="exit"></div>
               </div>
             </section>
-
             <section class="example">
               <div class="example-col-1">
                 <h2 class="example-heading">Enter + Exit</h2>
@@ -422,7 +409,6 @@
                   data-swiss="toggle[this](bg:accent)" data-swiss-on="enter exit"></div>
               </div>
             </section>
-
             <section class="example">
               <div class="example-col-1">
                 <h2 class="example-heading">Enter + Exit (transform)</h2>
@@ -441,31 +427,32 @@
       </div>
       </section>
     </div>
-  </div>
-  </div>
 
-  <div id="modal"
-    class="opacity:0 pointer-events:none fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
-    <div class="box p:20x bg:surface-a! rel"
-      data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)"
-      data-swiss-on="clickOutside" data-swiss-if="#modal.modal-is-active">
-      <div class="flex flex-direction:column gap:1em">
-        <p class="f:12px">Some kind of modal...</p>
+    </div>
+    </div>
 
-        <button class="cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px"
-          data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)">
-          Close Modal
-        </button>
+    <div id="modal"
+      class="opacity:0 pointer-events:none fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
+      <div class="box p:20x bg:surface-a! rel"
+        data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)"
+        data-swiss-on="clickOutside" data-swiss-if="#modal.modal-is-active">
+        <div class="flex flex-direction:column gap:1em">
+          <p class="f:12px">Some kind of modal...</p>
+
+          <button class="cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px"
+            data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)">
+            Close Modal
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="dist/swiss.umd.js"></script>
+    <script src="dist/swiss.umd.js"></script>
 
-  <script>
-    const box = document.getElementById('event-listener-example');
-    box.addEventListener('myCustomEvent', () => alert('”myCustomEvent” triggered by Swiss.js!'));
-  </script>
+    <script>
+      const box = document.getElementById('event-listener-example');
+      box.addEventListener('myCustomEvent', () => alert('”myCustomEvent” triggered by Swiss.js!'));
+    </script>
 </body>
 
 </html>
