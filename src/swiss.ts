@@ -322,8 +322,11 @@
         }
 
         // 3) class/attr actions:
-        //    type[selector](payload)(options?)
-        const match = block.match(/^(\w+)\[(.+?)\]\((.+?)\)(?:\((.+?)\))?$/);
+        //    type[selector](payload)(options?) or type(payload)(options?)
+        //    If selector is omitted, defaults to "this"
+        const match = block.match(
+          /^(\w+)(?:\[(.+?)\])?\((.+?)\)(?:\((.+?)\))?$/,
+        );
         if (!match) {
           console.warn("Swiss: invalid action format:", block);
           return null;
@@ -335,7 +338,7 @@
           return null;
         }
 
-        const selector = selRaw.trim();
+        const selector = selRaw ? selRaw.trim() : "this";
         const payload = payloadRaw.trim();
 
         const classNames: string[] = [];

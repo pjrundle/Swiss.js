@@ -125,14 +125,13 @@
         <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,50px)"
           style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
           <span class="cursor:pointer user-select:none"
-            data-swiss="toggle[this](color:accent) toggle[#js](color:accent)">Swiss</span>
+            data-swiss="toggle(color:accent) toggle[#js](color:accent)">Swiss</span>
           <span id="js" class="color:accent">.js</span>
         </h1>
         <div class="flex:1 t:center t:right@md">
           <p class="inline-block opacity:0.85 max-w:32em f:14px line-height:1.4 t:center t:left@md">
-            A simple javascript utility for declaratively adding, removing
-            and toggling classes + more via data-attributes. Use it for fast prototyping and eliminating scattered,
-            repetitive code in non-react/vue etc projects.
+            Swiss.js — A tiny JavaScript utility for adding interactivity using simple HTML attributes. Perfect for
+            static sites, CMS templates, prototypes, and Webflow/Framer custom code.
           </p>
         </div>
       </div>
@@ -142,14 +141,14 @@
       <div
         class="max-w:1200px mx:auto flex {cursor:pointer;px:4x;py:4x;opacity:0.66;bb:2px|solid|transparent;user-select:none}>* f:14px">
         <div class="test-tab opacity:1! border-color:accent!"
-          data-swiss="remove[.test-tab](border-color:accent! opacity:1!) add[this](border-color:accent! opacity:1!)">
+          data-swiss="remove[.test-tab](border-color:accent! opacity:1!) add(border-color:accent! opacity:1!)">
           Examples
         </div>
         <div class="test-tab"
-          data-swiss="remove[.test-tab](border-color:accent! opacity:1!) add[this](border-color:accent! opacity:1!)">
+          data-swiss="remove[.test-tab](border-color:accent! opacity:1!) add(border-color:accent! opacity:1!)">
           Installation</div>
         <div class="test-tab"
-          data-swiss="remove[.test-tab](border-color:accent! opacity:1!) add[this](border-color:accent! opacity:1!)">
+          data-swiss="remove[.test-tab](border-color:accent! opacity:1!) add(border-color:accent! opacity:1!)">
           About</div>
       </div>
     </div>
@@ -166,14 +165,14 @@
                 <h2 class="example-heading">Toggle class on self</h2>
                 <script type="text/plain" class="language-markup f:13px!">
                   <div class="bg:accent"
-                       data-swiss="toggle[this](bg:accent border-color:rgba(255,255,255,0.8)!)">
+                       data-swiss="toggle(bg:accent border-color:rgba(255,255,255,0.8)!)">
                     Click
                   </div>
                   </script>
               </div>
               <div class="example-col-2">
                 <div class="box box-interactive cursor:pointer bg:accent"
-                  data-swiss="toggle[this](bg:accent border-color:rgba(255,255,255,0.8)!)">
+                  data-swiss="toggle(bg:accent border-color:rgba(255,255,255,0.8)!)">
                   Click
                 </div>
               </div>
@@ -182,14 +181,14 @@
               <div class="example-col-1">
                 <h2 class="example-heading">Hover to toggle class on self</h2>
                 <script type="text/plain" class="language-markup f:13px!">
-                    <div data-swiss="toggle[this](bg:accent)"
+                    <div data-swiss="toggle(bg:accent)"
                          data-swiss-on="mouseenter mouseleave">
                       Hover
                     </div>
                   </script>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer" data-swiss="toggle[this](bg:accent)"
+                <div class="box box-interactive cursor:pointer" data-swiss="toggle(bg:accent)"
                   data-swiss-on="mouseenter mouseleave">
                   Hover
                 </div>
@@ -199,7 +198,7 @@
               <div class="example-col-1">
                 <h2 class="example-heading">Toggle class on self & another element</h2>
                 <script type="text/plain" class="language-markup f:13px!">
-                    <div data-swiss="toggle[#target-1](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)">
+                    <div data-swiss="toggle[#target-1](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
                       Click
                     </div>
                     <div id="target-1" class="bg:accent" />
@@ -208,11 +207,11 @@
               <div class="example-col-2">
                 <div class="flex gap:4x">
                   <div class="box box-interactive cursor:pointer"
-                    data-swiss="toggle[#target-1](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)">
+                    data-swiss="toggle[#target-1](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
                     Click
                   </div>
                   <div id="target-1" class="box box-interactive bg:accent">
-                    <span style="opacity: 0;">To Change</span>
+                    #target-1
                   </div>
                 </div>
               </div>
@@ -221,7 +220,7 @@
               <div class="example-col-1">
                 <h2 class="example-heading">Hover to toggle class on self & another element</h2>
                 <script type="text/plain" class="language-markup f:13px!">
-                    <div data-swiss="toggle[#target-2](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)"
+                    <div data-swiss="toggle[#target-2](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)"
                          data-swiss-on="mouseenter mouseleave">
                       Hover
                     </div>
@@ -231,12 +230,12 @@
               <div class="example-col-2">
                 <div class="flex gap:4x">
                   <div class="box box-interactive cursor:pointer"
-                    data-swiss="toggle[#target-2](bg:accent) toggle[this](border-color:rgba(255,255,255,0.8)!)"
+                    data-swiss="toggle[#target-2](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)"
                     data-swiss-on="mouseenter mouseleave">
                     Hover
                   </div>
                   <div id="target-2" class="box box-interactive bg:accent">
-                    <span style="opacity: 0;">To Change</span>
+                    #target-2
                   </div>
                 </div>
               </div>
@@ -251,7 +250,7 @@
                 <h2 class="example-heading">Reset state on resize</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle[this](bg:accent)"
+                <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle(bg:accent)"
                   data-swiss-reset-on-resize>
                   Click
                 </div>
@@ -262,7 +261,7 @@
                 <h2 class="example-heading">Works only below 600px width viewport</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle[this](bg:accent)"
+                <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle(bg:accent)"
                   data-swiss-when="(max-width: 600px)">
                   Click
                 </div>
@@ -273,7 +272,7 @@
                 <h2 class="example-heading">Works only above 600px width viewport + reset when disabled</h2>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle[this](bg:accent)"
+                <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle(bg:accent)"
                   data-swiss-when="(min-width: 600px)" data-swiss-reset-when-disabled>
                   Click
                 </div>
@@ -397,7 +396,7 @@
               </div>
               <div class="example-col-2">
                 <div class="box box-interactive w:full transition:background-color|0.3s|ease-in-out"
-                  data-swiss="add[this](bg:accent)" data-swiss-on="enter"></div>
+                  data-swiss="add(bg:accent)" data-swiss-on="enter"></div>
               </div>
             </section>
             <section class="example">
@@ -406,7 +405,7 @@
               </div>
               <div class="example-col-2">
                 <div class="box box-interactive w:full bg:accent transition:background-color|0.3s|ease-in-out"
-                  data-swiss="remove[this](bg:accent)" data-swiss-on="exit"></div>
+                  data-swiss="remove(bg:accent)" data-swiss-on="exit"></div>
               </div>
             </section>
             <section class="example">
@@ -415,7 +414,7 @@
               </div>
               <div class="example-col-2">
                 <div class="box box-interactive rel w:full transition:all|0.3s|ease-in-out"
-                  data-swiss="toggle[this](bg:accent)" data-swiss-on="enter exit"></div>
+                  data-swiss="toggle(bg:accent)" data-swiss-on="enter exit"></div>
               </div>
             </section>
             <section class="example">
