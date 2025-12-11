@@ -47,6 +47,11 @@
         },
         "btn": {
           "": "cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px",
+        },
+        "tab": {
+          "active": "border-color:accent! opacity:1!",
+          "panel": "hidden",
+          "panel-active": "block",
         }
       }
     }
@@ -82,7 +87,7 @@
 
     .language-markup {
       margin-top: 15px !important;
-      font-size: 13px !important;
+      font-size: 12px !important;
       border-radius: 5px !important;
       padding-left: 0px !important;
     }
@@ -140,15 +145,15 @@
     <div class="by:1px|solid|color-default-border">
       <div
         class="max-w:1200px mx:auto flex {cursor:pointer;px:4x;py:4x;opacity:0.66;bb:2px|solid|transparent;user-select:none}>* f:14px">
-        <div class="test-tab opacity:1! border-color:accent!"
-          data-swiss="remove[.test-tab](border-color:accent! opacity:1!) add(border-color:accent! opacity:1!)">
+        <div class="tab tab-active"
+          data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-1](tab-panel-active)">
           Examples
         </div>
-        <div class="test-tab"
-          data-swiss="remove[.test-tab](border-color:accent! opacity:1!) add(border-color:accent! opacity:1!)">
+        <div class="tab"
+          data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-2](tab-panel-active)">
           Installation</div>
-        <div class="test-tab"
-          data-swiss="remove[.test-tab](border-color:accent! opacity:1!) add(border-color:accent! opacity:1!)">
+        <div class="tab"
+          data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-3](tab-panel-active)">
           About</div>
       </div>
     </div>
@@ -156,6 +161,17 @@
 
   <main class="bg:surface-a pt:20x pb:32x">
     <div class="mx:auto max-w:1200px">
+
+      <div class="grid grid-cols:3 f:14px py:10x">
+        <div class="tab-panel tab-panel-1 tab-panel-active">
+          Examples
+        </div>
+        <div class="tab-panel tab-panel-2">
+          Installation</div>
+        <div class="tab-panel tab-panel-3">
+          About</div>
+      </div>
+
       <div class="flex flex-direction:column gap:20x">
         <section>
           <h2 class="example-section-heading">Class Management</h2>
@@ -188,7 +204,7 @@
                   </script>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer" data-swiss="toggle(bg:accent)" data-swiss-on="hover">
+                <div class="box box-interactive" data-swiss="toggle(bg:accent)" data-swiss-on="hover">
                   Hover
                 </div>
               </div>
@@ -228,7 +244,7 @@
               </div>
               <div class="example-col-2">
                 <div class="flex gap:4x">
-                  <div class="box box-interactive cursor:pointer"
+                  <div class="box box-interactive"
                     data-swiss="toggle[#target-2](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)"
                     data-swiss-on="hover">
                     Hover
@@ -239,8 +255,54 @@
                 </div>
               </div>
             </section>
+            <section class="example">
+              <div class="example-col-1">
+                <h2 class="example-heading">Toggle class on multiple elements</h2>
+                <script type="text/plain" class="language-markup f:13px!">
+                  <div class="flex justify-content:center mb:4x">
+                    <div data-swiss="toggle[.many-targets](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
+                      Click
+                    </div>
+                  </div>
+
+                  <div class="flex gap:4x">
+                    <div class="many-targets bg:accent">
+                      Target
+                    </div>
+                    <div class="many-targets bg:accent">
+                      Target
+                    </div>
+                    <div class="many-targets bg:accent">
+                      Target
+                    </div>
+                  </div>
+                </script>
+              </div>
+              <div class="example-col-2">
+                <div>
+                  <div class="flex justify-content:center mb:4x">
+                    <div class="box box-interactive"
+                      data-swiss="toggle[.many-targets](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
+                      Click
+                    </div>
+                  </div>
+                  <div class="flex gap:4x">
+                    <div class="many-targets box box-interactive bg:accent">
+                      Target
+                    </div>
+                    <div class="many-targets box box-interactive bg:accent">
+                      Target
+                    </div>
+                    <div class="many-targets box box-interactive bg:accent">
+                      Target
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </section>
+
         <section>
           <h2 class="example-section-heading">Conditional Behavior</h2>
           <div class="example-section">
