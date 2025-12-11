@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Swiss.js - Testing Playground</title>
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Exo:wght@200;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;600&display=swap" rel="stylesheet">
 
   <link rel="preload" as="script" href="https://cdn.master.co/css-runtime@rc">
   <link rel="preload" as="style" href="https://cdn.master.co/normal.css">
@@ -39,7 +39,7 @@
         "example": {
           "": 'grid grid-cols:12 bt:1px|solid|color-default-border',
           "heading": 'f:12px f:13px@md opacity:0.75',
-          "col-1": "grid-col-span:12 grid-col-span:5@md p:4x p:8x@md pr:0@md br:0px|solid|color-default-border@md bg:surface-b",
+          "col-1": "grid-col-span:12 grid-col-span:5@md p:4x p:8x@md pr:0@md br:1px|solid|color-default-border@md bg:surface-b",
           "col-2": "grid-col-span:12 grid-col-span:7@md p:5x p:8x@md flex justify-content:center bg:rgba(0,0,0,0.1)",
         },
         "box": {
@@ -108,7 +108,8 @@
     .token.attr-value,
     .token.class-name,
     .token.function {
-      color: #db8e3c;
+      /* color: #db8e3c; // orange */
+      color: #3e99ff;
     }
   </style>
 </head>
