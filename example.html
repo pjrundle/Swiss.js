@@ -631,6 +631,12 @@
                 <section class="example bt:none">
                   <div class="example-col-1">
                     <h2 class="example-heading">Enter</h2>
+                    <script type="text/plain" class="language-markup">
+                      <div class="transition:background-color|0.3s|ease-in-out"
+                           data-swiss="add(bg:accent)"
+                           data-swiss-on="enter">
+                      </div>
+                    </script>
                   </div>
                   <div class="example-col-2">
                     <div class="box box-interactive w:full transition:background-color|0.3s|ease-in-out"
@@ -640,6 +646,12 @@
                 <section class="example">
                   <div class="example-col-1">
                     <h2 class="example-heading">Exit</h2>
+                    <script type="text/plain" class="language-markup">
+                      <div class="bg:accent transition:background-color|0.3s|ease-in-out"
+                           data-swiss="remove(bg:accent)"
+                           data-swiss-on="exit">
+                      </div>
+                    </script>
                   </div>
                   <div class="example-col-2">
                     <div class="box box-interactive w:full bg:accent transition:background-color|0.3s|ease-in-out"
@@ -649,15 +661,29 @@
                 <section class="example">
                   <div class="example-col-1">
                     <h2 class="example-heading">Enter + Exit</h2>
+                    <script type="text/plain" class="language-markup">
+                      <div class="transition:background-color|0.3s|ease-in-out"
+                           data-swiss="toggle(bg:accent)"
+                           data-swiss-on="enter exit">
+                      </div>
+                    </script>
                   </div>
                   <div class="example-col-2">
-                    <div class="box box-interactive rel w:full transition:all|0.3s|ease-in-out"
+                    <div class="box box-interactive w:full transition:background-color|0.3s|ease-in-out"
                       data-swiss="toggle(bg:accent)" data-swiss-on="enter exit"></div>
                   </div>
                 </section>
                 <section class="example">
                   <div class="example-col-1">
                     <h2 class="example-heading">Enter + Exit (transform)</h2>
+                    <script type="text/plain" class="language-markup">
+                      <div data-swiss="toggle[#enter-exit-transform](bg:accent left:0px! opacity:1!)"
+                           data-swiss-on="enter exit">
+                        <div id="enter-exit-transform"
+                             class="box box-interactive left:-300px opacity:0 rel w:full transition:all|0.3s|ease-in-out">
+                        </div>
+                      </div>
+                    </script>
                   </div>
                   <div class="example-col-2">
                     <div data-swiss="toggle[#enter-exit-transform](bg:accent left:0px! opacity:1!)"
