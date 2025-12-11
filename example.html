@@ -182,14 +182,13 @@
                 <h2 class="example-heading">Hover to toggle class on self</h2>
                 <script type="text/plain" class="language-markup f:13px!">
                     <div data-swiss="toggle(bg:accent)"
-                         data-swiss-on="mouseenter mouseleave">
+                         data-swiss-on="hover">
                       Hover
                     </div>
                   </script>
               </div>
               <div class="example-col-2">
-                <div class="box box-interactive cursor:pointer" data-swiss="toggle(bg:accent)"
-                  data-swiss-on="mouseenter mouseleave">
+                <div class="box box-interactive cursor:pointer" data-swiss="toggle(bg:accent)" data-swiss-on="hover">
                   Hover
                 </div>
               </div>
@@ -221,7 +220,7 @@
                 <h2 class="example-heading">Hover to toggle class on self & another element</h2>
                 <script type="text/plain" class="language-markup f:13px!">
                     <div data-swiss="toggle[#target-2](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)"
-                         data-swiss-on="mouseenter mouseleave">
+                         data-swiss-on="hover">
                       Hover
                     </div>
                     <div id="target-2" class="bg:accent" />
@@ -231,7 +230,7 @@
                 <div class="flex gap:4x">
                   <div class="box box-interactive cursor:pointer"
                     data-swiss="toggle[#target-2](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)"
-                    data-swiss-on="mouseenter mouseleave">
+                    data-swiss-on="hover">
                     Hover
                   </div>
                   <div id="target-2" class="box box-interactive bg:accent">

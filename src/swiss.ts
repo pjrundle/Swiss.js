@@ -105,6 +105,21 @@
   }
 
   /**
+   * Expand event shorthands (e.g., "hover" -> "mouseenter mouseleave")
+   */
+  function expandEventShorthands(events: string[]): string[] {
+    const expanded: string[] = [];
+    events.forEach((event) => {
+      if (event === "hover") {
+        expanded.push("mouseenter", "mouseleave");
+      } else {
+        expanded.push(event);
+      }
+    });
+    return expanded;
+  }
+
+  /**
    * Find matching closing parenthesis, respecting quotes
    * Returns index of closing paren, or -1 if unbalanced
    */
@@ -394,12 +409,13 @@
     const actions = parseDataSwissActionsAttr(raw);
     const hasActions = actions.length > 0;
 
-    const events =
+    const eventsRaw =
       hasActions && elHtml.hasAttribute("data-swiss-on")
         ? elHtml.getAttribute("data-swiss-on")!.split(/\s+/).filter(Boolean)
         : hasActions
           ? ["click"]
           : [];
+    const events = expandEventShorthands(eventsRaw);
 
     return {
       raw,
