@@ -19,17 +19,10 @@
     window.masterCSSConfig = {
       variables: {
         "surface-a": '#121b2c',
-        accent: '#e31d65',
+        accent: '#e31d93',
         'accent-muted': "#63112f",
       },
       utilities: {
-        "btn": {
-          "cursor": "pointer",
-          "border": "1px solid #e31d65",
-          "padding": "0.5em 1em",
-          "border-radius": "5px",
-          "font-size": "11px"
-        },
         "copy": {
           "font-size": "12px",
           "opacity": "0.75",
@@ -48,6 +41,9 @@
         },
         "box": {
           "": "inline-flex align-items:center justify-content:center user-select:none r:30px b:1px|solid|rgba(255,255,255,0.2) px:20x py:10x",
+        },
+        "btn": {
+          "": "cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px",
         }
       }
     }
@@ -343,7 +339,7 @@
           <h2 class="example-section-heading">Data Attributes</h2>
           <div class="example-section">
             <section class="example bt:none">
-              <div class="example-col-1">
+              <div class="example-col-1 pr:8x@md">
                 <h2 class="example-heading">Menu</h2>
                 <div class="flex flex-direction:column gap:1.5x mt:4x">
                   <!-- ADD ATTRIBUTE -->
