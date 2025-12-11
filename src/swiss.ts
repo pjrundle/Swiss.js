@@ -438,10 +438,18 @@
 
   /**
    * Resolve a selector to a list of elements
+   * Supports both global selectors (e.g., "#id", ".class") and relative selectors (e.g., ">div", "+.sibling")
    */
   function resolveTargets(el: Element, sel: string): Element[] {
     if (sel === "this") return [el];
     try {
+      // Relative selectors: start with >, +, or ~
+      // Use :scope prefix to make querySelector relative to the current element
+      if (sel.startsWith(">") || sel.startsWith("+") || sel.startsWith("~")) {
+        return Array.from(el.querySelectorAll(`:scope ${sel}`));
+      }
+
+      // Global selectors (IDs, classes, complex selectors)
       return Array.from(document.querySelectorAll(sel));
     } catch {
       console.warn("Swiss: bad selector:", sel);
