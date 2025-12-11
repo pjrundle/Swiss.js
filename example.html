@@ -126,6 +126,16 @@
       opacity: 1;
       pointer-events: auto;
     }
+
+    #modal {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #modal.modal--active {
+      opacity: 1;
+      pointer-events: auto;
+    }
   </style>
 </head>
 
@@ -493,13 +503,45 @@
               <section class="example">
                 <div class="example-col-1">
                   <h2 class="example-heading">Modal</h2>
+                  <script type="text/plain" class="language-markup">
+                    <button data-swiss="add[#modal](modal--active)">
+                      Open Modal
+                    </button>
+
+                    <div id="modal"
+                         class="fixed inset:0 bg:rgba(0,0,0,0.5) more styles...">
+                      <div class="styles..."
+                           data-swiss="remove[#modal](modal--active)"
+                           data-swiss-on="clickOutside"
+                           data-swiss-if="#modal.modal--active">
+                        Some kind of modal...
+                        <button data-swiss="remove[#modal](modal--active)">
+                          Close Modal
+                        </button>
+                      </div>
+                    </div>
+                  </script>
                 </div>
                 <div class="example-col-2">
                   <div class="flex align-items:center justify-content:center">
-                    <button class="btn"
-                      data-swiss="remove[#modal](opacity:0 pointer-events:none) add[#modal](modal-is-active)">
+                    <button class="btn" data-swiss="add[#modal](modal--active)">
                       Open Modal
                     </button>
+                  </div>
+
+                  <div id="modal"
+                    class="fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
+                    <div class="box p:20x bg:surface-a rel" data-swiss="remove[#modal](modal--active)"
+                      data-swiss-on="clickOutside" data-swiss-if="#modal.modal--active">
+                      <div class="flex flex-direction:column gap:3x">
+                        <p class="f:12px">Some kind of modal...</p>
+
+                        <button class="cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px"
+                          data-swiss="remove[#modal](modal--active)">
+                          Close Modal
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -626,22 +668,6 @@
     </div>
 
     </div>
-    </div>
-
-    <div id="modal"
-      class="opacity:0 pointer-events:none fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
-      <div class="box p:20x bg:surface-a! rel"
-        data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)"
-        data-swiss-on="clickOutside" data-swiss-if="#modal.modal-is-active">
-        <div class="flex flex-direction:column gap:1em">
-          <p class="f:12px">Some kind of modal...</p>
-
-          <button class="cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px"
-            data-swiss="add[#modal](opacity:0 pointer-events:none) remove[#modal](modal-is-active)">
-            Close Modal
-          </button>
-        </div>
-      </div>
     </div>
 
     <script src="dist/swiss.umd.js"></script>
