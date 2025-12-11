@@ -410,10 +410,20 @@
               <section class="example bt:none">
                 <div class="example-col-1">
                   <h2 class="example-heading">Dispatch a custom event</h2>
+                  <pre><code class="language-markup">
+                    &lt;button data-swiss="event(myCustomEvent)"&gt;
+                      Dispatch custom event
+                    &lt;/button&gt;
+
+                    &lt;script&gt;
+                      document.addEventListener('myCustomEvent', () => {
+                        alert('”myCustomEvent” triggered by Swiss.js!')
+                      });
+                    &lt;/script&gt;
+</code></pre>
                 </div>
                 <div class="example-col-2">
                   <div class="rel flex align-items:center justify-content:center">
-                    <!-- DISPATCH A CUSTOM EVENT -->
                     <button class="btn" data-swiss="event(myCustomEvent)" id="event-listener-example">
                       Dispatch custom event
                     </button>
@@ -423,10 +433,14 @@
               <section class="example">
                 <div class="example-col-1">
                   <h2 class="example-heading">Trigger an alert</h2>
+                  <script type="text/plain" class="language-markup">
+                    <button data-swiss="run(alert('Hello from Swiss.js!'))">
+                      Trigger alert
+                    </button>
+                  </script>
                 </div>
                 <div class="example-col-2">
                   <div class="flex align-items:center justify-content:center">
-                    <!-- TRIGGER AN ALERT -->
                     <button class="btn" data-swiss="run(alert('Hello from Swiss.js!'))">
                       Trigger alert
                     </button>
@@ -611,8 +625,9 @@
     <script src="dist/swiss.umd.js"></script>
 
     <script>
-      const box = document.getElementById('event-listener-example');
-      box.addEventListener('myCustomEvent', () => alert('”myCustomEvent” triggered by Swiss.js!'));
+      document.addEventListener('myCustomEvent', () => {
+        alert('”myCustomEvent” triggered by Swiss.js!')
+      });
     </script>
 </body>
 
