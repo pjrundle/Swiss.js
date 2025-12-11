@@ -32,6 +32,10 @@
         }
       },
       components: {
+        "page": {
+          "gutter": "px:4x px:7x@md",
+          "container": "mx:auto max-w:1200px",
+        },
         "example-section": {
           "": "r:20px r:40px@md b:1px|solid|color-default-border overflow:hidden shadow:0px|23px|25px|6px|rgba(0,0,0,0.25)",
           "heading": 'mb:5x f:16px f:18px@md',
@@ -144,27 +148,29 @@
   <header
     class="t:center bg:surface-b px:4x px:7x@md bb:0px|solid|color-default-border shadow:0px|23px|25px|6px|rgba(0,0,0,0.1) rel">
 
-    <div class="mx:auto max-w:1200px py:10x">
-      <div
-        class="flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md">
-        <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,50px)"
-          style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
-          <span class="cursor:pointer user-select:none"
-            data-swiss="toggle(color:accent) toggle[#js](color:accent)">Swiss</span>
-          <span id="js" class="color:accent">.js</span>
-        </h1>
-        <div class="flex:1 t:center t:right@md">
-          <p class="inline-block opacity:0.85 max-w:32em f:14px line-height:1.4 t:center t:left@md">
-            Swiss.js — A tiny JavaScript utility for adding interactivity using simple HTML attributes. Perfect for
-            static sites, CMS templates, prototypes, and Webflow/Framer custom code.
-          </p>
+    <div class="page-gutter">
+      <div class="page-container py:10x">
+        <div
+          class="flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md">
+          <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,50px)"
+            style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
+            <span class="cursor:pointer user-select:none"
+              data-swiss="toggle(color:accent) toggle[#js](color:accent)">Swiss</span>
+            <span id="js" class="color:accent">.js</span>
+          </h1>
+          <div class="flex:1 t:center t:right@md">
+            <p class="inline-block opacity:0.85 max-w:32em f:14px line-height:1.4 t:center t:left@md">
+              Swiss.js — A tiny JavaScript utility for adding interactivity using simple HTML attributes. Perfect for
+              static sites, CMS templates, prototypes, and Webflow/Framer custom code.
+            </p>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="by:1px|solid|color-default-border">
+    <div class="page-gutter by:1px|solid|color-default-border">
       <div
-        class="max-w:1200px mx:auto flex {cursor:pointer;px:4x;py:4x;opacity:0.66;bb:2px|solid|transparent;user-select:none}>* f:14px">
+        class="page-container flex {cursor:pointer;px:4x;py:4x;opacity:0.66;bb:2px|solid|transparent;user-select:none}>* f:14px">
         <div class="tab tab-active"
           data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-1](tab-panel-active)">
           Examples
@@ -180,7 +186,7 @@
   </header>
 
   <main class="bg:surface-a pt:20x pb:32x">
-    <div class="mx:auto max-w:1200px">
+    <div class="page-container">
 
       <div class="tab-panel tab-panel-1 tab-panel-active">
         <div class="flex flex-direction:column gap:20x">
@@ -431,17 +437,19 @@
               <section class="example bt:none">
                 <div class="example-col-1">
                   <h2 class="example-heading">Dispatch a custom event</h2>
-                  <pre><code class="language-markup">
-                    &lt;button data-swiss="event(myCustomEvent)"&gt;
-                      Dispatch custom event
-                    &lt;/button&gt;
+                  <pre>
+                    <code class="language-markup">
+                      &lt;button data-swiss="event(myCustomEvent)"&gt;
+                        Dispatch custom event
+                      &lt;/button&gt;
 
-                    &lt;script&gt;
-                      document.addEventListener('myCustomEvent', () => {
-                        alert('”myCustomEvent” triggered by Swiss.js!')
-                      });
-                    &lt;/script&gt;
-</code></pre>
+                      &lt;script&gt;
+                        document.addEventListener('myCustomEvent', () => {
+                          alert('”myCustomEvent” triggered by Swiss.js!')
+                        });
+                      &lt;/script&gt;
+                    </code>
+                  </pre>
                 </div>
                 <div class="example-col-2">
                   <div class="rel flex align-items:center justify-content:center">
