@@ -115,7 +115,8 @@
 
 <body class="min-w:100vw min-h:100vh bg:surface-b">
 
-  <header class="t:center bg:surface-b px:4x px:7x@md bb:0px|solid|color-default-border">
+  <header
+    class="t:center bg:surface-b px:4x px:7x@md bb:0px|solid|color-default-border shadow:0px|23px|25px|6px|rgba(0,0,0,0.1) rel">
 
     <div class="mx:auto max-w:1200px py:10x">
       <div
@@ -138,10 +139,17 @@
 
     <div class="by:1px|solid|color-default-border">
       <div
-        class="max-w:1200px mx:auto flex {cursor:pointer;px:4x;py:4x;opacity:0.66;bb:2px|solid|transparent}>* f:14px">
-        <div class="opacity:1! border-color:accent!">Examples</div>
-        <div>Installation</div>
-        <div>About</div>
+        class="max-w:1200px mx:auto flex {cursor:pointer;px:4x;py:4x;opacity:0.66;bb:2px|solid|transparent;user-select:none}>* f:14px">
+        <div class="test-tab opacity:1! border-color:accent!"
+          data-swiss="remove[.test-tab](border-color:accent! opacity:1!) add[this](border-color:accent! opacity:1!)">
+          Examples
+        </div>
+        <div class="test-tab"
+          data-swiss="remove[.test-tab](border-color:accent! opacity:1!) add[this](border-color:accent! opacity:1!)">
+          Installation</div>
+        <div class="test-tab"
+          data-swiss="remove[.test-tab](border-color:accent! opacity:1!) add[this](border-color:accent! opacity:1!)">
+          About</div>
       </div>
     </div>
   </header>
