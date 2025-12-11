@@ -53,6 +53,7 @@
           "": "cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px",
         },
         "tab": {
+          "": "cursor:pointer px:4x py:3x py:4x@md opacity:0.66 bb:2px|solid|transparent user-select:none f:12px f:14px@md",
           "active": "border-color:accent! opacity:1!",
           "panel": "hidden",
           "panel-active": "block",
@@ -145,14 +146,13 @@
 
 <body class="min-w:100vw min-h:100vh bg:surface-b">
 
-  <header
-    class="t:center bg:surface-b px:4x px:7x@md bb:0px|solid|color-default-border shadow:0px|23px|25px|6px|rgba(0,0,0,0.1) rel">
+  <header class="t:center bg:surface-b bb:0px|solid|color-default-border shadow:0px|23px|25px|6px|rgba(0,0,0,0.1) rel">
 
     <div class="page-gutter">
-      <div class="page-container py:10x">
+      <div class="page-container py:18x py:12x@md">
         <div
           class="flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md">
-          <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,50px)"
+          <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(40px,4vw,50px)"
             style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
             <span class="cursor:pointer user-select:none"
               data-swiss="toggle(color:accent) toggle[#js](color:accent)">Swiss</span>
@@ -161,75 +161,77 @@
           <div class="flex:1 t:center t:right@md">
             <p class="inline-block opacity:0.85 max-w:32em f:14px line-height:1.4 t:center t:left@md">
               Swiss.js — A tiny JavaScript utility for adding interactivity using simple HTML attributes. Perfect for
-              static sites, CMS templates, prototypes, and Webflow/Framer custom code.
+              static sites, CMS templates, prototypes, and Webflow/Framer custom&nbsp;code.
             </p>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="page-gutter by:1px|solid|color-default-border">
-      <div
-        class="page-container flex {cursor:pointer;px:4x;py:4x;opacity:0.66;bb:2px|solid|transparent;user-select:none}>* f:14px">
-        <div class="tab tab-active"
-          data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-1](tab-panel-active)">
-          Examples
+    <div class="by:1px|solid|color-default-border">
+      <div class="page-gutter">
+        <div class="page-container flex">
+          <div class="tab tab-active"
+            data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-1](tab-panel-active)">
+            Examples
+          </div>
+          <div class="tab"
+            data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-2](tab-panel-active)">
+            Installation</div>
+          <div class="tab"
+            data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-3](tab-panel-active)">
+            About</div>
         </div>
-        <div class="tab"
-          data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-2](tab-panel-active)">
-          Installation</div>
-        <div class="tab"
-          data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-3](tab-panel-active)">
-          About</div>
       </div>
     </div>
   </header>
 
   <main class="bg:surface-a pt:20x pb:32x">
-    <div class="page-container">
+    <div class="page-gutter">
+      <div class="page-container">
 
-      <div class="tab-panel tab-panel-1 tab-panel-active">
-        <div class="flex flex-direction:column gap:20x">
-          <section>
-            <h2 class="example-section-heading">Class Management</h2>
-            <div class="example-section">
-              <section class="example bt:none">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Toggle class on self</h2>
-                  <script type="text/plain" class="language-markup">
+        <div class="tab-panel tab-panel-1 tab-panel-active">
+          <div class="flex flex-direction:column gap:20x">
+            <section>
+              <h2 class="example-section-heading">Class Management</h2>
+              <div class="example-section">
+                <section class="example bt:none">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Toggle class on self</h2>
+                    <script type="text/plain" class="language-markup">
                   <div class="bg:accent"
                        data-swiss="toggle(bg:accent border-color:rgba(255,255,255,0.8)!)">
                     Click
                   </div>
                   </script>
-                </div>
-                <div class="example-col-2">
-                  <div class="box box-interactive cursor:pointer bg:accent"
-                    data-swiss="toggle(bg:accent border-color:rgba(255,255,255,0.8)!)">
-                    Click
                   </div>
-                </div>
-              </section>
-              <section class="example">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Hover to toggle class on self</h2>
-                  <script type="text/plain" class="language-markup">
+                  <div class="example-col-2">
+                    <div class="box box-interactive cursor:pointer bg:accent"
+                      data-swiss="toggle(bg:accent border-color:rgba(255,255,255,0.8)!)">
+                      Click
+                    </div>
+                  </div>
+                </section>
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Hover to toggle class on self</h2>
+                    <script type="text/plain" class="language-markup">
                     <div data-swiss="toggle(bg:accent)"
                          data-swiss-on="hover">
                       Hover
                     </div>
                   </script>
-                </div>
-                <div class="example-col-2">
-                  <div class="box box-interactive" data-swiss="toggle(bg:accent)" data-swiss-on="hover">
-                    Hover
                   </div>
-                </div>
-              </section>
-              <section class="example">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Toggle class on self & another element</h2>
-                  <script type="text/plain" class="language-markup">
+                  <div class="example-col-2">
+                    <div class="box box-interactive" data-swiss="toggle(bg:accent)" data-swiss-on="hover">
+                      Hover
+                    </div>
+                  </div>
+                </section>
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Toggle class on self & another element</h2>
+                    <script type="text/plain" class="language-markup">
                     <div data-swiss="toggle[#target-1](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
                       Click
                     </div>
@@ -238,23 +240,23 @@
                       #target-1
                     </div>
                   </script>
-                </div>
-                <div class="example-col-2">
-                  <div class="flex gap:4x">
-                    <div class="box box-interactive cursor:pointer"
-                      data-swiss="toggle[#target-1](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
-                      Click
-                    </div>
-                    <div id="target-1" class="box box-interactive bg:accent">
-                      #target-1
+                  </div>
+                  <div class="example-col-2">
+                    <div class="flex gap:4x">
+                      <div class="box box-interactive cursor:pointer"
+                        data-swiss="toggle[#target-1](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
+                        Click
+                      </div>
+                      <div id="target-1" class="box box-interactive bg:accent">
+                        #target-1
+                      </div>
                     </div>
                   </div>
-                </div>
-              </section>
-              <section class="example">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Hover to toggle class on self & another element</h2>
-                  <script type="text/plain" class="language-markup">
+                </section>
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Hover to toggle class on self & another element</h2>
+                    <script type="text/plain" class="language-markup">
                     <div data-swiss="toggle[#target-2](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)"
                          data-swiss-on="hover">
                       Hover
@@ -264,24 +266,24 @@
                       #target-2
                     </div>
                   </script>
-                </div>
-                <div class="example-col-2">
-                  <div class="flex gap:4x">
-                    <div class="box box-interactive"
-                      data-swiss="toggle[#target-2](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)"
-                      data-swiss-on="hover">
-                      Hover
-                    </div>
-                    <div id="target-2" class="box box-interactive bg:accent">
-                      #target-2
+                  </div>
+                  <div class="example-col-2">
+                    <div class="flex gap:4x">
+                      <div class="box box-interactive"
+                        data-swiss="toggle[#target-2](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)"
+                        data-swiss-on="hover">
+                        Hover
+                      </div>
+                      <div id="target-2" class="box box-interactive bg:accent">
+                        #target-2
+                      </div>
                     </div>
                   </div>
-                </div>
-              </section>
-              <section class="example">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Toggle class on multiple elements</h2>
-                  <script type="text/plain" class="language-markup">
+                </section>
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Toggle class on multiple elements</h2>
+                    <script type="text/plain" class="language-markup">
                   <div class="flex justify-content:center mb:4x">
                     <div data-swiss="toggle[.many-targets](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
                       Click
@@ -300,33 +302,33 @@
                     </div>
                   </div>
                 </script>
-                </div>
-                <div class="example-col-2">
-                  <div>
-                    <div class="flex justify-content:center mb:4x">
-                      <div class="box box-interactive"
-                        data-swiss="toggle[.many-targets](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
-                        Click
+                  </div>
+                  <div class="example-col-2">
+                    <div>
+                      <div class="flex justify-content:center mb:4x">
+                        <div class="box box-interactive"
+                          data-swiss="toggle[.many-targets](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
+                          Click
+                        </div>
                       </div>
-                    </div>
-                    <div class="flex gap:4x">
-                      <div class="many-targets box box-interactive bg:accent">
-                        Target
-                      </div>
-                      <div class="many-targets box box-interactive bg:accent">
-                        Target
-                      </div>
-                      <div class="many-targets box box-interactive bg:accent">
-                        Target
+                      <div class="flex gap:4x">
+                        <div class="many-targets box box-interactive bg:accent">
+                          Target
+                        </div>
+                        <div class="many-targets box box-interactive bg:accent">
+                          Target
+                        </div>
+                        <div class="many-targets box box-interactive bg:accent">
+                          Target
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </section>
-              <section class="example">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Same as above - but with data attribute selector</h2>
-                  <script type="text/plain" class="language-markup">
+                </section>
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Same as above - but with data attribute selector</h2>
+                    <script type="text/plain" class="language-markup">
                     <div class="flex justify-content:center mb:4x">
                       <div data-swiss="toggle[[data-multi-target]](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
                         Click
@@ -345,74 +347,74 @@
                       </div>
                     </div>
                   </script>
-                </div>
-                <div class="example-col-2">
-                  <div>
-                    <div class="flex justify-content:center mb:4x">
-                      <div class="box box-interactive"
-                        data-swiss="toggle[[data-multi-target]](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
-                        Click
+                  </div>
+                  <div class="example-col-2">
+                    <div>
+                      <div class="flex justify-content:center mb:4x">
+                        <div class="box box-interactive"
+                          data-swiss="toggle[[data-multi-target]](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
+                          Click
+                        </div>
                       </div>
-                    </div>
-                    <div class="flex gap:4x">
-                      <div data-multi-target class="box box-interactive bg:accent">
-                        Target
-                      </div>
-                      <div data-multi-target class="box box-interactive bg:accent">
-                        Target
-                      </div>
-                      <div data-multi-target class="box box-interactive bg:accent">
-                        Target
+                      <div class="flex gap:4x">
+                        <div data-multi-target class="box box-interactive bg:accent">
+                          Target
+                        </div>
+                        <div data-multi-target class="box box-interactive bg:accent">
+                          Target
+                        </div>
+                        <div data-multi-target class="box box-interactive bg:accent">
+                          Target
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </section>
-            </div>
-          </section>
+                </section>
+              </div>
+            </section>
 
-          <section>
-            <h2 class="example-section-heading">Viewport Binding + State Reset</h2>
-            <div class="example-section">
-              <section class="example bt:none">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Trigger actions below 600px width viewport</h2>
-                  <script type="text/plain" class="language-markup">
+            <section>
+              <h2 class="example-section-heading">Viewport Binding + State Reset</h2>
+              <div class="example-section">
+                <section class="example bt:none">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Trigger actions below 600px width viewport</h2>
+                    <script type="text/plain" class="language-markup">
                     <div class="bg:accent"
                          data-swiss="toggle(bg:accent)"
                          data-swiss-when="(max-width: 600px)">
                       Click
                     </div>
                   </script>
-                </div>
-                <div class="example-col-2">
-                  <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle(bg:accent)"
-                    data-swiss-when="(max-width: 600px)">
-                    Click
                   </div>
-                </div>
-              </section>
-              <section class="example">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Reset state on resize</h2>
-                  <script type="text/plain" class="language-markup">
+                  <div class="example-col-2">
+                    <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle(bg:accent)"
+                      data-swiss-when="(max-width: 600px)">
+                      Click
+                    </div>
+                  </div>
+                </section>
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Reset state on resize</h2>
+                    <script type="text/plain" class="language-markup">
                     <div data-swiss="toggle(bg:accent)"
                           data-swiss-reset-on-resize>
                       Click
                     </div>
                   </script>
-                </div>
-                <div class="example-col-2">
-                  <div class="box box-interactive cursor:pointer" data-swiss="toggle(bg:accent)"
-                    data-swiss-reset-on-resize>
-                    Click
                   </div>
-                </div>
-              </section>
-              <section class="example">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Trigger above 600px width viewport + reset when disabled</h2>
-                  <script type="text/plain" class="language-markup">
+                  <div class="example-col-2">
+                    <div class="box box-interactive cursor:pointer" data-swiss="toggle(bg:accent)"
+                      data-swiss-reset-on-resize>
+                      Click
+                    </div>
+                  </div>
+                </section>
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Trigger above 600px width viewport + reset when disabled</h2>
+                    <script type="text/plain" class="language-markup">
                     <div class="bg:accent"
                          data-swiss="toggle(bg:accent)"
                          data-swiss-when="(min-width: 600px)"
@@ -420,24 +422,24 @@
                       Click
                     </div>
                   </script>
-                </div>
-                <div class="example-col-2">
-                  <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle(bg:accent)"
-                    data-swiss-when="(min-width: 600px)" data-swiss-reset-when-disabled>
-                    Click
                   </div>
-                </div>
-              </section>
-            </div>
-          </section>
+                  <div class="example-col-2">
+                    <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle(bg:accent)"
+                      data-swiss-when="(min-width: 600px)" data-swiss-reset-when-disabled>
+                      Click
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </section>
 
-          <section>
-            <h2 class="example-section-heading">Events + Run Inline JS</h2>
-            <div class="example-section">
-              <section class="example bt:none">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Dispatch a custom event</h2>
-                  <pre>
+            <section>
+              <h2 class="example-section-heading">Events + Run Inline JS</h2>
+              <div class="example-section">
+                <section class="example bt:none">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Dispatch a custom event</h2>
+                    <pre>
                     <code class="language-markup">
                       &lt;button data-swiss="event(myCustomEvent)"&gt;
                         Dispatch custom event
@@ -450,41 +452,41 @@
                       &lt;/script&gt;
                     </code>
                   </pre>
-                </div>
-                <div class="example-col-2">
-                  <div class="rel flex align-items:center justify-content:center">
-                    <button class="btn" data-swiss="event(myCustomEvent)" id="event-listener-example">
-                      Dispatch custom event
-                    </button>
                   </div>
-                </div>
-              </section>
-              <section class="example">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Trigger an alert</h2>
-                  <script type="text/plain" class="language-markup">
+                  <div class="example-col-2">
+                    <div class="rel flex align-items:center justify-content:center">
+                      <button class="btn" data-swiss="event(myCustomEvent)" id="event-listener-example">
+                        Dispatch custom event
+                      </button>
+                    </div>
+                  </div>
+                </section>
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Trigger an alert</h2>
+                    <script type="text/plain" class="language-markup">
                     <button data-swiss="run(alert('Hello from Swiss.js!'))">
                       Trigger alert
                     </button>
                   </script>
-                </div>
-                <div class="example-col-2">
-                  <div class="flex align-items:center justify-content:center">
-                    <button class="btn" data-swiss="run(alert('Hello from Swiss.js!'))">
-                      Trigger alert
-                    </button>
                   </div>
-                </div>
-            </div>
-          </section>
+                  <div class="example-col-2">
+                    <div class="flex align-items:center justify-content:center">
+                      <button class="btn" data-swiss="run(alert('Hello from Swiss.js!'))">
+                        Trigger alert
+                      </button>
+                    </div>
+                  </div>
+              </div>
+            </section>
 
-          <section>
-            <h2 class="example-section-heading">UI Examples</h2>
-            <div class="example-section">
-              <section class="example bt:none">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Menu</h2>
-                  <script type="text/plain" class="language-markup">
+            <section>
+              <h2 class="example-section-heading">UI Examples</h2>
+              <div class="example-section">
+                <section class="example bt:none">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Menu</h2>
+                    <script type="text/plain" class="language-markup">
                     <button data-swiss="toggle[#menu](menu--active)">Menu</button>
 
                     <div id="menu"
@@ -495,23 +497,23 @@
                       Some kind of menu...
                     </div>
                   </script>
-                </div>
-                <div class="example-col-2">
-                  <div class="rel flex align-items:center justify-content:center">
-                    <button class="btn" data-swiss="toggle[#menu](menu--active)">Menu</button>
-                    <div id="menu"
-                      class="abs w:200px top:40px f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|0.1s|ease-in-out"
-                      data-swiss="toggle[#menu](menu--active)" data-swiss-on="clickOutside"
-                      data-swiss-if="#menu.menu--active">
-                      Some kind of menu...
+                  </div>
+                  <div class="example-col-2">
+                    <div class="rel flex align-items:center justify-content:center">
+                      <button class="btn" data-swiss="toggle[#menu](menu--active)">Menu</button>
+                      <div id="menu"
+                        class="abs w:200px top:40px f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|0.1s|ease-in-out"
+                        data-swiss="toggle[#menu](menu--active)" data-swiss-on="clickOutside"
+                        data-swiss-if="#menu.menu--active">
+                        Some kind of menu...
+                      </div>
                     </div>
                   </div>
-                </div>
-              </section>
-              <section class="example">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Modal</h2>
-                  <script type="text/plain" class="language-markup">
+                </section>
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Modal</h2>
+                    <script type="text/plain" class="language-markup">
                     <button data-swiss="add[#modal](modal--active)">
                       Open Modal
                     </button>
@@ -529,131 +531,131 @@
                       </div>
                     </div>
                   </script>
-                </div>
-                <div class="example-col-2">
-                  <div class="flex align-items:center justify-content:center">
-                    <button class="btn" data-swiss="add[#modal](modal--active)">
-                      Open Modal
-                    </button>
                   </div>
+                  <div class="example-col-2">
+                    <div class="flex align-items:center justify-content:center">
+                      <button class="btn" data-swiss="add[#modal](modal--active)">
+                        Open Modal
+                      </button>
+                    </div>
 
-                  <div id="modal"
-                    class="fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
-                    <div class="box p:20x bg:surface-a rel min-w:500px max-w:90vw"
-                      data-swiss="remove[#modal](modal--active)" data-swiss-on="clickOutside"
-                      data-swiss-if="#modal.modal--active">
-                      <div class="flex flex-direction:column gap:3x">
-                        <p class="f:12px">Some kind of modal...</p>
+                    <div id="modal"
+                      class="fixed inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
+                      <div class="box p:20x bg:surface-a rel min-w:500px max-w:90vw"
+                        data-swiss="remove[#modal](modal--active)" data-swiss-on="clickOutside"
+                        data-swiss-if="#modal.modal--active">
+                        <div class="flex flex-direction:column gap:3x">
+                          <p class="f:12px">Some kind of modal...</p>
 
-                        <button class="cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px"
-                          data-swiss="remove[#modal](modal--active)">
-                          Close Modal
-                        </button>
+                          <button class="cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px"
+                            data-swiss="remove[#modal](modal--active)">
+                            Close Modal
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </section>
-            </div>
-          </section>
+                </section>
+              </div>
+            </section>
 
-          <section>
-            <h2 class="example-section-heading">Data Attributes</h2>
-            <div class="example-section">
-              <section class="example bt:none">
-                <div class="example-col-1 pr:8x@md">
-                  <h2 class="example-heading">Menu</h2>
-                  <div class="flex flex-direction:column gap:1.5x mt:4x">
-                    <!-- ADD ATTRIBUTE -->
-                    <button class="btn" data-swiss="add[#target]({data-open:true})">
-                      Add attribute: data-open="true"
-                    </button>
-                    <!-- REMOVE ATTRIBUTE -->
-                    <button class="btn" data-swiss="remove[#target]({data-open})">
-                      Remove attribute: data-open
-                    </button>
-                    <!-- TOGGLE PRESENCE -->
-                    <button class="btn" data-swiss="toggle[#target]({data-flag})">
-                      Toggle presence: data-flag
-                    </button>
-                    <!-- TOGGLE VALUE (open|closed) -->
-                    <button class="btn" data-swiss="toggle[#target]({data-state:open|closed})">
-                      Toggle data-state="open|closed"
-                    </button>
-                    <!-- MIX CLASS + ATTRIBUTE -->
-                    <button class="btn" data-swiss="toggle[#target](bg:accent-muted {data-mixed:true})">
-                      Toggle class + add/remove attribute
-                    </button>
-                  </div>
-                </div>
-                <div class="example-col-2">
-                  <!-- TARGET ELEMENT -->
-                  <div id="target" class="box box-interactive p:10x w:full align-items:center justify-content:center"
-                    data-state="closed" data-flag style="transition:all 0.3s ease;">
-                    <div class="t:center">
-                      Target Element
-                      <br>
-                      <p class="f:10px opacity:0.5 mt:2x">(watch attributes change in DevTools)</p>
+            <section>
+              <h2 class="example-section-heading">Data Attributes</h2>
+              <div class="example-section">
+                <section class="example bt:none">
+                  <div class="example-col-1 pr:8x@md">
+                    <h2 class="example-heading">Menu</h2>
+                    <div class="flex flex-direction:column gap:1.5x mt:4x">
+                      <!-- ADD ATTRIBUTE -->
+                      <button class="btn" data-swiss="add[#target]({data-open:true})">
+                        Add attribute: data-open="true"
+                      </button>
+                      <!-- REMOVE ATTRIBUTE -->
+                      <button class="btn" data-swiss="remove[#target]({data-open})">
+                        Remove attribute: data-open
+                      </button>
+                      <!-- TOGGLE PRESENCE -->
+                      <button class="btn" data-swiss="toggle[#target]({data-flag})">
+                        Toggle presence: data-flag
+                      </button>
+                      <!-- TOGGLE VALUE (open|closed) -->
+                      <button class="btn" data-swiss="toggle[#target]({data-state:open|closed})">
+                        Toggle data-state="open|closed"
+                      </button>
+                      <!-- MIX CLASS + ATTRIBUTE -->
+                      <button class="btn" data-swiss="toggle[#target](bg:accent-muted {data-mixed:true})">
+                        Toggle class + add/remove attribute
+                      </button>
                     </div>
                   </div>
-                </div>
-              </section>
-            </div>
-          </section>
-
-          <section>
-            <h2 class="example-section-heading">Enter/Exit</h2>
-            <div class="example-section">
-              <section class="example bt:none">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Enter</h2>
-                </div>
-                <div class="example-col-2">
-                  <div class="box box-interactive w:full transition:background-color|0.3s|ease-in-out"
-                    data-swiss="add(bg:accent)" data-swiss-on="enter"></div>
-                </div>
-              </section>
-              <section class="example">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Exit</h2>
-                </div>
-                <div class="example-col-2">
-                  <div class="box box-interactive w:full bg:accent transition:background-color|0.3s|ease-in-out"
-                    data-swiss="remove(bg:accent)" data-swiss-on="exit"></div>
-                </div>
-              </section>
-              <section class="example">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Enter + Exit</h2>
-                </div>
-                <div class="example-col-2">
-                  <div class="box box-interactive rel w:full transition:all|0.3s|ease-in-out"
-                    data-swiss="toggle(bg:accent)" data-swiss-on="enter exit"></div>
-                </div>
-              </section>
-              <section class="example">
-                <div class="example-col-1">
-                  <h2 class="example-heading">Enter + Exit (transform)</h2>
-                </div>
-                <div class="example-col-2">
-                  <div data-swiss="toggle[#enter-exit-transform](bg:accent left:0px! opacity:1!)"
-                    data-swiss-on="enter exit">
-                    <div id="enter-exit-transform"
-                      class="box box-interactive left:-300px opacity:0 rel w:full transition:all|0.3s|ease-in-out">
+                  <div class="example-col-2">
+                    <!-- TARGET ELEMENT -->
+                    <div id="target" class="box box-interactive p:10x w:full align-items:center justify-content:center"
+                      data-state="closed" data-flag style="transition:all 0.3s ease;">
+                      <div class="t:center">
+                        Target Element
+                        <br>
+                        <p class="f:10px opacity:0.5 mt:2x">(watch attributes change in DevTools)</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </section>
-            </div>
-          </section>
+                </section>
+              </div>
+            </section>
+
+            <section>
+              <h2 class="example-section-heading">Enter/Exit</h2>
+              <div class="example-section">
+                <section class="example bt:none">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Enter</h2>
+                  </div>
+                  <div class="example-col-2">
+                    <div class="box box-interactive w:full transition:background-color|0.3s|ease-in-out"
+                      data-swiss="add(bg:accent)" data-swiss-on="enter"></div>
+                  </div>
+                </section>
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Exit</h2>
+                  </div>
+                  <div class="example-col-2">
+                    <div class="box box-interactive w:full bg:accent transition:background-color|0.3s|ease-in-out"
+                      data-swiss="remove(bg:accent)" data-swiss-on="exit"></div>
+                  </div>
+                </section>
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Enter + Exit</h2>
+                  </div>
+                  <div class="example-col-2">
+                    <div class="box box-interactive rel w:full transition:all|0.3s|ease-in-out"
+                      data-swiss="toggle(bg:accent)" data-swiss-on="enter exit"></div>
+                  </div>
+                </section>
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Enter + Exit (transform)</h2>
+                  </div>
+                  <div class="example-col-2">
+                    <div data-swiss="toggle[#enter-exit-transform](bg:accent left:0px! opacity:1!)"
+                      data-swiss-on="enter exit">
+                      <div id="enter-exit-transform"
+                        class="box box-interactive left:-300px opacity:0 rel w:full transition:all|0.3s|ease-in-out">
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </section>
+          </div>
         </div>
-      </div>
 
-      <div class="tab-panel tab-panel-2">
-        <section>
-          <h2 class="example-section-heading">Installation</h2>
-          <div class="example-section bg:surface-b px:10x py:8x">
-            <pre>
+        <div class="tab-panel tab-panel-2">
+          <section>
+            <h2 class="example-section-heading">Installation</h2>
+            <div class="example-section bg:surface-b px:10x py:8x">
+              <pre>
               <code class="language-markup">
                 &lt;html&gt;
                   &lt;body&gt;
@@ -663,29 +665,28 @@
                 &lt;/html&gt;
               </code>
             </pre>
-          </div>
-        </section>
+            </div>
+          </section>
+        </div>
+
+        <div class="tab-panel tab-panel-3">
+          <section>
+            <h2 class="example-section-heading">About</h2>
+            <div class="example-section">
+            </div>
+          </section>
+        </div>
       </div>
-
-      <div class="tab-panel tab-panel-3">
-        <section>
-          <h2 class="example-section-heading">About</h2>
-          <div class="example-section">
-          </div>
-        </section>
-      </div>
     </div>
+  </main>
 
-    </div>
-    </div>
+  <script src="dist/swiss.umd.js"></script>
 
-    <script src="dist/swiss.umd.js"></script>
-
-    <script>
-      document.addEventListener('myCustomEvent', () => {
-        alert('”myCustomEvent” triggered by Swiss.js!')
-      });
-    </script>
+  <script>
+    document.addEventListener('myCustomEvent', () => {
+      alert('”myCustomEvent” triggered by Swiss.js!')
+    });
+  </script>
 </body>
 
 </html>
