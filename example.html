@@ -19,8 +19,11 @@
     window.masterCSSConfig = {
       variables: {
         "surface-a": '#121b2c',
+        "surface-b": '#0c1320',
         accent: '#e31d93',
-        'accent-muted': "#63112f",
+        "accent-lighter": 'hsl(325 100% 67% / 1)',
+        'accent-muted': "#e31d9340",
+        "color-default-border": "rgba(255,255,255,0.1)",
       },
       utilities: {
         "copy": {
@@ -30,17 +33,17 @@
       },
       components: {
         "example-section": {
-          "": "r:20px r:40px@md b:1px|solid|rgba(255,255,255,0.1) overflow:hidden shadow:0px|23px|25px|6px|rgba(0,0,0,0.25)",
+          "": "r:20px r:40px@md b:1px|solid|color-default-border overflow:hidden shadow:0px|23px|25px|6px|rgba(0,0,0,0.25)",
           "heading": 'mb:5x f:16px f:18px@md',
         },
         "example": {
-          "": 'grid grid-cols:12 bt:1px|solid|rgba(255,255,255,0.1)',
+          "": 'grid grid-cols:12 bt:1px|solid|color-default-border',
           "heading": 'f:12px f:13px@md opacity:0.75',
-          "col-1": "grid-col-span:12 grid-col-span:5@md p:4x p:8x@md pr:0@md br:0px|solid|rgba(255,255,255,0.1)@md bg:#0c1320",
+          "col-1": "grid-col-span:12 grid-col-span:5@md p:4x p:8x@md pr:0@md br:0px|solid|color-default-border@md bg:surface-b",
           "col-2": "grid-col-span:12 grid-col-span:7@md p:5x p:8x@md flex justify-content:center bg:rgba(0,0,0,0.1)",
         },
         "box": {
-          "": "inline-flex align-items:center justify-content:center user-select:none r:30px b:1px|solid|rgba(255,255,255,0.2) px:20x py:10x",
+          "": "inline-flex align-items:center justify-content:center user-select:none r:30px b:1px|solid|color-default-border px:20x py:10x",
         },
         "btn": {
           "": "cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px",
@@ -74,7 +77,7 @@
 
     :not(pre)>code[class*=language-],
     pre[class*=language-] {
-      background: #0c1320;
+      background: transparent;
     }
 
     .language-markup {
@@ -111,34 +114,41 @@
 </head>
 
 <body class="min-w:100vw min-h:100vh bg:surface-a">
-  <div class="px:4x px:7x@md">
-    <div class="mx:auto max-w:1200px pt:16x pb:32x">
+  <div class="">
 
-      <!-- HEADER -->
-      <header class="t:center mb:4x">
+    <!-- HEADER -->
+    <header class="t:center mb:4x bg:surface-b px:4x px:7x@md bb:0px|solid|color-default-border">
 
+      <div class="mx:auto max-w:1200px py:10x">
         <div
           class="flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md">
-          <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,60px)"
+          <h1 class="font-weight:600 letter-spacing:-0.025em line-height:1 flex f:clamp(45px,4vw,50px)"
             style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);">
             <span class="cursor:pointer user-select:none"
               data-swiss="toggle[this](color:accent) toggle[#js](color:accent)">Swiss</span>
             <span id="js" class="color:accent">.js</span>
           </h1>
           <div class="flex:1 t:center t:right@md">
-            <p class="inline-block opacity:0.85 max-w:32em f:14px f:16px@lg line-height:1.4 t:center t:left@md">
+            <p class="inline-block opacity:0.85 max-w:32em f:14px line-height:1.4 t:center t:left@md">
               A simple javascript utility for declaratively adding, removing
               and toggling classes + more via data-attributes. Use it for fast prototyping and eliminating scattered,
               repetitive code in non-react/vue etc projects.
             </p>
           </div>
         </div>
+      </div>
 
-        <!-- <div class="mt:10x py:4x by:1px|solid|rgba(255,255,255,0.1)"></div> -->
-      </header>
+      <div class="by:1px|solid|color-default-border">
+        <div class="max-w:1200px mx:auto flex {cursor:pointer;px:4x;py:4x;opacity:0.66;bb:2px|solid|transparent}>*">
+          <div class="opacity:1! border-color:accent!">Examples</div>
+          <div>Installation</div>
+          <div>About</div>
+        </div>
+      </div>
+    </header>
 
-
-      <div class="mt:20x flex flex-direction:column gap:20x">
+    <div class="mx:auto max-w:1200px pt:20x pb:32x">
+      <div class="flex flex-direction:column gap:20x">
         <section>
           <h2 class="example-section-heading">Class Management</h2>
           <div class="example-section">
