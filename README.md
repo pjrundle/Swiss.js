@@ -17,8 +17,8 @@ Perfect for prototyping, sprinkling interactivity into static sites, and reducin
 - **Event binding with `data-swiss-on`** – Click, hover (shorthand for mouseenter/mouseleave), and more.
 - **`clickOutside` built in** – Close menus, modals, popovers without manual wiring.
 - **Conditional actions with `data-swiss-if`** – Only run logic when a selector matches.
-- **Run inline JS** – `run:alert('Hello!')`
-- **Dispatch custom events** – `event:myCustomEvent`
+- **Run inline JS** – `run(alert('Hello!'))`
+- **Dispatch custom events** – `event(myCustomEvent)`
 
 No framework required. No build step required. Just drop it in.
 
@@ -110,19 +110,19 @@ No ID or class needed on the child! Use `>div` to target direct children, `+.sib
 ### 5. Trigger an alert
 
 ```html
-<div data-swiss="run:alert('Hello from Swiss.js!')">Click</div>
+<div data-swiss="run(alert('Hello from Swiss.js!'))">Click</div>
 ```
 
 ### 6. Dispatch a custom event
 
 ```html
-<button id="trigger" data-swiss="event:myEvent">Click</button>
+<button id="trigger" data-swiss="event(myCustomEvent)">Click</button>
 
 // then somewhere in your code, something like:
 <script>
-  document
-    .getElementById("trigger")
-    .addEventListener("myEvent", () => console.log("Custom event fired!"));
+  document.addEventListener("myCustomEvent", () => {
+    console.log("Custom event fired!");
+  });
 </script>
 ```
 
@@ -211,13 +211,13 @@ Examples:
 
 ### Supported action types
 
-| Action       | Description                 |
-| ------------ | --------------------------- |
-| `toggle`     | Toggles one or more classes |
-| `add`        | Adds class(es)              |
-| `remove`     | Removes class(es)           |
-| `run:js`     | Runs inline JS              |
-| `event:name` | Dispatches a custom event   |
+| Action        | Description                 |
+| ------------- | --------------------------- |
+| `toggle`      | Toggles one or more classes |
+| `add`         | Adds class(es)              |
+| `remove`      | Removes class(es)           |
+| `run(js)`     | Runs inline JS              |
+| `event(name)` | Dispatches a custom event   |
 
 ### Selector Types
 
