@@ -1,3 +1,5 @@
-dist
+dist/*
+!dist/swiss.umd.js
+!dist/swiss.umd.js.map
 node_modules
 .vercel

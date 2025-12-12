@@ -26,11 +26,27 @@ No framework required. No build step required. Just drop it in.
 
 ## 📦 Installation
 
-### Via script tag
+### Via CDN (Recommended)
 
+**For Production (use version tags):**
+
+**jsDelivr (from GitHub):**
 ```html
-<script src="src/swiss.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/swissjs/swissjs@v1.0.0/dist/swiss.umd.js"></script>
 ```
+
+**unpkg (if published to npm):**
+```html
+<script src="https://unpkg.com/swissjs@1.0.0/dist/swiss.umd.js"></script>
+```
+
+**For Development/Testing:**
+```html
+<!-- Latest from main branch (may change) -->
+<script src="https://cdn.jsdelivr.net/gh/swissjs/swissjs@main/dist/swiss.umd.js"></script>
+```
+
+**⚠️ Important for Production:** Always use a specific version tag (e.g., `@v1.0.0`) instead of `@main` or `@latest` to ensure your site doesn't break if the library is updated.
 
 ### Via npm
 
