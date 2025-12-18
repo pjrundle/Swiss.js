@@ -61,6 +61,13 @@
         "language": {
           "markup": "f:11px! f:12px!@md border-radius:5px padding:0! margin:0px!important",
         },
+        "menu": {
+          "item": "px:3x py:2x rel cursor:pointer user-select:none",
+        },
+        "example-dropdown": {
+          "": "abs w:200px top:40px f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|50ms|ease-in-out opacity:0 pointer-events:none",
+          "is-active": "opacity:1 pointer-events:auto",
+        },
       },
     };
   </script>
@@ -489,6 +496,7 @@
                          class="transition:opacity|0.1s|ease-in-out"
                          data-swiss="toggle[#menu](menu--active)"
                          data-swiss-on="clickOutside"
+                         data-swiss-on-click-outside-ignore=".menu-button"
                          data-swiss-if="#menu.menu--active">
                       Some kind of menu...
                     </div>
@@ -496,16 +504,17 @@
                   </div>
                   <div class="example-col-2">
                     <div class="rel flex align-items:center justify-content:center">
-                      <button class="btn" data-swiss="toggle[#menu](menu--active)">Menu</button>
+                      <button class="btn menu-button" data-swiss="toggle[#menu](menu--active)">Menu</button>
                       <div id="menu"
                         class="abs w:200px top:40px f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|0.1s|ease-in-out"
                         data-swiss="toggle[#menu](menu--active)" data-swiss-on="clickOutside"
-                        data-swiss-if="#menu.menu--active">
+                        data-swiss-on-click-outside-ignore=".menu-button" data-swiss-if="#menu.menu--active">
                         Some kind of menu...
                       </div>
                     </div>
                   </div>
                 </section>
+
                 <section class="example">
                   <div class="example-col-1">
                     <h2 class="example-heading">Modal</h2>
@@ -550,6 +559,53 @@
                         </div>
                       </div>
                     </div>
+                  </div>
+                </section>
+
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Desktop Menu</h2>
+                    <script type="text/plain" class="language-markup">
+                    </script>
+                  </div>
+                  <div class="example-col-2">
+                    <ul class="flex align-items:center justify-content:center mb:10x">
+                      <li class="rel">
+                        <div class="menu-item menu-item-1"
+                          data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">Item
+                          1</div>
+                        <div class="example-dropdown example-dropdown-1" data-swiss-on="clickOutside"
+                          data-swiss="remove(example-dropdown-is-active)"
+                          data-swiss-if=".example-dropdown-1.example-dropdown-is-active"
+                          data-swiss-on-click-outside-ignore=".menu-item.menu-item-1">
+                          Some kind of menu...
+                        </div>
+                      </li>
+
+                      <li class="rel">
+                        <div class="menu-item menu-item-2"
+                          data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">Item
+                          2</div>
+                        <div class="example-dropdown example-dropdown-2" data-swiss-on="clickOutside"
+                          data-swiss="remove(example-dropdown-is-active)"
+                          data-swiss-if=".example-dropdown-2.example-dropdown-is-active"
+                          data-swiss-on-click-outside-ignore=".menu-item.menu-item-2">
+                          Some kind of menu...
+                        </div>
+                      </li>
+
+                      <li class="rel">
+                        <div class="menu-item menu-item-3"
+                          data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">Item
+                          3</div>
+                        <div class="example-dropdown example-dropdown-3" data-swiss-on="clickOutside"
+                          data-swiss="remove(example-dropdown-is-active)"
+                          data-swiss-if=".example-dropdown-3.example-dropdown-is-active"
+                          data-swiss-on-click-outside-ignore=".menu-item.menu-item-3">
+                          Some kind of menu...
+                        </div>
+                      </li>
+                    </ul>
                   </div>
                 </section>
               </div>
@@ -725,8 +781,8 @@
     </div>
   </main>
 
-  <!-- <script src="dist/swiss.umd.js"></script> -->
-  <script src="https://cdn.jsdelivr.net/gh/pjrundle/Swiss.js@v1.0.0/dist/swiss.umd.js"></script>
+  <script src="dist/swiss.umd.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/gh/pjrundle/Swiss.js@v1.0.0/dist/swiss.umd.js"></script> -->
 
   <script>
     document.addEventListener('myCustomEvent', () => {
