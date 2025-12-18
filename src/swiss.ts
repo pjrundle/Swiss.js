@@ -760,14 +760,19 @@
       // explicit ignore selector
       const ignore = elHtml.getAttribute("data-swiss-on-click-outside-ignore")
 
-      const shouldIgnoreElements =
-        (ignore && Array.from(document.querySelectorAll(ignore))) || []
+      if (ignore) {
+        // Support multiple selectors separated by commas
+        // e.g., ".menu-item, .some-other-class" or ".menu-item .some-other-class"
+        const shouldIgnoreElements = Array.from(
+          document.querySelectorAll(ignore),
+        )
 
-      const shouldIgnore = shouldIgnoreElements?.some((el) =>
-        el.contains(target),
-      )
+        const shouldIgnore = shouldIgnoreElements.some((el) =>
+          el.contains(target),
+        )
 
-      if (shouldIgnore) return
+        if (shouldIgnore) return
+      }
 
       actionHandler()
     }

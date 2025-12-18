@@ -564,9 +564,56 @@
 
                 <section class="example">
                   <div class="example-col-1">
-                    <h2 class="example-heading">Desktop Menu</h2>
+                    <h2 class="example-heading">Desktop Menu - class selector</h2>
                     <script type="text/plain" class="language-markup">
                     </script>
+                  </div>
+                  <div class="example-col-2">
+                    <ul class="flex align-items:center justify-content:center mb:10x">
+                      <li class="rel">
+                        <div class="menu-item menu-item-1"
+                          data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">Item
+                          1</div>
+                        <div class="example-dropdown example-dropdown-1" data-swiss-on="clickOutside"
+                          data-swiss="remove(example-dropdown-is-active)"
+                          data-swiss-if=".example-dropdown-1.example-dropdown-is-active"
+                          data-swiss-on-click-outside-ignore=".menu-item.menu-item-1">
+                          Some kind of menu...
+                        </div>
+                      </li>
+
+                      <li class="rel">
+                        <div class="menu-item menu-item-2"
+                          data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">Item
+                          2</div>
+                        <div class="example-dropdown example-dropdown-2" data-swiss-on="clickOutside"
+                          data-swiss="remove(example-dropdown-is-active)"
+                          data-swiss-if=".example-dropdown-2.example-dropdown-is-active"
+                          data-swiss-on-click-outside-ignore=".menu-item.menu-item-2">
+                          Some kind of menu...
+                        </div>
+                      </li>
+
+                      <li class="rel">
+                        <div class="menu-item menu-item-3"
+                          data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">Item
+                          3</div>
+                        <div class="example-dropdown example-dropdown-3" data-swiss-on="clickOutside"
+                          data-swiss="remove(example-dropdown-is-active)"
+                          data-swiss-if=".example-dropdown-3.example-dropdown-is-active"
+                          data-swiss-on-click-outside-ignore=".menu-item.menu-item-3">
+                          Some kind of menu...
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </section>
+
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Desktop Menu - data attribute selector</h2>
+                    <script type="text/plain" class="language-markup">
+                                    </script>
                   </div>
                   <div class="example-col-2">
                     <ul class="flex align-items:center justify-content:center mb:10x">
