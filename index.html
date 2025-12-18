@@ -618,37 +618,37 @@
                   <div class="example-col-2">
                     <ul class="flex align-items:center justify-content:center mb:10x">
                       <li class="rel">
-                        <div class="menu-item menu-item-1"
-                          data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">Item
+                        <div class="menu-item" data-menu-trigger="1"
+                          data-swiss="toggle[+[data-menu-dropdown='1']](example-dropdown-is-active)">Item
                           1</div>
-                        <div class="example-dropdown example-dropdown-1" data-swiss-on="clickOutside"
+                        <div class="example-dropdown" data-menu-dropdown="1" data-swiss-on="clickOutside"
                           data-swiss="remove(example-dropdown-is-active)"
-                          data-swiss-if=".example-dropdown-1.example-dropdown-is-active"
-                          data-swiss-on-click-outside-ignore=".menu-item.menu-item-1">
+                          data-swiss-if="[data-menu-dropdown='1'].example-dropdown-is-active"
+                          data-swiss-on-click-outside-ignore="[data-menu-trigger='1']">
                           Some kind of menu...
                         </div>
                       </li>
 
                       <li class="rel">
-                        <div class="menu-item menu-item-2"
-                          data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">Item
+                        <div class="menu-item" data-menu-trigger="2"
+                          data-swiss="toggle[+[data-menu-dropdown='2']](example-dropdown-is-active)">Item
                           2</div>
-                        <div class="example-dropdown example-dropdown-2" data-swiss-on="clickOutside"
+                        <div class="example-dropdown" data-menu-dropdown="2" data-swiss-on="clickOutside"
                           data-swiss="remove(example-dropdown-is-active)"
-                          data-swiss-if=".example-dropdown-2.example-dropdown-is-active"
-                          data-swiss-on-click-outside-ignore=".menu-item.menu-item-2">
+                          data-swiss-if="[data-menu-dropdown='2'].example-dropdown-is-active"
+                          data-swiss-on-click-outside-ignore="[data-menu-trigger='2']">
                           Some kind of menu...
                         </div>
                       </li>
 
                       <li class="rel">
-                        <div class="menu-item menu-item-3"
-                          data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">Item
+                        <div class="menu-item" data-menu-trigger="3"
+                          data-swiss="toggle[+[data-menu-dropdown='3']](example-dropdown-is-active)">Item
                           3</div>
-                        <div class="example-dropdown example-dropdown-3" data-swiss-on="clickOutside"
+                        <div class="example-dropdown" data-menu-dropdown="3" data-swiss-on="clickOutside"
                           data-swiss="remove(example-dropdown-is-active)"
-                          data-swiss-if=".example-dropdown-3.example-dropdown-is-active"
-                          data-swiss-on-click-outside-ignore=".menu-item.menu-item-3">
+                          data-swiss-if="[data-menu-dropdown='3'].example-dropdown-is-active"
+                          data-swiss-on-click-outside-ignore="[data-menu-trigger='3']">
                           Some kind of menu...
                         </div>
                       </li>
