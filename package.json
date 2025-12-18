@@ -1,6 +1,6 @@
 {
   "name": "swissjs",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A tiny Javascript utility for declaratively adding, removing and toggling classes — plus custom events and click-outside handling — using HTML data attributes.",
   "author": "@pjrundle",
   "license": "MIT",
