@@ -52,6 +52,7 @@
         "btn": {
           "": "cursor:pointer b:1px|solid|accent b:1px|solid|accent-lighter:hover px:1em py:0.5em r:5px f:11px",
         },
+        "bar": "block w:16px h:2px bg:#fff",
         "tab": {
           "": "cursor:pointer px:4x py:3x py:4x@md opacity:0.66 bb:2px|solid|transparent user-select:none f:12px f:14px@md",
           "active": "border-color:accent! opacity:1!",
@@ -681,6 +682,45 @@
                     </ul>
                   </div>
                 </section>
+
+                <section class="example">
+                  <div class="example-col-1">
+                    <h2 class="example-heading">Mobile Menu</h2>
+                    <script type="text/plain" class="language-markup">
+                    <div class="flex justify-content:space-between align-items:center rel">
+                      <div class="logo">Swiss.js</div>
+
+                      <button class="btn flex flex-direction:column gap-y:1x py:3x"
+                        data-swiss="toggle[#mobile-menu](example-dropdown-is-active)">
+                      </button>
+
+                      <div id="mobile-menu" class="example-dropdown w:full! top:55px!">
+                        Some kind of menu...
+                      </div>
+                    </div>
+                    </script>
+                  </div>
+                  <div class="example-col-2">
+                    <div class="flex align-items:center justify-content:space-between mb:10x w:full max-w:375px rel">
+                      <div class="font-weight:600 f:24px letter-spacing:-0.025em">Swiss<span
+                          class="color:accent">.js</span></div>
+
+                      <button id="mobile-menu-toggle" class="btn flex flex-direction:column gap-y:1x py:3x"
+                        data-swiss="toggle[#mobile-menu](example-dropdown-is-active)">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                      </button>
+
+                      <div id="mobile-menu" class="example-dropdown w:full! top:55px!" data-swiss-on="clickOutside"
+                        data-swiss="remove(example-dropdown-is-active)"
+                        data-swiss-if="#mobile-menu.example-dropdown-is-active"
+                        data-swiss-on-click-outside-ignore="#mobile-menu-toggle">
+                        Some kind of menu...
+                      </div>
+                    </div>
+                  </div>
+                </section>
               </div>
             </section>
 
@@ -854,8 +894,8 @@
     </div>
   </main>
 
-  <script src="dist/swiss.umd.js"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/gh/pjrundle/Swiss.js@v1.0.0/dist/swiss.umd.js"></script> -->
+  <!-- <script src="dist/swiss.umd.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/gh/pjrundle/Swiss.js@v1.1.0/dist/swiss.umd.js"></script>
 
   <script>
     document.addEventListener('myCustomEvent', () => {
