@@ -42,7 +42,7 @@
         },
         "example": {
           "": 'grid grid-cols:12 bt:1px|solid|color-default-border',
-          "heading": 'f:12px f:13px@md opacity:0.75 mb:7x',
+          "heading": 'f:12px f:13px@md opacity:0.85 mb:7x',
           "col-1": "grid-col-span:12 grid-col-span:5@md p:4x pb:6x p:8x@md pr:0@md br:1px|solid|color-default-border@md bg:surface-b",
           "col-2": "grid-col-span:12 grid-col-span:7@md p:5x p:8x@md flex align-items:center justify-content:center bg:rgba(0,0,0,0.1)",
         },
@@ -179,26 +179,49 @@
 
     .prose p {
       margin-bottom: 1rem;
-      opacity: 0.85;
     }
 
     .prose ul,
     .prose ol {
       margin-bottom: 1rem;
       padding-left: 1.5rem;
-      opacity: 0.85;
+    }
+
+    .prose ul {
+      list-style-type: disc;
+    }
+
+    .prose ul li::marker {
+      color: #e31d93;
+    }
+
+    .prose ol li::marker {
+      color: #e31d93;
+      font-weight: 600;
     }
 
     .prose li {
       margin-bottom: 0.5rem;
     }
 
+    /* Reduced contrast for body text (matched to opacity: 0.85) */
+    .prose p,
+    .prose li {
+      color: #dbdcdd;
+    }
+
+    /* Full contrast for emphasis */
+    .prose p strong,
+    .prose li strong {
+      color: white;
+    }
+
     .prose code {
       background: rgba(255, 255, 255, 0.05);
+      color: #3e99ff;
       padding: 0.2em 0.4em;
       border-radius: 3px;
-      font-size: 0.8em;
-      font-family: 'Courier New', monospace;
+      font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
     }
 
     .prose pre {
