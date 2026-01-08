@@ -293,9 +293,11 @@
           <div class="tab"
             data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-2](tab-panel-active)">
             Installation</div>
-          <div class="tab"
-            data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-3](tab-panel-active)">
-            Rationale</div>
+          <div data-swiss="run(loadRationale())" data-swiss-on="hover">
+            <div class="tab"
+              data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-3](tab-panel-active) run(loadRationale())">
+              Rationale</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1020,26 +1022,32 @@
       alert('"myCustomEvent" triggered by Swiss.js!')
     });
 
-    // Load and render RATIONALE.md
-    fetch('RATIONALE.md')
-      .then(response => response.text())
-      .then(markdown => {
-        const html = marked.parse(markdown);
-        const container = document.getElementById('rationale-content');
-        container.innerHTML = html;
+    // Load and render RATIONALE.md (called by Swiss.js on tab click)
+    function loadRationale() {
+      // Only load once
+      if (window.rationaleLoaded) return;
+      window.rationaleLoaded = true;
 
-        // Highlight code blocks with Prism if available
-        if (window.Prism) {
-          Prism.highlightAllUnder(container);
-        }
-      })
-      .catch(err => {
-        console.error('Failed to load RATIONALE.md:', err);
-        const container = document.getElementById('rationale-content');
-        if (container) {
-          container.innerHTML = '<p style="padding: 2rem; opacity: 0.6;">Failed to load rationale content.</p>';
-        }
-      });
+      fetch('RATIONALE.md')
+        .then(response => response.text())
+        .then(markdown => {
+          const html = marked.parse(markdown);
+          const container = document.getElementById('rationale-content');
+          container.innerHTML = html;
+
+          // Highlight code blocks with Prism if available
+          if (window.Prism) {
+            Prism.highlightAllUnder(container);
+          }
+        })
+        .catch(err => {
+          console.error('Failed to load RATIONALE.md:', err);
+          const container = document.getElementById('rationale-content');
+          if (container) {
+            container.innerHTML = '<p style="padding: 2rem; opacity: 0.6;">Failed to load rationale content.</p>';
+          }
+        });
+    }
   </script>
 </body>
 
