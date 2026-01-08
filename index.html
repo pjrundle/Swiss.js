@@ -146,54 +146,62 @@
       pointer-events: auto;
     }
 
-    /* Rationale markdown styling */
-    #rationale-content {
-      padding: 3rem 2rem;
+    /* prose/markdown styling */
+    .prose {
+      font-size: 14px;
+      max-width: 60ch;
+      margin: 0 auto;
       line-height: 1.7;
     }
 
-    #rationale-content h1 {
-      font-size: 2rem;
+    .prose h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-top: 0;
+    }
+
+    .prose h1 {
+      font-size: 22px;
       font-weight: 600;
       margin-bottom: 1.5rem;
       letter-spacing: -0.025em;
     }
 
-    #rationale-content h2 {
-      font-size: 1.5rem;
+    .prose h2 {
+      font-size: 18px;
       font-weight: 600;
-      margin-top: 3rem;
       margin-bottom: 1rem;
       letter-spacing: -0.02em;
     }
 
-    #rationale-content p {
+    .prose p {
       margin-bottom: 1rem;
       opacity: 0.85;
-      font-size: 15px;
     }
 
-    #rationale-content ul,
-    #rationale-content ol {
+    .prose ul,
+    .prose ol {
       margin-bottom: 1rem;
       padding-left: 1.5rem;
       opacity: 0.85;
     }
 
-    #rationale-content li {
+    .prose li {
       margin-bottom: 0.5rem;
-      font-size: 15px;
     }
 
-    #rationale-content code {
+    .prose code {
       background: rgba(255, 255, 255, 0.05);
       padding: 0.2em 0.4em;
       border-radius: 3px;
-      font-size: 14px;
+      font-size: 0.8em;
       font-family: 'Courier New', monospace;
     }
 
-    #rationale-content pre {
+    .prose pre {
       background: rgba(0, 0, 0, 0.3);
       padding: 1.5rem;
       border-radius: 8px;
@@ -202,43 +210,28 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    #rationale-content pre code {
+    .prose pre code {
       background: transparent;
       padding: 0;
     }
 
-    #rationale-content blockquote {
+    .prose blockquote {
       border-left: 3px solid #e31d93;
       padding-left: 1.5rem;
       margin: 2rem 0;
-      opacity: 0.9;
       font-style: italic;
+      font-weight: 600;
     }
 
-    #rationale-content hr {
+    .prose hr {
       border: none;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       margin: 3rem 0;
     }
 
-    #rationale-content strong {
+    .prose strong {
       font-weight: 600;
       color: white;
-    }
-
-    @media (max-width: 768px) {
-      #rationale-content {
-        padding: 2rem 1.5rem;
-      }
-
-      #rationale-content h1 {
-        font-size: 1.75rem;
-      }
-
-      #rationale-content h2 {
-        font-size: 1.25rem;
-        margin-top: 2rem;
-      }
     }
   </style>
 </head>
@@ -983,7 +976,9 @@
         <div class="tab-panel tab-panel-3">
           <section>
             <h2 class="example-section-heading">Rationale</h2>
-            <div id="rationale-content" class="example-section">
+            <div class="example-section bg:surface-b py:14x">
+              <div id="rationale-content" class="prose">
+              </div>
             </div>
           </section>
         </div>
