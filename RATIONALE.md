@@ -1,4 +1,4 @@
-# Rationale
+## Why Swiss.js?
 
 Swiss.js exists because, in a lot of real projects, **you don’t need a framework — you just need a few things done cleanly**.
 

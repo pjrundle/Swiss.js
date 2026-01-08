@@ -16,12 +16,14 @@
   "tsconfig": "tsconfig.json",
   "scripts": {
     "build": "microbundle --format modern,cjs,umd",
-    "dev": "microbundle watch",
+    "dev": "concurrently \"microbundle watch\" \"http-server -p 8080 -c-1\"",
     "test": "vitest",
     "lint": "eslint src --fix",
     "format": "prettier --write src"
   },
   "devDependencies": {
+    "concurrently": "^9.1.2",
+    "http-server": "^14.1.1",
     "jsdom": "^27.2.0",
     "microbundle": "^0.15.1",
     "vitest": "^4.0.15",
