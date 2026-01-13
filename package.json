@@ -15,7 +15,7 @@
   "types": "dist/swiss.d.ts",
   "tsconfig": "tsconfig.json",
   "scripts": {
-    "build": "microbundle --format modern,cjs,umd",
+    "build": "microbundle --format modern,cjs,umd --compress",
     "dev": "concurrently \"microbundle watch\" \"http-server -p 8080 -c-1\"",
     "test": "vitest",
     "lint": "eslint src --fix",
