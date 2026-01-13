@@ -53,6 +53,7 @@
       components: {
         "page": {
           "gutter": "px:4x px:7x@md",
+          "gutter-y": "py:2x py:3.5x@md",
           "container": "mx:auto max-w:1200px",
         },
         "example-section": {
@@ -280,6 +281,8 @@
 
 <body class="min-w:360px w:100% min-h:100vh bg:surface-b">
 
+  <div class="opacity:0.7 bg:surface-a page-gutter-y pattern-diag bb:1px|solid|color-default-border"></div>
+
   <!-- HEADER -->
   <header class="t:center bg:surface-b bb:0px|solid|color-default-border shadow:0px|23px|25px|6px|rgba(0,0,0,0.1) rel">
     <div class="page-gutter">
@@ -287,24 +290,24 @@
 
         <div
           class="flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md rel">
-          <h1
-            class="typestyle-meta letter-spacing:0.1em color:white! font-weight:400 cursor:pointer user-select:none flex f:clamp(28px,5vw,28px) flex align-items:center"
-            style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);"
-            data-swiss="toggle[#swiss](opacity:0.5) toggle[#js](opacity:0.5)">
-
-            <span class="bg:accent w:0.83em block mr:0.5em">
-              <span class="aspect:1/1 bg:accent block"></span>
-            </span>
-
-            <div class="mt:-2px flex align-items:center gap:-1em">
-              <span id="swiss">Swiss</span>
-              <span id="js" class="opacity:0.5">.js</span>
-            </div>
-          </h1>
+          <div>
+            <h1
+              class="typestyle-meta letter-spacing:0.1em color:white! font-weight:400 cursor:pointer user-select:none flex f:clamp(28px,5vw,28px) flex align-items:center"
+              style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);"
+              data-swiss="toggle[#swiss](opacity:0.5) toggle[#js](opacity:0.5)">
+              <span class="bg:accent w:0.83em block mr:0.5em">
+                <span class="aspect:1/1 bg:accent block"></span>
+              </span>
+              <div class="mt:-2px flex align-items:center gap:-1em">
+                <span id="swiss">Swiss</span>
+                <span id="js" class="opacity:0.5">.js</span>
+              </div>
+            </h1>
+            <span class="f:11px f:12px@md opacity:0.6">A tiny JavaScript utility</span>
+          </div>
           <div class="flex:1 t:center t:right@md abs-center-y@md right:0">
-            <p
-              class="inline-block opacity:0.6 max-w:38em f:11px f:12px@md line-height:1.5 t:center t:left@md font-family:ibm-plex-mono">
-              Swiss.js — A tiny JavaScript utility for adding interactivity using simple HTML attributes. Perfect for
+            <p class="inline-block opacity:0.6 max-w:38em f:11px f:12px@md line-height:1.5 t:center t:left@md">
+              Use Swiss.js to instantly add interactivity using simple HTML attributes. Perfect for
               static sites, CMS templates, prototypes, and Webflow/Framer custom&nbsp;code.
             </p>
           </div>
