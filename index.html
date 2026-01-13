@@ -5,8 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Swiss.js - A tiny JavaScript utility for adding interactivity using simple HTML attributes</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=IBM+Plex+Serif:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
 
   <link rel="preload" as="script" href="https://cdn.master.co/css-runtime@rc">
   <link rel="preload" as="style" href="https://cdn.master.co/normal.css">
@@ -18,18 +22,34 @@
   <script>
     window.masterCSSConfig = {
       variables: {
-        "surface-a": '#121b2c',
-        "surface-b": '#0c1320',
-        accent: '#e31d93',
+        "surface-a": 'oklch(0.20,0,0)',
+        "surface-b": 'oklch(0.17,0,0)',
+        "surface-c": 'oklch(0.14,0,0)',
+        "surface-d": 'oklch(0.24,0,0)',
+        accent: 'rgb(203,69,58)',
+        "accent-pop": '#e94338',
         "accent-lighter": 'hsl(325 100% 67% / 1)',
         'accent-muted': "#e31d9340",
-        "color-default-border": "rgba(255,255,255,0.1)",
+        "color-default-border": "oklch(0.77,0,0/0.1)",
+        'ibm-plex-mono': 'IBM Plex Mono',
       },
       utilities: {
+        "abs-center-y": {
+          "position": "absolute",
+          "top": "50%",
+          "transform": "translateY(-50%)",
+        },
         "copy": {
           "font-size": "12px",
           "opacity": "0.75",
-        }
+        },
+        "typestyle-meta": {
+          "text-transform": "uppercase",
+          "font-family": "Ibm Plex Mono",
+          "letter-spacing": "0.25em",
+          "font-weight": 500,
+          "color": "rgba(255,255,255,0.5)",
+        },
       },
       components: {
         "page": {
@@ -37,25 +57,29 @@
           "container": "mx:auto max-w:1200px",
         },
         "example-section": {
-          "": "r:20px r:40px@md b:1px|solid|color-default-border overflow:hidden shadow:0px|23px|25px|6px|rgba(0,0,0,0.25)",
-          "heading": 'mb:5x f:16px f:18px@md',
+          "": "r:8px r:10px@md b:1px|solid|color-default-border overflow:hidden shadow:0px|23px|25px|6px|rgba(0,0,0,0.5)",
+          "heading": 'px:4x py:3x pt:3.5x@md pb:4x@md f:10px f:14px@md bb:1px|solid|color-default-border',
+        },
+        "enclosed-section": {
+          "": "bg:surfaceb",
         },
         "example": {
           "": 'grid grid-cols:12 bt:1px|solid|color-default-border',
-          "heading": 'f:12px f:13px@md opacity:0.85 mb:7x',
-          "col-1": "grid-col-span:12 grid-col-span:5@md p:4x pb:6x p:8x@md pr:0@md br:1px|solid|color-default-border@md bg:surface-b",
-          "col-2": "grid-col-span:12 grid-col-span:7@md p:5x p:8x@md flex align-items:center justify-content:center bg:rgba(0,0,0,0.1)",
+          "container": "bg:surfaced p:4x",
+          "col-1": "grid-col-span:12 grid-col-span:5@md px:4x pt:2.5x pb:6x p:8x@md pt:6.5x@md pr:0@md br:1px|solid|color-default-border@md bg:surface-b",
+          "col-2": "grid-col-span:12 grid-col-span:7@md p:5x p:8x@md flex align-items:center justify-content:center bg:surface-b",
         },
         "box": {
-          "": "inline-flex h:80px h:140px@md align-items:center justify-content:center user-select:none r:30px b:1px|solid|color-default-border px:20x py:10x white-space:nowrap f:14px f:16px@md",
+          "": "border-width:1px border-style:solid border-color:rgba(255,255,255,0.7) bg:surface-b inline-flex h:80px h:140px@md align-items:center justify-content:center user-select:none r:10px px:20x py:10x white-space:nowrap f:10px f:10px@md shadow:0px|23px|25px|6px|rgba(0,0,0,0.25)",
+          "active": 'border-color:accent-pop bg:rgba(233,68,56,0.08) color:white',
         },
         "btn": {
-          "": "cursor:pointer b:1px|solid|accent b:1px|solid|accent-lighter:hover px:1em py:0.5em r:5px f:11px",
+          "": "cursor:pointer b:1px|solid|accent b:1px|solid|accent-pop:hover px:1em py:0.5em r:5px f:12px",
         },
         "bar": "block w:16px h:2px bg:#fff",
         "tab": {
-          "": "cursor:pointer px:4x py:3x py:4x@md opacity:0.66 bb:2px|solid|transparent user-select:none f:12px f:14px@md",
-          "active": "border-color:accent! opacity:1!",
+          "": "cursor:pointer px:4x py:3x py:3.5x@md bb:2px|solid|transparent user-select:none f:9px f:10px@md br:1px|solid|color-default-border",
+          "active": "border-bottom-color:accent! color:rgb(255,123,114)!",
           "panel": "hidden",
           "panel-active": "block",
         },
@@ -76,24 +100,15 @@
 
   <style>
     body {
-      font-family: 'Exo', sans-serif;
+      /* font-family: 'Google Sans Flex', sans-serif; */
+      /* font-family: 'Geist', sans-serif; */
+      /* font-family: 'IBM Plex Sans', sans-serif; */
+      font-family: 'IBM Plex Mono', monospace;
       color: white;
     }
 
     .debug {
       border: 1px solid red;
-    }
-
-    .box-interactive {
-      box-shadow:
-        0px 8px 0px 0px rgba(255, 255, 255, 0),
-        /* button thickness */
-        0px 0 20px rgba(255, 255, 255, .1) inset,
-        /* inner glow */
-        2px 30px 0px rgba(255, 255, 255, .1) inset,
-        /* subtle reflection */
-        5px 15px 30px -10px rgba(0, 0, 0, 0.8);
-      /* dark shadow underneath */
     }
 
     :not(pre)>code[class*=language-],
@@ -106,7 +121,8 @@
     .token.property,
     .token.symbol,
     .token.tag {
-      color: #3e99ff;
+      /* color: rgb(231 109 255 / 65%); */
+      color: rgb(228 228 228 / 65%);
     }
 
     .token.attr-name,
@@ -115,15 +131,19 @@
     .token.inserted,
     .token.selector,
     .token.string {
-      color: #ff518f;
+      color: rgb(255, 123, 114);
     }
 
     .token.atrule,
     .token.attr-value,
     .token.class-name,
     .token.function {
-      /* color: #db8e3c; // orange */
-      color: #3e99ff;
+      /* color: rgb(159 159 159); */
+      color: rgb(202, 156, 103);
+    }
+
+    .token.comment {
+      color: #767676;
     }
 
     #menu {
@@ -148,7 +168,7 @@
 
     /* prose/markdown styling */
     .prose {
-      font-size: 14px;
+      font-size: 12px;
       max-width: 60ch;
       margin: 0 auto;
       line-height: 1.7;
@@ -192,11 +212,11 @@
     }
 
     .prose ul li::marker {
-      color: #e31d93;
+      color: #737373;
     }
 
     .prose ol li::marker {
-      color: #e31d93;
+      color: #737373;
       font-weight: 600;
     }
 
@@ -207,7 +227,7 @@
     /* Reduced contrast for body text (matched to opacity: 0.85) */
     .prose p,
     .prose li {
-      color: #dbdcdd;
+      color: #a7a7a7;
     }
 
     /* Full contrast for emphasis */
@@ -216,12 +236,15 @@
       color: white;
     }
 
+    code[class*=language-],
+    pre[class*=language-] {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
     .prose code {
-      background: rgba(255, 255, 255, 0.05);
-      color: #3e99ff;
-      padding: 0.2em 0.4em;
-      border-radius: 3px;
-      font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+      color: rgb(255, 123, 114);
+      padding: 0.3em 0.6em;
+      border: 1px solid #1f1f1f;
     }
 
     .prose pre {
@@ -239,7 +262,7 @@
     }
 
     .prose blockquote {
-      border-left: 3px solid #e31d93;
+      border-left: 3px solid rgb(255, 123, 114);
       padding-left: 1.5rem;
       margin: 2rem 0;
       font-style: italic;
@@ -256,46 +279,92 @@
       font-weight: 600;
       color: white;
     }
+
+    .pattern-diag {
+      background-image: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0px, rgba(255, 255, 255, 0.06) 1px, transparent 0px, transparent 11px);
+    }
+
+    .pattern-dots {
+      /* background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px,
+          transparent 1px);
+      background-size: 10px 10px; */
+
+      background-image: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0px, rgba(255, 255, 255, 0.06) 1px, transparent 0px, transparent 11px);
+    }
+
+    /* .plus::before,
+    .plus::after {
+      content: '';
+      position: absolute;
+      background: white;
+    }
+
+    .plus::before {
+      transform: translateY(-50%);
+      top: 50%;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 2px;
+    }
+
+    .plus::after {
+      transform: translateX(-50%);
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      width: 2px;
+    } */
   </style>
 </head>
 
 <body class="min-w:360px w:100% min-h:100vh bg:surface-b">
 
   <header class="t:center bg:surface-b bb:0px|solid|color-default-border shadow:0px|23px|25px|6px|rgba(0,0,0,0.1) rel">
-
     <div class="page-gutter">
-      <div class="page-container py:18x py:12x@md">
+      <div class="p:18x p:14x@md bx:1px|solid|color-default-border">
+
         <div
-          class="flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md">
+          class="flex flex-direction:column flex-direction:row@md justify-content:space-between align-items:center gap:6x gap:10x@md rel">
           <h1
-            class="font-weight:600 cursor:pointer user-select:none letter-spacing:-0.025em line-height:1 flex f:clamp(44px,5vw,50px)"
+            class="typestyle-meta letter-spacing:0.1em color:white! font-weight:400 cursor:pointer user-select:none flex f:clamp(28px,5vw,28px) flex align-items:center"
             style="text-shadow: 7px 14px 30px rgba(0,0,0,0.15);"
-            data-swiss="toggle[#swiss](color:accent) toggle[#js](color:accent)">
-            <span id="swiss">Swiss</span>
-            <span id="js" class="color:accent">.js</span>
+            data-swiss="toggle[#swiss](opacity:0.5) toggle[#js](opacity:0.5)">
+
+            <span class="bg:accent w:0.82em block mr:0.5em rel plus">
+              <span class="aspect:1/1 bg:accent block"></span>
+            </span>
+
+            <div class="mt:-2px flex align-items:center gap:-1em">
+              <span id="swiss">Swiss</span>
+              <span id="js" class="opacity:0.5">.js</span>
+            </div>
           </h1>
-          <div class="flex:1 t:center t:right@md">
-            <p class="inline-block opacity:0.85 max-w:32em f:14px line-height:1.4 t:center t:left@md">
+          <div class="flex:1 t:center t:right@md abs-center-y right:0">
+            <p
+              class="inline-block opacity:0.6 max-w:38em f:12px line-height:1.5 t:center t:left@md font-family:ibm-plex-mono">
               Swiss.js — A tiny JavaScript utility for adding interactivity using simple HTML attributes. Perfect for
               static sites, CMS templates, prototypes, and Webflow/Framer custom&nbsp;code.
             </p>
           </div>
         </div>
+
       </div>
     </div>
 
     <div class="by:1px|solid|color-default-border">
       <div class="page-gutter">
-        <div class="page-container flex">
-          <div class="tab tab-active"
+        <div class="page-contain flex bl:1px|solid|color-default-border">
+          <div class="tab tab-active typestyle-meta"
             data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-1](tab-panel-active)">
             Examples
           </div>
-          <div class="tab"
+          <div class="tab typestyle-meta"
             data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-2](tab-panel-active)">
             Installation</div>
           <div data-swiss="run(loadRationale())" data-swiss-on="hover">
-            <div class="tab"
+            <div class="tab typestyle-meta"
               data-swiss="remove[.tab](tab-active) add(tab-active) remove[.tab-panel](tab-panel-active) add[.tab-panel-3](tab-panel-active) run(loadRationale())">
               Rationale</div>
           </div>
@@ -304,709 +373,707 @@
     </div>
   </header>
 
-  <main class="bg:surface-a pt:15x pt:20x@md pb:32x">
+  <main class="bg:surface-a pb:32x pattern-diag">
     <div class="page-gutter">
-      <div class="page-container">
+      <div
+        class="bg:surface-a pt:15x pt:20x@md pb:19x pb:24x@md bx:1px|solid|color-default-border bb:1px|solid|color-default-border">
+        <div class="page-container b:1px|solid|color-default-border">
+          <div class="tab-panel tab-panel-1 tab-panel-active">
+            <div class="flex flex-direction:column gap:20x">
+              <section class="enclosed-section">
+                <h2 class="example-section-heading">UI Examples</h2>
+                <div class="example-container">
+                  <div class="example-section">
+                    <section class="example bt:none">
+                      <div class="example-col-1">
+                        <script type="text/plain" class="language-markup">
+                        <!-- Menu -->
 
-        <div class="tab-panel tab-panel-1 tab-panel-active">
-          <div class="flex flex-direction:column gap:20x">
-            <section>
-              <h2 class="example-section-heading">Class Management</h2>
-              <div class="example-section">
-                <section class="example bt:none">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Toggle class on self</h2>
-                    <script type="text/plain" class="language-markup">
-                  <div class="bg:accent"
-                       data-swiss="toggle(bg:accent border-color:rgba(255,255,255,0.8)!)">
-                    Click
-                  </div>
-                  </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="box box-interactive cursor:pointer bg:accent"
-                      data-swiss="toggle(bg:accent border-color:rgba(255,255,255,0.8)!)">
-                      Click
-                    </div>
-                  </div>
-                </section>
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Hover to toggle class on self</h2>
-                    <script type="text/plain" class="language-markup">
-                    <div data-swiss="toggle(bg:accent)"
-                         data-swiss-on="hover">
-                      Hover
-                    </div>
-                  </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="box box-interactive" data-swiss="toggle(bg:accent)" data-swiss-on="hover">
-                      Hover
-                    </div>
-                  </div>
-                </section>
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Toggle class on self & another element</h2>
-                    <script type="text/plain" class="language-markup">
-                    <div data-swiss="toggle[#target-1](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
-                      Click
-                    </div>
+                        <button data-swiss="toggle[#menu](menu--active)">Menu</button>
 
-                    <div id="target-1" class="bg:accent">
-                      #target-1
-                    </div>
-                  </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="flex gap:4x">
-                      <div class="box box-interactive cursor:pointer"
-                        data-swiss="toggle[#target-1](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
-                        Click
+                        <div id="menu" data-swiss="toggle[#menu](menu--active)" data-swiss-on="clickOutside"
+                          data-swiss-on-click-outside-ignore=".menu-button" data-swiss-if="#menu.menu--active">
+                          Some kind of menu...
+                        </div>
+                        </script>
                       </div>
-                      <div id="target-1" class="box box-interactive bg:accent">
-                        #target-1
+                      <div class="example-col-2 pattern-dots">
+                        <div class="rel flex align-items:center justify-content:center">
+                          <button class="btn menu-button" data-swiss="toggle[#menu](menu--active)">Menu</button>
+                          <div id="menu"
+                            class="abs w:200px top:40px f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|0.1s|ease-in-out"
+                            data-swiss="toggle[#menu](menu--active)" data-swiss-on="clickOutside"
+                            data-swiss-on-click-outside-ignore=".menu-button" data-swiss-if="#menu.menu--active">
+                            Some kind of menu...
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </section>
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Hover to toggle class on self & another element</h2>
-                    <script type="text/plain" class="language-markup">
-                    <div data-swiss="toggle[#target-2](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)"
-                         data-swiss-on="hover">
-                      Hover
-                    </div>
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <script type="text/plain" class="language-markup">
+                        <!-- Modal -->
 
-                    <div id="target-2" class="bg:accent">
-                      #target-2
-                    </div>
-                  </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="flex gap:4x">
-                      <div class="box box-interactive"
-                        data-swiss="toggle[#target-2](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)"
-                        data-swiss-on="hover">
-                        Hover
-                      </div>
-                      <div id="target-2" class="box box-interactive bg:accent">
-                        #target-2
-                      </div>
-                    </div>
-                  </div>
-                </section>
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Toggle class on multiple elements</h2>
-                    <script type="text/plain" class="language-markup">
-                  <div class="flex justify-content:center mb:4x">
-                    <div data-swiss="toggle[.many-targets](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
-                      Click
-                    </div>
-                  </div>
+                        <button data-swiss="add[#modal](modal--active)">Open Modal</button>
 
-                  <div class="flex gap:4x">
-                    <div class="many-targets bg:accent">
-                      Target
-                    </div>
-                    <div class="many-targets bg:accent">
-                      Target
-                    </div>
-                    <div class="many-targets bg:accent">
-                      Target
-                    </div>
+                        <div id="modal">
+                          <div data-swiss="remove[#modal](modal--active)" data-swiss-on="clickOutside"
+                            data-swiss-if="#modal.modal--active">
+                            Some kind of modal...
+                            <button data-swiss="remove[#modal](modal--active)">
+                              Close Modal
+                            </button>
+                          </div>
+                        </div>
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div class="flex align-items:center justify-content:center">
+                          <button class="btn" data-swiss="add[#modal](modal--active)">
+                            Open Modal
+                          </button>
+                        </div>
+                        <div id="modal"
+                          class="fixed z:1 inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
+                          <div class="box p:20x bg:surface-a rel w:500px max-w:90vw"
+                            data-swiss="remove[#modal](modal--active)" data-swiss-on="clickOutside"
+                            data-swiss-if="#modal.modal--active">
+                            <div class="flex flex-direction:column gap:3x">
+                              <p class="f:12px">Some kind of modal...</p>
+                              <button class="cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px"
+                                data-swiss="remove[#modal](modal--active)">
+                                Close Modal
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <script type="text/plain" class="language-markup">
+                                      <!-- Desktop Menu - class selector -->
+                        <!-- E.g forEach (menuItem in menuItems) -->
+                        <li class="rel">
+                          <div class="menu-item menu-item-1"
+                            data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">
+                            Item 1
+                          </div>
+                          <div class="example-dropdown example-dropdown-1" data-swiss-on="clickOutside"
+                            data-swiss="remove(example-dropdown-is-active)"
+                            data-swiss-if=".example-dropdown-1.example-dropdown-is-active"
+                            data-swiss-on-click-outside-ignore=".menu-item.menu-item-1">
+                            Some kind of menu...
+                          </div>
+                        </li>
+                        <!-- endforeach -->
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <ul class="flex align-items:center justify-content:center mb:10x f:14px">
+                          <li class="rel">
+                            <div class="menu-item menu-item-1"
+                              data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">
+                              Item
+                              1</div>
+                            <div class="example-dropdown example-dropdown-1" data-swiss-on="clickOutside"
+                              data-swiss="remove(example-dropdown-is-active)"
+                              data-swiss-if=".example-dropdown-1.example-dropdown-is-active"
+                              data-swiss-on-click-outside-ignore=".menu-item.menu-item-1">
+                              Some kind of menu...
+                            </div>
+                          </li>
+                          <li class="rel">
+                            <div class="menu-item menu-item-2"
+                              data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">
+                              Item
+                              2</div>
+                            <div class="example-dropdown example-dropdown-2" data-swiss-on="clickOutside"
+                              data-swiss="remove(example-dropdown-is-active)"
+                              data-swiss-if=".example-dropdown-2.example-dropdown-is-active"
+                              data-swiss-on-click-outside-ignore=".menu-item.menu-item-2">
+                              Some kind of menu...
+                            </div>
+                          </li>
+                          <li class="rel">
+                            <div class="menu-item menu-item-3"
+                              data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">
+                              Item
+                              3</div>
+                            <div class="example-dropdown example-dropdown-3" data-swiss-on="clickOutside"
+                              data-swiss="remove(example-dropdown-is-active)"
+                              data-swiss-if=".example-dropdown-3.example-dropdown-is-active"
+                              data-swiss-on-click-outside-ignore=".menu-item.menu-item-3">
+                              Some kind of menu...
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <script type="text/plain" class="language-markup">
+                                      <!-- Desktop Menu - data attribute selector -->
+                        <!-- E.g forEach (menuItem in menuItems) -->
+                        <li class="rel">
+                          <div class="menu-item" data-menu-trigger="1"
+                            data-swiss="toggle[+[data-menu-dropdown='1']](example-dropdown-is-active)">Item
+                            1</div>
+                          <div class="example-dropdown" data-menu-dropdown="1" data-swiss-on="clickOutside"
+                            data-swiss="remove(example-dropdown-is-active)"
+                            data-swiss-if="[data-menu-dropdown='1'].example-dropdown-is-active"
+                            data-swiss-on-click-outside-ignore="[data-menu-trigger='1']">
+                            Some kind of menu...
+                          </div>
+                        </li>
+                        <!-- endforeach -->
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <ul class="flex align-items:center justify-content:center mb:10x f:14px">
+                          <li class="rel">
+                            <div class="menu-item" data-menu-trigger="1"
+                              data-swiss="toggle[+[data-menu-dropdown='1']](example-dropdown-is-active)">Item
+                              1</div>
+                            <div class="example-dropdown" data-menu-dropdown="1" data-swiss-on="clickOutside"
+                              data-swiss="remove(example-dropdown-is-active)"
+                              data-swiss-if="[data-menu-dropdown='1'].example-dropdown-is-active"
+                              data-swiss-on-click-outside-ignore="[data-menu-trigger='1']">
+                              Some kind of menu...
+                            </div>
+                          </li>
+                          <li class="rel">
+                            <div class="menu-item" data-menu-trigger="2"
+                              data-swiss="toggle[+[data-menu-dropdown='2']](example-dropdown-is-active)">Item
+                              2</div>
+                            <div class="example-dropdown" data-menu-dropdown="2" data-swiss-on="clickOutside"
+                              data-swiss="remove(example-dropdown-is-active)"
+                              data-swiss-if="[data-menu-dropdown='2'].example-dropdown-is-active"
+                              data-swiss-on-click-outside-ignore="[data-menu-trigger='2']">
+                              Some kind of menu...
+                            </div>
+                          </li>
+                          <li class="rel">
+                            <div class="menu-item" data-menu-trigger="3"
+                              data-swiss="toggle[+[data-menu-dropdown='3']](example-dropdown-is-active)">Item
+                              3</div>
+                            <div class="example-dropdown" data-menu-dropdown="3" data-swiss-on="clickOutside"
+                              data-swiss="remove(example-dropdown-is-active)"
+                              data-swiss-if="[data-menu-dropdown='3'].example-dropdown-is-active"
+                              data-swiss-on-click-outside-ignore="[data-menu-trigger='3']">
+                              Some kind of menu...
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <script type="text/plain" class="language-markup">
+                        <!-- Mobile Menu -->
+
+                        <div class="flex justify-content:space-between align-items:center rel">
+                          <div class="logo">Swiss.js</div>
+
+                          <button class="btn flex flex-direction:column gap-y:1x py:3x"
+                            data-swiss="toggle[#mobile-menu](example-dropdown-is-active)">
+                          </button>
+
+                          <div id="mobile-menu" class="example-dropdown w:full! top:55px!">
+                            Some kind of menu...
+                          </div>
+                        </div>
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div
+                          class="flex align-items:center justify-content:space-between mb:10x w:full max-w:375px rel">
+                          <div class="font-weight:400 typestyle-meta f:18px letter-spacing:0.1em">
+                            Logo
+                          </div>
+                          <button id="mobile-menu-toggle" class="btn flex flex-direction:column gap-y:1x py:3x"
+                            data-swiss="toggle[#mobile-menu](example-dropdown-is-active)">
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                          </button>
+                          <div id="mobile-menu" class="example-dropdown w:full! top:55px!" data-swiss-on="clickOutside"
+                            data-swiss="remove(example-dropdown-is-active)"
+                            data-swiss-if="#mobile-menu.example-dropdown-is-active"
+                            data-swiss-on-click-outside-ignore="#mobile-menu-toggle">
+                            Some kind of menu...
+                          </div>
+                        </div>
+                      </div>
+                    </section>
                   </div>
-                </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div>
-                      <div class="flex justify-content:center mb:4x">
-                        <div class="box box-interactive"
-                          data-swiss="toggle[.many-targets](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
+                </div>
+              </section>
+              <section class="enclosed-section">
+                <h2 class="example-section-heading">Class Management</h2>
+                <div class="example-container">
+                  <div class="example-section">
+                    <section class="example bt:none">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Toggle class on self</h2> -->
+                        <script type="text/plain" class="language-markup">
+                        <!-- Toggle class on self -->
+
+                        <div class="bg:accent" data-swiss="toggle(bg:accent border-color:rgba(255,255,255,0.8)!)">
+                          Click
+                        </div>
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div class="box cursor:pointer typestyle-meta" data-swiss="toggle(box-active)">
                           Click
                         </div>
                       </div>
-                      <div class="flex gap:4x">
-                        <div class="many-targets box box-interactive bg:accent">
-                          Target
-                        </div>
-                        <div class="many-targets box box-interactive bg:accent">
-                          Target
-                        </div>
-                        <div class="many-targets box box-interactive bg:accent">
-                          Target
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Same as above - but with data attribute selector</h2>
-                    <script type="text/plain" class="language-markup">
-                    <div class="flex justify-content:center mb:4x">
-                      <div data-swiss="toggle[[data-multi-target]](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
-                        Click
-                      </div>
-                    </div>
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Hover to toggle class on self</h2> -->
+                        <script type="text/plain" class="language-markup">
+                        <!-- Hover to toggle class on self -->
 
-                    <div class="flex gap:4x">
-                      <div data-multi-target class="bg:accent">
-                        Target
+                        <div data-swiss="toggle(bg:accent)" data-swiss-on="hover">
+                          Hover
+                        </div>
+                        </script>
                       </div>
-                      <div data-multi-target class="bg:accent">
-                        Target
+                      <div class="example-col-2 pattern-dots">
+                        <div class="box typestyle-meta" data-swiss="toggle(box-active)" data-swiss-on="hover">
+                          Hover
+                        </div>
                       </div>
-                      <div data-multi-target class="bg:accent">
-                        Target
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Toggle class on self & another element</h2> -->
+                        <script type="text/plain" class="language-markup">
+                        <!-- Toggle class on self & another element -->
+
+                        <div data-swiss="toggle[#target-1](bg:accent) toggle(border-color:accent-pop!)">
+                          Click
+                        </div>
+                        <div id="target-1" class="bg:accent">
+                          #target-1
+                        </div>
+                        </script>
                       </div>
-                    </div>
-                  </script>
+                      <div class="example-col-2 pattern-dots">
+                        <div class="flex gap:4x">
+                          <div class="box cursor:pointer typestyle-meta"
+                            data-swiss="toggle[#target-1](box-active) toggle(border-color:accent-pop)">
+                            Click
+                          </div>
+                          <div id="target-1" class="box box-active typestyle-meta">
+                            #target-1
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Hover to toggle class on self & another element</h2> -->
+                        <script type="text/plain" class="language-markup">
+                        <!-- Hover to toggle class on self & another element -->
+                        <div data-swiss="toggle[#target-2](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)"
+                          data-swiss-on="hover">
+                          Hover
+                        </div>
+                        <div id="target-2" class="bg:accent">
+                          #target-2
+                        </div>
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div class="flex gap:4x">
+                          <div class="box typestyle-meta"
+                            data-swiss="toggle[#target-2](box-active) toggle(border-color:accent-pop)"
+                            data-swiss-on="hover">
+                            Hover
+                          </div>
+                          <div id="target-2" class="box box-active">
+                            #target-2
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Toggle class on multiple elements</h2> -->
+                        <script type="text/plain" class="language-markup">
+                        <!-- Toggle class on multiple elements -->
+                        <div class="flex justify-content:center mb:4x">
+                          <div
+                            data-swiss="toggle[.many-targets](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
+                            Click
+                          </div>
+                        </div>
+                        <div class="flex gap:4x">
+                          <div class="many-targets bg:accent">
+                            Target
+                          </div>
+                          <div class="many-targets bg:accent">
+                            Target
+                          </div>
+                          <div class="many-targets bg:accent">
+                            Target
+                          </div>
+                        </div>
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div>
+                          <div class="flex justify-content:center mb:4x">
+                            <div class="box typestyle-meta"
+                              data-swiss="toggle[.many-targets](box-active) toggle(border-color:accent-pop)">
+                              Click
+                            </div>
+                          </div>
+                          <div class="flex gap:4x">
+                            <div class="many-targets box box-active typestyle-meta">
+                              Target
+                            </div>
+                            <div class="many-targets box box-active typestyle-meta">
+                              Target
+                            </div>
+                            <div class="many-targets box box-active typestyle-meta">
+                              Target
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Same as above - but with data attribute selector</h2> -->
+                        <script type="text/plain" class="language-markup">
+                        <!-- Same as above - but with data attribute selector -->
+                        <div class="flex justify-content:center mb:4x">
+                          <div
+                            data-swiss="toggle[[data-multi-target]](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
+                            Click
+                          </div>
+                        </div>
+                        <div class="flex gap:4x">
+                          <div data-multi-target class="bg:accent">
+                            Target
+                          </div>
+                          <div data-multi-target class="bg:accent">
+                            Target
+                          </div>
+                          <div data-multi-target class="bg:accent">
+                            Target
+                          </div>
+                        </div>
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div>
+                          <div class="flex justify-content:center mb:4x">
+                            <div class="box"
+                              data-swiss="toggle[[data-multi-target]](box-active) toggle(border-color:accent-pop)">
+                              Click
+                            </div>
+                          </div>
+                          <div class="flex gap:4x">
+                            <div data-multi-target class="box box-active">
+                              Target
+                            </div>
+                            <div data-multi-target class="box box-active">
+                              Target
+                            </div>
+                            <div data-multi-target class="box box-active">
+                              Target
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
                   </div>
-                  <div class="example-col-2">
-                    <div>
-                      <div class="flex justify-content:center mb:4x">
-                        <div class="box box-interactive"
-                          data-swiss="toggle[[data-multi-target]](bg:accent) toggle(border-color:rgba(255,255,255,0.8)!)">
+                </div>
+              </section>
+              <section class="enclosed-section">
+                <h2 class="example-section-heading">Viewport Binding + State Reset</h2>
+                <div class="example-container">
+                  <div class="example-section">
+                    <section class="example bt:none">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Trigger actions below 600px width viewport</h2> -->
+                        <script type="text/plain" class="language-markup">
+                      <!-- Trigger actions below 600px width viewport -->
+
+                        <div class="bg:accent" data-swiss="toggle(bg:accent)" data-swiss-when="(max-width: 600px)">
+                          Click
+                        </div>
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div class="box cursor:pointer box-active" data-swiss="toggle(box-active)"
+                          data-swiss-when="(max-width: 600px)">
                           Click
                         </div>
                       </div>
-                      <div class="flex gap:4x">
-                        <div data-multi-target class="box box-interactive bg:accent">
-                          Target
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Reset state on resize</h2> -->
+                        <script type="text/plain" class="language-markup">
+                      <!-- Reset state on resize -->
+
+                        <div data-swiss="toggle(bg:accent)" data-swiss-reset-on-resize>
+                          Click
                         </div>
-                        <div data-multi-target class="box box-interactive bg:accent">
-                          Target
-                        </div>
-                        <div data-multi-target class="box box-interactive bg:accent">
-                          Target
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div class="box cursor:pointer" data-swiss="toggle(box-active)" data-swiss-reset-on-resize>
+                          Click
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </section>
-              </div>
-            </section>
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Trigger above 600px width viewport + reset when disabled</h2> -->
+                        <script type="text/plain" class="language-markup">
+                      <!-- Trigger above 600px width viewport + reset when disabled -->
 
-            <section>
-              <h2 class="example-section-heading">Viewport Binding + State Reset</h2>
-              <div class="example-section">
-                <section class="example bt:none">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Trigger actions below 600px width viewport</h2>
-                    <script type="text/plain" class="language-markup">
-                    <div class="bg:accent"
-                         data-swiss="toggle(bg:accent)"
-                         data-swiss-when="(max-width: 600px)">
-                      Click
-                    </div>
-                  </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle(bg:accent)"
-                      data-swiss-when="(max-width: 600px)">
-                      Click
-                    </div>
-                  </div>
-                </section>
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Reset state on resize</h2>
-                    <script type="text/plain" class="language-markup">
-                    <div data-swiss="toggle(bg:accent)"
-                         data-swiss-reset-on-resize>
-                      Click
-                    </div>
-                  </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="box box-interactive cursor:pointer" data-swiss="toggle(bg:accent)"
-                      data-swiss-reset-on-resize>
-                      Click
-                    </div>
-                  </div>
-                </section>
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Trigger above 600px width viewport + reset when disabled</h2>
-                    <script type="text/plain" class="language-markup">
-                    <div class="bg:accent"
-                         data-swiss="toggle(bg:accent)"
-                         data-swiss-when="(min-width: 600px)"
-                         data-swiss-reset-when-disabled>
-                      Click
-                    </div>
-                  </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="box box-interactive cursor:pointer bg:accent" data-swiss="toggle(bg:accent)"
-                      data-swiss-when="(min-width: 600px)" data-swiss-reset-when-disabled>
-                      Click
-                    </div>
-                  </div>
-                </section>
-              </div>
-            </section>
-
-            <section>
-              <h2 class="example-section-heading">Events + Run Inline JS</h2>
-              <div class="example-section">
-                <section class="example bt:none">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Dispatch a custom event</h2>
-                    <pre>
-                    <code class="language-markup">
-                      &lt;button data-swiss="event(myCustomEvent)"&gt;
-                        Dispatch custom event
-                      &lt;/button&gt;
-
-                      &lt;script&gt;
-                        document.addEventListener('myCustomEvent', () => {
-                          alert('”myCustomEvent” triggered by Swiss.js!')
-                        });
-                      &lt;/script&gt;
-                    </code>
-                  </pre>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="rel flex align-items:center justify-content:center">
-                      <button class="btn" data-swiss="event(myCustomEvent)" id="event-listener-example">
-                        Dispatch custom event
-                      </button>
-                    </div>
-                  </div>
-                </section>
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Trigger an alert</h2>
-                    <script type="text/plain" class="language-markup">
-                    <button data-swiss="run(alert('Hello from Swiss.js!'))">
-                      Trigger alert
-                    </button>
-                  </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="flex align-items:center justify-content:center">
-                      <button class="btn" data-swiss="run(alert('Hello from Swiss.js!'))">
-                        Trigger alert
-                      </button>
-                    </div>
-                  </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 class="example-section-heading">UI Examples</h2>
-              <div class="example-section">
-                <section class="example bt:none">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Menu</h2>
-                    <script type="text/plain" class="language-markup">
-                    <button data-swiss="toggle[#menu](menu--active)">Menu</button>
-
-                    <div id="menu"
-                         class="transition:opacity|0.1s|ease-in-out"
-                         data-swiss="toggle[#menu](menu--active)"
-                         data-swiss-on="clickOutside"
-                         data-swiss-on-click-outside-ignore=".menu-button"
-                         data-swiss-if="#menu.menu--active">
-                      Some kind of menu...
-                    </div>
-                  </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="rel flex align-items:center justify-content:center">
-                      <button class="btn menu-button" data-swiss="toggle[#menu](menu--active)">Menu</button>
-                      <div id="menu"
-                        class="abs w:200px top:40px f:12px bg:surface-a! r:5px py:1em px:1.5em b:1px|solid|rgba(255,255,255,0.2)! transition:opacity|0.1s|ease-in-out"
-                        data-swiss="toggle[#menu](menu--active)" data-swiss-on="clickOutside"
-                        data-swiss-on-click-outside-ignore=".menu-button" data-swiss-if="#menu.menu--active">
-                        Some kind of menu...
+                        <div class="bg:accent" data-swiss="toggle(bg:accent)" data-swiss-when="(min-width: 600px)"
+                          data-swiss-reset-when-disabled>
+                          Click
+                        </div>
+                        </script>
                       </div>
-                    </div>
-                  </div>
-                </section>
-
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Modal</h2>
-                    <script type="text/plain" class="language-markup">
-                    <button data-swiss="add[#modal](modal--active)">
-                      Open Modal
-                    </button>
-
-                    <div id="modal"
-                         class="fixed z:1 inset:0 bg:rgba(0,0,0,0.5) more styles...">
-                      <div class="styles..."
-                           data-swiss="remove[#modal](modal--active)"
-                           data-swiss-on="clickOutside"
-                           data-swiss-if="#modal.modal--active">
-                        Some kind of modal...
-                        <button data-swiss="remove[#modal](modal--active)">
-                          Close Modal
-                        </button>
+                      <div class="example-col-2 pattern-dots">
+                        <div class="box cursor:pointer box-active" data-swiss="toggle(box-active)"
+                          data-swiss-when="(min-width: 600px)" data-swiss-reset-when-disabled>
+                          Click
+                        </div>
                       </div>
-                    </div>
-                  </script>
+                    </section>
                   </div>
-                  <div class="example-col-2">
-                    <div class="flex align-items:center justify-content:center">
-                      <button class="btn" data-swiss="add[#modal](modal--active)">
-                        Open Modal
-                      </button>
-                    </div>
-
-                    <div id="modal"
-                      class="fixed z:1 inset:0 bg:rgba(0,0,0,0.5) transition:opacity|0.1s|ease-in-out flex align-items:center justify-content:center">
-                      <div class="box p:20x bg:surface-a rel w:500px max-w:90vw"
-                        data-swiss="remove[#modal](modal--active)" data-swiss-on="clickOutside"
-                        data-swiss-if="#modal.modal--active">
-                        <div class="flex flex-direction:column gap:3x">
-                          <p class="f:12px">Some kind of modal...</p>
-
-                          <button class="cursor:pointer b:1px|solid|accent px:1em py:0.5em r:5px f:11px"
-                            data-swiss="remove[#modal](modal--active)">
-                            Close Modal
+                </div>
+              </section>
+              <section class="enclosed-section">
+                <h2 class="example-section-heading">Events + Run Inline JS</h2>
+                <div class="example-container">
+                  <div class="example-section">
+                    <section class="example bt:none">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Dispatch a custom event</h2> -->
+                        <pre>
+                        <code class="language-markup">
+                          &lt;!-- Dispatch a custom event --&gt;
+                          &lt;button data-swiss="event(myCustomEvent)"&gt;
+                            Dispatch custom event
+                          &lt;/button&gt;
+                          &lt;script&gt;
+                            document.addEventListener('myCustomEvent', () => {
+                              alert('”myCustomEvent” triggered by Swiss.js!')
+                            });
+                          &lt;/script&gt;
+                        </code>
+                      </pre>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div class="rel flex align-items:center justify-content:center">
+                          <button class="btn" data-swiss="event(myCustomEvent)" id="event-listener-example">
+                            Dispatch custom event
                           </button>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </section>
-
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Desktop Menu - class selector</h2>
-
-                    <script type="text/plain" class="language-markup">
-                    <!-- E.g forEach (menuItem in menuItems) -->
-                    <li class="rel">
-                      <div class="menu-item menu-item-1"
-                        data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">
-                        Item 1
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Trigger an alert</h2> -->
+                        <script type="text/plain" class="language-markup">
+                        <!-- Trigger an alert -->
+                        <button data-swiss="run(alert('Hello from Swiss.js!'))">
+                          Trigger alert
+                        </button>
+                        </script>
                       </div>
-                      <div class="example-dropdown example-dropdown-1" data-swiss-on="clickOutside"
-                        data-swiss="remove(example-dropdown-is-active)"
-                        data-swiss-if=".example-dropdown-1.example-dropdown-is-active"
-                        data-swiss-on-click-outside-ignore=".menu-item.menu-item-1">
-                        Some kind of menu...
-                      </div>
-                    </li>
-                    <!-- endforeach -->
-                    </script>
-                  </div>
-                  <div class="example-col-2">
-                    <ul class="flex align-items:center justify-content:center mb:10x">
-                      <li class="rel">
-                        <div class="menu-item menu-item-1"
-                          data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">Item
-                          1</div>
-                        <div class="example-dropdown example-dropdown-1" data-swiss-on="clickOutside"
-                          data-swiss="remove(example-dropdown-is-active)"
-                          data-swiss-if=".example-dropdown-1.example-dropdown-is-active"
-                          data-swiss-on-click-outside-ignore=".menu-item.menu-item-1">
-                          Some kind of menu...
-                        </div>
-                      </li>
-
-                      <li class="rel">
-                        <div class="menu-item menu-item-2"
-                          data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">Item
-                          2</div>
-                        <div class="example-dropdown example-dropdown-2" data-swiss-on="clickOutside"
-                          data-swiss="remove(example-dropdown-is-active)"
-                          data-swiss-if=".example-dropdown-2.example-dropdown-is-active"
-                          data-swiss-on-click-outside-ignore=".menu-item.menu-item-2">
-                          Some kind of menu...
-                        </div>
-                      </li>
-
-                      <li class="rel">
-                        <div class="menu-item menu-item-3"
-                          data-swiss="toggle[+.example-dropdown](example-dropdown-is-active)">Item
-                          3</div>
-                        <div class="example-dropdown example-dropdown-3" data-swiss-on="clickOutside"
-                          data-swiss="remove(example-dropdown-is-active)"
-                          data-swiss-if=".example-dropdown-3.example-dropdown-is-active"
-                          data-swiss-on-click-outside-ignore=".menu-item.menu-item-3">
-                          Some kind of menu...
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </section>
-
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Desktop Menu - data attribute selector</h2>
-                    <script type="text/plain" class="language-markup">
-                    <!-- E.g forEach (menuItem in menuItems) -->
-                    <li class="rel">
-                      <div class="menu-item" data-menu-trigger="1"
-                        data-swiss="toggle[+[data-menu-dropdown='1']](example-dropdown-is-active)">Item
-                        1</div>
-                      <div class="example-dropdown" data-menu-dropdown="1" data-swiss-on="clickOutside"
-                        data-swiss="remove(example-dropdown-is-active)"
-                        data-swiss-if="[data-menu-dropdown='1'].example-dropdown-is-active"
-                        data-swiss-on-click-outside-ignore="[data-menu-trigger='1']">
-                        Some kind of menu...
-                      </div>
-                    </li>
-                    <!-- endforeach -->
-                    </script>
-                  </div>
-                  <div class="example-col-2">
-                    <ul class="flex align-items:center justify-content:center mb:10x">
-                      <li class="rel">
-                        <div class="menu-item" data-menu-trigger="1"
-                          data-swiss="toggle[+[data-menu-dropdown='1']](example-dropdown-is-active)">Item
-                          1</div>
-                        <div class="example-dropdown" data-menu-dropdown="1" data-swiss-on="clickOutside"
-                          data-swiss="remove(example-dropdown-is-active)"
-                          data-swiss-if="[data-menu-dropdown='1'].example-dropdown-is-active"
-                          data-swiss-on-click-outside-ignore="[data-menu-trigger='1']">
-                          Some kind of menu...
-                        </div>
-                      </li>
-
-                      <li class="rel">
-                        <div class="menu-item" data-menu-trigger="2"
-                          data-swiss="toggle[+[data-menu-dropdown='2']](example-dropdown-is-active)">Item
-                          2</div>
-                        <div class="example-dropdown" data-menu-dropdown="2" data-swiss-on="clickOutside"
-                          data-swiss="remove(example-dropdown-is-active)"
-                          data-swiss-if="[data-menu-dropdown='2'].example-dropdown-is-active"
-                          data-swiss-on-click-outside-ignore="[data-menu-trigger='2']">
-                          Some kind of menu...
-                        </div>
-                      </li>
-
-                      <li class="rel">
-                        <div class="menu-item" data-menu-trigger="3"
-                          data-swiss="toggle[+[data-menu-dropdown='3']](example-dropdown-is-active)">Item
-                          3</div>
-                        <div class="example-dropdown" data-menu-dropdown="3" data-swiss-on="clickOutside"
-                          data-swiss="remove(example-dropdown-is-active)"
-                          data-swiss-if="[data-menu-dropdown='3'].example-dropdown-is-active"
-                          data-swiss-on-click-outside-ignore="[data-menu-trigger='3']">
-                          Some kind of menu...
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </section>
-
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Mobile Menu</h2>
-                    <script type="text/plain" class="language-markup">
-                    <div class="flex justify-content:space-between align-items:center rel">
-                      <div class="logo">Swiss.js</div>
-
-                      <button class="btn flex flex-direction:column gap-y:1x py:3x"
-                        data-swiss="toggle[#mobile-menu](example-dropdown-is-active)">
-                      </button>
-
-                      <div id="mobile-menu" class="example-dropdown w:full! top:55px!">
-                        Some kind of menu...
-                      </div>
-                    </div>
-                    </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="flex align-items:center justify-content:space-between mb:10x w:full max-w:375px rel">
-                      <div class="font-weight:600 f:24px letter-spacing:-0.025em">Swiss<span
-                          class="color:accent">.js</span></div>
-
-                      <button id="mobile-menu-toggle" class="btn flex flex-direction:column gap-y:1x py:3x"
-                        data-swiss="toggle[#mobile-menu](example-dropdown-is-active)">
-                        <span class="bar"></span>
-                        <span class="bar"></span>
-                        <span class="bar"></span>
-                      </button>
-
-                      <div id="mobile-menu" class="example-dropdown w:full! top:55px!" data-swiss-on="clickOutside"
-                        data-swiss="remove(example-dropdown-is-active)"
-                        data-swiss-if="#mobile-menu.example-dropdown-is-active"
-                        data-swiss-on-click-outside-ignore="#mobile-menu-toggle">
-                        Some kind of menu...
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              </div>
-            </section>
-
-            <section>
-              <h2 class="example-section-heading">Data Attributes</h2>
-              <div class="example-section">
-                <section class="example bt:none">
-                  <div class="example-col-1 pr:8x@md">
-                    <!-- <h2 class="example-heading">Various</h2> -->
-                    <div class="flex flex-direction:column gap:1.5x my:4x">
-                      <!-- Add -->
-                      <button class="btn" data-swiss="add[#target]({data-open:true})">
-                        Add attribute: data-open="true"
-                      </button>
-                      <!-- Remove -->
-                      <button class="btn" data-swiss="remove[#target]({data-open})">
-                        Remove attribute: data-open
-                      </button>
-                      <!-- Toggle presence -->
-                      <button class="btn" data-swiss="toggle[#target]({data-flag})">
-                        Toggle presence: data-flag
-                      </button>
-                      <!-- Toggle value (open|closed) -->
-                      <button class="btn" data-swiss="toggle[#target]({data-state:open|closed})">
-                        Toggle data-state="open|closed"
-                      </button>
-                      <!-- Mix class + attribute -->
-                      <button class="btn" data-swiss="toggle[#target](bg:accent-muted {data-mixed:true})">
-                        Toggle class + add/remove attribute
-                      </button>
-                    </div>
-                    <script type="text/plain" class="language-markup">
-                    <!-- Add -->
-                    <button data-swiss="add[#target]({data-open:true})">
-                      Add attribute: data-open="true"
-                    </button>
-
-                    <!-- Remove -->
-                    <button data-swiss="remove[#target]({data-open})">
-                      Remove attribute: data-open
-                    </button>
-
-                    <!-- Toggle presence -->
-                    <button data-swiss="toggle[#target]({data-flag})">
-                      Toggle presence: data-flag
-                    </button>
-
-                    <!-- Toggle value (open|closed) -->
-                    <button data-swiss="toggle[#target]({data-state:open|closed})">
-                      Toggle data-state="open|closed"
-                    </button>
-
-                    <!-- Mix class + attribute -->
-                    <button data-swiss="toggle[#target](bg:accent-muted {data-mixed:true})">
-                      Toggle class + add/remove attribute
-                    </button>
-                    </script>
-                  </div>
-                  <div class="example-col-2">
-                    <!-- TARGET ELEMENT -->
-                    <div id="target" class="box box-interactive p:10x w:full align-items:center justify-content:center"
-                      data-state="closed" data-flag style="transition:all 0.3s ease;">
-                      <div class="t:center">
-                        Target Element
-                        <br>
-                        <p class="f:10px opacity:0.5 mt:2x">(watch attributes change in DevTools)</p>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              </div>
-            </section>
-
-            <section>
-              <h2 class="example-section-heading">Enter/Exit</h2>
-              <div class="example-section">
-                <section class="example bt:none">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Enter</h2>
-                    <script type="text/plain" class="language-markup">
-                      <div class="transition:background-color|0.3s|ease-in-out"
-                           data-swiss="add(bg:accent)"
-                           data-swiss-on="enter">
-                      </div>
-                    </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="box box-interactive w:full transition:background-color|0.3s|ease-in-out"
-                      data-swiss="add(bg:accent)" data-swiss-on="enter"></div>
-                  </div>
-                </section>
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Exit</h2>
-                    <script type="text/plain" class="language-markup">
-                      <div class="bg:accent transition:background-color|0.3s|ease-in-out"
-                           data-swiss="remove(bg:accent)"
-                           data-swiss-on="exit">
-                      </div>
-                    </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="box box-interactive w:full bg:accent transition:background-color|0.3s|ease-in-out"
-                      data-swiss="remove(bg:accent)" data-swiss-on="exit"></div>
-                  </div>
-                </section>
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Enter + Exit</h2>
-                    <script type="text/plain" class="language-markup">
-                      <div class="transition:background-color|0.3s|ease-in-out"
-                           data-swiss="toggle(bg:accent)"
-                           data-swiss-on="enter exit">
-                      </div>
-                    </script>
-                  </div>
-                  <div class="example-col-2">
-                    <div class="box box-interactive w:full transition:background-color|0.3s|ease-in-out"
-                      data-swiss="toggle(bg:accent)" data-swiss-on="enter exit"></div>
-                  </div>
-                </section>
-                <section class="example">
-                  <div class="example-col-1">
-                    <h2 class="example-heading">Enter + Exit (transform)</h2>
-                    <script type="text/plain" class="language-markup">
-                      <div data-swiss="toggle[>div](bg:accent left:0px! opacity:1!)"
-                           data-swiss-on="enter exit">
-                        <div class="left:-300px opacity:0 rel w:full transition:all|0.3s|ease-in-out">
+                      <div class="example-col-2 pattern-dots">
+                        <div class="flex align-items:center justify-content:center">
+                          <button class="btn" data-swiss="run(alert('Hello from Swiss.js!'))">
+                            Trigger alert
+                          </button>
                         </div>
                       </div>
-                    </script>
                   </div>
-                  <div class="example-col-2">
-                    <div data-swiss="toggle[>div](bg:accent left:0px! opacity:1!)" data-swiss-on="enter exit">
-                      <div class="box box-interactive left:-300px opacity:0 rel w:full transition:all|0.3s|ease-in-out">
+                </div>
+              </section>
+              <section class="enclosed-section">
+                <h2 class="example-section-heading">Data Attributes</h2>
+                <div class="example-container">
+                  <div class="example-section">
+                    <section class="example bt:none">
+                      <div class="example-col-1 pr:8x@md">
+                        <!-- <h2 class="example-heading">Various</h2> -->
+                        <div class="flex flex-direction:column gap:1.5x my:4x">
+                          <!-- Add -->
+                          <button class="btn" data-swiss="add[#target]({data-open:true})">
+                            Add attribute: data-open="true"
+                          </button>
+                          <!-- Remove -->
+                          <button class="btn" data-swiss="remove[#target]({data-open})">
+                            Remove attribute: data-open
+                          </button>
+                          <!-- Toggle presence -->
+                          <button class="btn" data-swiss="toggle[#target]({data-flag})">
+                            Toggle presence: data-flag
+                          </button>
+                          <!-- Toggle value (open|closed) -->
+                          <button class="btn" data-swiss="toggle[#target]({data-state:open|closed})">
+                            Toggle data-state="open|closed"
+                          </button>
+                          <!-- Mix class + attribute -->
+                          <button class="btn" data-swiss="toggle[#target](bg:accent-muted {data-mixed:true})">
+                            Toggle class + add/remove attribute
+                          </button>
+                        </div>
+                        <script type="text/plain" class="language-markup">
+                        <!-- Add -->
+                        <button data-swiss="add[#target]({data-open:true})">
+                          Add attribute: data-open="true"
+                        </button>
+                        <!-- Remove -->
+                        <button data-swiss="remove[#target]({data-open})">
+                          Remove attribute: data-open
+                        </button>
+                        <!-- Toggle presence -->
+                        <button data-swiss="toggle[#target]({data-flag})">
+                          Toggle presence: data-flag
+                        </button>
+                        <!-- Toggle value (open|closed) -->
+                        <button data-swiss="toggle[#target]({data-state:open|closed})">
+                          Toggle data-state="open|closed"
+                        </button>
+                        <!-- Mix class + attribute -->
+                        <button data-swiss="toggle[#target](bg:accent-muted {data-mixed:true})">
+                          Toggle class + add/remove attribute
+                        </button>
+                        </script>
                       </div>
-                    </div>
+                      <div class="example-col-2 pattern-dots">
+                        <!-- TARGET ELEMENT -->
+                        <div id="target" class="box p:10x w:full align-items:center justify-content:center"
+                          data-state="closed" data-flag style="transition:all 0.3s ease;">
+                          <div class="t:center">
+                            Target Element
+                            <br>
+                            <p class="f:10px opacity:0.5 mt:2x">(watch attributes change in DevTools)</p>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
                   </div>
-                </section>
+                </div>
+              </section>
+              <section class="enclosed-section">
+                <h2 class="example-section-heading">Enter/Exit</h2>
+                <div class="example-container">
+                  <div class="example-section">
+                    <section class="example bt:none">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Enter</h2> -->
+                        <script type="text/plain" class="language-markup">
+                        <!-- Enter -->
+                        <div class="transition:background-color|0.3s|ease-in-out" data-swiss="add(bg:accent)"
+                          data-swiss-on="enter">
+                        </div>
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div class="box w:full transition:background-color|0.3s|ease-in-out" data-swiss="add(bg:accent)"
+                          data-swiss-on="enter"></div>
+                      </div>
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Exit</h2> -->
+                        <script type="text/plain" class="language-markup">
+                        <!-- Exit -->
+                        <div class="bg:accent transition:background-color|0.3s|ease-in-out"
+                          data-swiss="remove(bg:accent)" data-swiss-on="exit">
+                        </div>
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div class="box w:full bg:accent transition:background-color|0.3s|ease-in-out"
+                          data-swiss="remove(bg:accent)" data-swiss-on="exit"></div>
+                      </div>
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Enter + Exit</h2> -->
+                        <script type="text/plain" class="language-markup">
+                        <!-- Enter + Exit -->
+                        <div class="transition:background-color|0.3s|ease-in-out" data-swiss="toggle(bg:accent)"
+                          data-swiss-on="enter exit">
+                        </div>
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div class="box w:full transition:background-color|0.3s|ease-in-out"
+                          data-swiss="toggle(bg:accent)" data-swiss-on="enter exit"></div>
+                      </div>
+                    </section>
+                    <section class="example">
+                      <div class="example-col-1">
+                        <!-- <h2 class="example-heading">Enter + Exit (transform)</h2> -->
+                        <script type="text/plain" class="language-markup">
+                        <!-- Enter + Exit (transform) -->
+                        <div data-swiss="toggle[>div](bg:accent left:0px! opacity:1!)" data-swiss-on="enter exit">
+                          <div class="left:-300px opacity:0 rel w:full transition:all|0.3s|ease-in-out">
+                          </div>
+                        </div>
+                        </script>
+                      </div>
+                      <div class="example-col-2 pattern-dots">
+                        <div data-swiss="toggle[>div](bg:accent left:0px! opacity:1!)" data-swiss-on="enter exit">
+                          <div class="box left:-300px opacity:0 rel w:full transition:all|0.3s|ease-in-out">
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+          <div class="tab-panel tab-panel-2">
+            <section class="enclosed-section">
+              <h2 class="example-section-heading">Script Tag</h2>
+              <div class="example-container">
+                <div class="example-section bg:surface-b px:10x py:8x">
+                  <pre>
+                  <code class="language-markup">
+                    &lt;html&gt;
+                      &lt;body&gt;
+                        &lt;!-- insert Swiss.js before closing body tag - and you're good to go! --&gt;
+                        &lt;script src="https://cdn.jsdelivr.net/gh/pjrundle/swiss.js/dist/swiss.umd.js"&gt;&lt;/script&gt;
+                      &lt;/body&gt;
+                    &lt;/html&gt;
+                  </code>
+                </pre>
+                </div>
               </div>
             </section>
           </div>
-        </div>
-
-        <div class="tab-panel tab-panel-2">
-          <section>
-            <h2 class="example-section-heading">Installation</h2>
-            <div class="example-section bg:surface-b px:10x py:8x">
-              <pre>
-              <code class="language-markup">
-                &lt;html&gt;
-                  &lt;body&gt;
-                    &lt;!-- insert Swiss.js before closing body tag - and you're good to go! --&gt;
-                    &lt;script src="dist/swiss.umd.js"&gt;&lt;/script&gt;
-                  &lt;/body&gt;
-                &lt;/html&gt;
-              </code>
-            </pre>
-            </div>
-          </section>
-        </div>
-
-        <div class="tab-panel tab-panel-3">
-          <section>
-            <h2 class="example-section-heading">Rationale</h2>
-            <div class="example-section bg:surface-b py:10x py:14x@md page-gutter">
-              <div id="rationale-content" class="prose">
+          <div class="tab-panel tab-panel-3">
+            <section class="enclosed-section">
+              <h2 class="example-section-heading">Rationale</h2>
+              <div class="example-container">
+                <div class="example-section bg:surface-b py:10x py:18x@md page-gutter">
+                  <div id="rationale-content" class="prose">
+                  </div>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </div>
       </div>
     </div>
