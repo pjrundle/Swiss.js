@@ -1,4 +1,4 @@
-# 🛠️ Swiss.js
+# 🟥 SWISS.JS
 
 A tiny Javascript utility for declaratively adding, removing and toggling classes — plus custom events and click-outside handling — using HTML data attributes.
 
@@ -31,16 +31,19 @@ No framework required. No build step required. Just drop it in.
 **For Production (use version tags):**
 
 **jsDelivr (from GitHub):**
+
 ```html
 <script src="https://cdn.jsdelivr.net/gh/swissjs/swissjs@v1.0.0/dist/swiss.umd.js"></script>
 ```
 
 **unpkg (if published to npm):**
+
 ```html
 <script src="https://unpkg.com/swissjs@1.0.0/dist/swiss.umd.js"></script>
 ```
 
 **For Development/Testing:**
+
 ```html
 <!-- Latest from main branch (may change) -->
 <script src="https://cdn.jsdelivr.net/gh/swissjs/swissjs@main/dist/swiss.umd.js"></script>
@@ -57,7 +60,7 @@ npm install swissjs
 Then:
 
 ```js
-import "swissjs";
+import "swissjs"
 ```
 
 Swiss auto-initialises on DOM ready.
@@ -137,8 +140,8 @@ No ID or class needed on the child! Use `>div` to target direct children, `+.sib
 // then somewhere in your code, something like:
 <script>
   document.addEventListener("myCustomEvent", () => {
-    console.log("Custom event fired!");
-  });
+    console.log("Custom event fired!")
+  })
 </script>
 ```
 
@@ -320,8 +323,8 @@ Swiss shines when the alternative is writing repetitive DOM event code:
 
 ```js
 document.querySelector(".menu-btn").addEventListener("click", () => {
-  document.getElementById("menu").classList.toggle("open");
-});
+  document.getElementById("menu").classList.toggle("open")
+})
 ```
 
 With Swiss, this becomes:
